@@ -31,8 +31,15 @@ export function MapScreen({ progress, onOpen, onUnlockAll, onReset }: Props) {
         </div>
         <h1>Marble Machine</h1>
         <p>Build machines that sort, paint and count marbles - with code!</p>
+        <button
+          className={`cheat ${progress.unlockAll ? 'on' : ''}`}
+          onClick={() => onUnlockAll(!progress.unlockAll)}
+          title="Cheat mode opens every level"
+        >
+          🕹️ Cheat mode: {progress.unlockAll ? 'ON - all levels open' : 'off'}
+        </button>
         <div className="hero-stats">
-          ⭐ {totalStars} / {ALL_LEVELS.length * 2}
+          ⭐ {totalStars} / {ALL_LEVELS.length * 3}
           {next && (
             <button className="btn run" onClick={() => onOpen(next.id)}>
               ▶ {totalStars === 0 ? 'Start playing' : 'Continue'}
@@ -62,7 +69,13 @@ export function MapScreen({ progress, onOpen, onUnlockAll, onReset }: Props) {
                 >
                   <span className="lvl-num">{unlocked ? n : '🔒'}</span>
                   <span className="lvl-title">{l.title}</span>
-                  <span className="lvl-stars">{s >= 1 ? '⭐' : '☆'}{s >= 2 ? '⭐' : '☆'}</span>
+                  <span className="lvl-stars">
+                    {[1, 2, 3].map((k) => (
+                      <span key={k} className={s >= k ? 'on' : 'off'}>
+                        ⭐
+                      </span>
+                    ))}
+                  </span>
                 </button>
               )
             })}
@@ -71,14 +84,10 @@ export function MapScreen({ progress, onOpen, onUnlockAll, onReset }: Props) {
       ))}
 
       <footer className="map-footer">
-        <label>
-          <input type="checkbox" checked={!!progress.unlockAll} onChange={(e) => onUnlockAll(e.target.checked)} /> Unlock all levels
-          (for parents & teachers)
-        </label>
         <button
           className="btn ghost small"
           onClick={() => {
-            if (confirm('Erase all progress and saved programs?')) onReset()
+            if (confirm('Erase all stars and saved machines?')) onReset()
           }}
         >
           Reset progress

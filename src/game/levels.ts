@@ -62,40 +62,42 @@ export const CHAPTERS: Chapter[] = [
         id: 'f1',
         title: 'Only Red',
         goal: 'Keep only the red marbles.',
-        intro: `Welcome to the Marble Machine! Marbles roll in on the left. Your program decides what comes out on the right.
+        intro: `Welcome to the Marble Machine! You build a machine, and marbles roll through it.
 
-Look at the examples: on the left is what goes in, on the right is what should come out. Can you spot the pattern?
+Look at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you spot the pattern?
 
-**filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This program keeps blue marbles:
+**filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This machine keeps blue marbles:
 
 \`\`\`
 filter color is blue
 \`\`\`
 
-Now change it so it keeps the red ones, then press **Run**.`,
+Click the word **blue** in your machine, pick **red**, then press **▶ Run**.`,
         starter: 'filter color is blue',
         solution: 'filter color is red',
         features: RB,
         count: [4, 6],
-        hints: ['You only need to change one word.', 'Change "blue" into "red".'],
+        hints: ['You only need to change one word.', 'Click on "blue" and choose "red".'],
         unlocks: ['filter'],
       },
       {
         id: 'f2',
         title: 'Green Team',
         goal: 'Keep only the green marbles.',
-        intro: `Now there are three colors. Write the whole line yourself this time!
+        intro: `Now there are three colors. Build the machine yourself this time!
 
-Tip: you can click the word chips under the editor to insert them.`,
+Press **+ 🚪 filter** to add a gate, then click the words to change them.
+
+Not sure what happens? Press **🐞 Step by step** and follow the marbles one by one. It's free!`,
         solution: 'filter color is green',
         features: RBG,
-        hints: ['Start with the word filter.', 'filter color is green'],
+        hints: ['Add a filter step.', 'filter color is green'],
       },
       {
         id: 'f3',
         title: 'No Yellow Allowed',
         goal: 'Remove all yellow marbles. Keep everything else.',
-        intro: `Sometimes it is easier to say what you **don't** want. Add **not** after **is**:
+        intro: `Sometimes it is easier to say what you **don't** want. Click on **is** and choose **is not**:
 
 \`\`\`
 filter color is not red
@@ -113,7 +115,7 @@ This keeps every marble that is not red.`,
         goal: 'Keep only the big marbles.',
         intro: `Marbles also come in three sizes: **small**, **medium** and **big**.
 
-You can ask about size just like you ask about color:
+Click on **color** to ask about **size** instead:
 
 \`\`\`
 filter size is small
@@ -141,7 +143,7 @@ filter pattern is dotted
         id: 'f6',
         title: 'Two Gates',
         goal: 'Keep only the marbles that are red AND big.',
-        intro: `A program can have many lines. Marbles go through them from top to bottom, like a conveyor belt with several gates.
+        intro: `A machine can have many steps. Marbles go through them from top to bottom, like a conveyor belt with several gates.
 
 \`\`\`
 filter color is blue
@@ -152,7 +154,7 @@ The first gate lets only blue marbles through. The second gate checks those blue
         solution: 'filter color is red\nfilter size is big',
         features: { colors: RBG.colors, sizes: ['small', 'medium', 'big'] },
         count: [5, 8],
-        hints: ['Use two lines: one for color, one for size.', 'filter color is red\nfilter size is big'],
+        hints: ['Use two filter steps: one for color, one for size.', 'filter color is red\nfilter size is big'],
         unlocks: ['chain'],
       },
       {
@@ -164,28 +166,46 @@ The first gate lets only blue marbles through. The second gate checks those blue
         count: [5, 8],
         hints: ['Two gates again.', 'One gate for "small", one for "is not blue".'],
       },
+    ],
+  },
+  {
+    id: 'boxes',
+    title: 'Question Boxes',
+    emoji: '🧩',
+    blurb: 'Ask many questions at once with and / or - and put boxes inside boxes.',
+    levels: [
       {
         id: 'f8',
-        title: 'One Gate, Two Questions',
-        goal: 'Keep the marbles that are green AND striped - using only one line.',
-        intro: `You can ask two questions in one gate with **and**. A marble passes only if both answers are *yes*:
+        title: 'The ALL Box',
+        goal: 'Keep the marbles that are green AND striped - using only one gate.',
+        intro: `One gate can ask several questions. Press **+ and** next to a question. Your questions go into a **blue ALL box**:
 
 \`\`\`
 filter color is red and size is big
 \`\`\`
 
-⭐ Bonus star: solve levels with as few lines as possible.`,
+An ALL box says *yes* only when **every** question inside says *yes*. A big blue marble? "color is red" says no, so the whole box says no.`,
         solution: 'filter color is green and pattern is striped',
         features: { colors: RBG.colors, patterns: ['plain', 'striped', 'dotted'] },
         count: [5, 8],
-        hints: ['Put "and" between two questions.', 'filter color is green and pattern is striped'],
+        hints: ['Press "+ and" next to the first question.', 'filter color is green and pattern is striped'],
         unlocks: ['and'],
       },
       {
+        id: 'fa2',
+        title: 'Three in a Box',
+        goal: 'Keep the marbles that are blue AND small AND dotted.',
+        intro: `An ALL box can hold as many questions as you like. Every single one must say *yes*.`,
+        solution: 'filter color is blue and size is small and pattern is dotted',
+        features: { colors: RB.colors, sizes: ['small', 'big'], patterns: ['plain', 'dotted'] },
+        count: [6, 9],
+        hints: ['Press "+ and" twice.', 'filter color is blue and size is small and pattern is dotted'],
+      },
+      {
         id: 'f9',
-        title: 'Either One',
+        title: 'The ONE-YES Box',
         goal: 'Keep the marbles that are red OR yellow.',
-        intro: `With **or**, a marble passes if at least one answer is *yes*:
+        intro: `Press **+ or** to get an **orange ONE-YES box**. It says *yes* when **at least one** question inside says *yes*:
 
 \`\`\`
 filter color is blue or color is green
@@ -195,20 +215,65 @@ Careful: two separate gates can't do this! The first gate would already throw aw
         solution: 'filter color is red or color is yellow',
         features: FOUR,
         count: [5, 8],
-        hints: ['Use "or" between two questions.', 'Each side needs the full question: color is red or color is yellow'],
+        hints: ['Press "+ or" next to the first question.', 'filter color is red or color is yellow'],
         unlocks: ['or'],
+      },
+      {
+        id: 'fo2',
+        title: 'Warm Colors',
+        goal: 'Keep the red, yellow and purple marbles.',
+        solution: 'filter color is red or color is yellow or color is purple',
+        features: ALL5,
+        count: [6, 9],
+        hints: [
+          'One ONE-YES box with three questions - or think about which colors you DON\'T want.',
+          'filter color is red or color is yellow or color is purple',
+        ],
+      },
+      {
+        id: 'fg1',
+        title: 'Box in a Box',
+        goal: 'Keep the red marbles that are big OR striped.',
+        intro: `Now put a box inside a box! Build **color is red**, press **+ and**. Then, on the *second* question, press **+ or**:
+
+\`\`\`
+filter color is red and (size is big or pattern is striped)
+\`\`\`
+
+The machine answers the **inner** box first: "is it big or striped?". Then the outer ALL box checks: "is it red, AND did the inner box say yes?"
+
+Use **🐞 Step by step** to see every box light up green ✓ or red ✗.`,
+        solution: 'filter color is red and (size is big or pattern is striped)',
+        features: { colors: RB.colors, sizes: ['small', 'big'], patterns: ['plain', 'striped'] },
+        count: [7, 9],
+        hints: [
+          'The ONE-YES box (big or striped) goes inside the ALL box.',
+          'filter color is red and (size is big or pattern is striped)',
+        ],
+        unlocks: ['brackets'],
+      },
+      {
+        id: 'fg2',
+        title: 'Two Teams',
+        goal: 'Team 1: big red marbles. Team 2: small blue marbles. Keep both teams!',
+        intro: `This time the outer box is a ONE-YES box, with two ALL boxes inside - one for each team:
+
+\`\`\`
+filter (color is red and size is big) or (color is blue and size is small)
+\`\`\``,
+        solution: 'filter (color is red and size is big) or (color is blue and size is small)',
+        features: { colors: RB.colors, sizes: ['small', 'big'] },
+        count: [6, 9],
+        hints: [
+          'Start with: color is red OR color is blue. Then press "+ and" next to each color to add its size.',
+          'filter (color is red and size is big) or (color is blue and size is small)',
+        ],
       },
       {
         id: 'f10',
         title: 'Puzzle Box',
         goal: 'Keep the marbles that are big or dotted, but never purple ones.',
-        intro: `When you mix **and** with **or**, use brackets to say what belongs together - just like in math:
-
-\`\`\`
-filter (color is red or color is blue) and size is small
-\`\`\`
-
-Or use two gates - that works too!`,
+        intro: `Now it's your turn to choose: one gate with boxes in boxes, or two gates one after another. Both work!`,
         solution: 'filter size is big or pattern is dotted\nfilter color is not purple',
         features: { colors: ['red', 'blue', 'purple'], sizes: ['small', 'big'], patterns: ['plain', 'dotted'] },
         count: [6, 9],
@@ -216,7 +281,6 @@ Or use two gates - that works too!`,
           'Split it: first keep "big or dotted", then remove purple.',
           'filter size is big or pattern is dotted\nfilter color is not purple',
         ],
-        unlocks: ['brackets'],
       },
     ],
   },
@@ -230,15 +294,13 @@ Or use two gates - that works too!`,
         id: 'n1',
         title: 'More Than Five',
         goal: 'Keep the marbles with a number bigger than 5.',
-        intro: `These marbles have numbers on them! You can compare numbers:
+        intro: `These marbles have numbers on them! Click on **color** and choose **number**. Then you can compare: **>** means *bigger than*, **<** means *smaller than*.
 
 \`\`\`
-filter number > 3     # bigger than 3
-filter number < 3     # smaller than 3
-filter number is 3    # exactly 3
+filter number > 3
 \`\`\`
 
-(Anything after # is a comment - the machine ignores it.)`,
+This keeps 4, 5, 6 ... but not 3 itself.`,
         solution: 'filter number > 5',
         features: { colors: ['blue'], numbers: [1, 9] },
         hints: ['Use the > sign.', 'filter number > 5'],
@@ -248,10 +310,10 @@ filter number is 3    # exactly 3
         id: 'n2',
         title: 'Three or Less',
         goal: 'Keep the marbles with numbers 3 or smaller.',
-        intro: `**<=** means "smaller or equal" and **>=** means "bigger or equal".
+        intro: `**<=** means "smaller or equal" and **>=** means "bigger or equal". This keeps 4, 5, 6 ...:
 
 \`\`\`
-filter number >= 4    # 4, 5, 6, ...
+filter number >= 4
 \`\`\``,
         solution: 'filter number <= 3',
         features: { colors: ['green'], numbers: [1, 9] },
@@ -310,13 +372,15 @@ filter number is odd
         id: 'm1',
         title: 'Everything Blue',
         goal: 'Paint every marble blue.',
-        intro: `**map** is a machine that changes *every* marble that goes through it. The arrow **->** means "becomes":
+        intro: `**map** is a machine that changes *every* marble that goes through it. Press **+ 🎨 map**:
 
 \`\`\`
 map color -> green
 \`\`\`
 
-Every marble's color becomes green. Nothing gets thrown away - map never removes marbles.`,
+Every marble's color becomes green. Nothing gets thrown away - map never removes marbles.
+
+(In real code, "becomes" is written as an arrow: \`color -> green\`. Press **</> Code** to see your machine as code.)`,
         solution: 'map color -> blue',
         features: { colors: ['red', 'green', 'yellow'], sizes: ['small', 'big'] },
         hints: ['map color -> blue'],
@@ -334,7 +398,7 @@ Every marble's color becomes green. Nothing gets thrown away - map never removes
         id: 'm3',
         title: 'Makeover',
         goal: 'Make every marble purple AND dotted.',
-        intro: `One map can change several things. Separate them with a comma:
+        intro: `One map can change several things. Press **+ change more**:
 
 \`\`\`
 map color -> red, size -> small
@@ -352,7 +416,7 @@ map color -> red, size -> small
         solution: 'filter color is red\nmap color -> yellow',
         features: RBG,
         count: [5, 8],
-        hints: ['Two lines: filter first, then map.', 'filter color is red\nmap color -> yellow'],
+        hints: ['Two steps: filter first, then map.', 'filter color is red\nmap color -> yellow'],
       },
       {
         id: 'm5',
@@ -367,7 +431,7 @@ map color -> red, size -> small
         id: 'm6',
         title: 'Only Some',
         goal: 'Paint the big marbles red. Leave the others as they are.',
-        intro: `Add **if** at the end of a map to change only some marbles. The others pass through unchanged - nobody is thrown away!
+        intro: `Press **+ only if...** to change only some marbles. The others pass through unchanged - nobody is thrown away!
 
 \`\`\`
 map color -> green if pattern is dotted
@@ -414,7 +478,7 @@ Hint: you can use a third color as a temporary "parking spot".`,
         id: 'x1',
         title: 'Double Trouble',
         goal: 'Double the number on every marble.',
-        intro: `map can change numbers with math. On the right side of the arrow, **number** means "the number this marble had before":
+        intro: `map can change numbers with math. Choose **number becomes**, then press **⊕ math**. Here **number** means "the number this marble had before":
 
 \`\`\`
 map number -> number + 1
@@ -422,7 +486,7 @@ map number -> number + 1
 
 A marble with 4 becomes 5, a marble with 7 becomes 8.
 
-You can use \`+\` \`-\` \`*\` (times) and \`/\` (divide).`,
+Click on **+** to choose another sign: **+ − × ÷**. Press **⊕ math** again to add another math step.`,
         solution: 'map number -> number * 2',
         features: { colors: ['blue'], numbers: [1, 9] },
         hints: ['Look at the examples: 2 becomes 4, 3 becomes 6...', 'map number -> number * 2'],
@@ -505,7 +569,7 @@ You can use \`+\` \`-\` \`*\` (times) and \`/\` (divide).`,
 reduce count
 \`\`\`
 
-After reduce there are no more marbles - just a number. So reduce is always the last line.`,
+After reduce there are no more marbles - just a number. So reduce is always the last step.`,
         solution: 'reduce count',
         features: ALL5,
         count: [2, 9],

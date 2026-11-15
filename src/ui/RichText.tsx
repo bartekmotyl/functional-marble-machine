@@ -11,23 +11,33 @@ function inline(text: string): ReactNode[] {
   })
 }
 
-export function RichText({ text }: { text: string }) {
+interface Props {
+  text: string
+  /** how to show ``` code blocks (e.g. as read-only program blocks) */
+  renderCode?: (code: string) => ReactNode
+}
+
+export function RichText({ text, renderCode }: Props) {
   const blocks = text.split(/```\n?([\s\S]*?)```/g)
   return (
     <div className="rich">
-      {blocks.map((b, i) =>
-        i % 2 === 1 ? (
-          <pre key={i} className="code-sample">
-            {b.replace(/\n$/, '')}
-          </pre>
-        ) : (
-          b
-            .split(/\n\s*\n/)
-            .map((p) => p.trim())
-            .filter(Boolean)
-            .map((p, j) => <p key={`${i}-${j}`}>{inline(p)}</p>)
-        ),
-      )}
+      {blocks.map((b, i) => {
+        if (i % 2 === 1) {
+          const code = b.replace(/\n$/, '')
+          return renderCode ? (
+            <div key={i}>{renderCode(code)}</div>
+          ) : (
+            <pre key={i} className="code-sample">
+              {code}
+            </pre>
+          )
+        }
+        return b
+          .split(/\n\s*\n/)
+          .map((p) => p.trim())
+          .filter(Boolean)
+          .map((p, j) => <p key={`${i}-${j}`}>{inline(p)}</p>)
+      })}
     </div>
   )
 }

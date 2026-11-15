@@ -62,9 +62,9 @@ export function tokenizeLine(text: string, line: number): Token[] {
 
 // ---------------------------------------------------------------- AST
 
-type CmpOp = '==' | '!=' | '<' | '>' | '<=' | '>='
+export type CmpOp = '==' | '!=' | '<' | '>' | '<=' | '>='
 export type ValueType = 'number' | 'color' | 'size' | 'pattern' | 'bool' | 'parity'
-type Span = { col: number; end: number }
+type Span = { col: number; end: number; id?: string }
 
 export type Expr = Span &
   (
@@ -105,7 +105,7 @@ const PROP_TYPES: Record<PropName, ValueType> = {
   number: 'number',
 }
 
-const LITERALS: Record<string, ValueType> = {}
+export const LITERALS: Record<string, ValueType> = {}
 COLORS.forEach((c) => (LITERALS[c] = 'color'))
 SIZES.forEach((s) => (LITERALS[s] = 'size'))
 PATTERNS.forEach((p) => (LITERALS[p] = 'pattern'))
@@ -456,7 +456,7 @@ function expectType(e: Expr, want: ValueType, line: number, message: string) {
   if (got !== want) throw new LangError(message.replace('{got}', TYPE_WORDS[got]), line, e.col, e.end)
 }
 
-function checkStep(s: Step) {
+export function checkStep(s: Step) {
   const yesNo = 'This must be a yes/no question, like "color is red" - but it is {got}.'
   switch (s.kind) {
     case 'filter':
@@ -515,4 +515,13 @@ export function parseProgram(source: string): Program {
     steps.push(step)
   })
   return { steps }
+}
+
+/** Type-check a program that was built directly (e.g. from blocks) instead of parsed from text. */
+export function checkProgram(program: Program) {
+  program.steps.forEach((s, i) => {
+    if (i < program.steps.length - 1 && s.kind !== 'filter' && s.kind !== 'map')
+      throw new LangError('After reduce there are no more marbles - just one number. reduce must be the last step.', s.line)
+    checkStep(s)
+  })
 }

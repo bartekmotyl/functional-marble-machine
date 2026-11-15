@@ -1,13 +1,24 @@
 import { SIZES, type Marble, type Output } from './marble'
 import { LangError, parseProgram, type Expr, type Program, type Step } from './parser'
 
-type Value = number | string | boolean
+export type Value = number | string | boolean
+/** Values of every expression node that has an id, for one marble passing one step. */
+export type Values = Map<string, Value>
 
-/** What happened at each step - used to animate the marble machine. */
+/** What happened at each step - used to animate and explain the marble machine. */
 export type Stage =
-  | { kind: 'filter'; line: number; input: Marble[]; kept: boolean[] }
-  | { kind: 'map'; line: number; input: Marble[]; output: Marble[]; changed: boolean[] }
-  | { kind: 'reduce'; line: number; input: Marble[]; label: string; start: number | null; accs: number[]; result: number }
+  | { kind: 'filter'; line: number; input: Marble[]; kept: boolean[]; values: Values[] }
+  | { kind: 'map'; line: number; input: Marble[]; output: Marble[]; changed: boolean[]; values: Values[] }
+  | {
+      kind: 'reduce'
+      line: number
+      input: Marble[]
+      label: string
+      start: number | null
+      accs: number[]
+      result: number
+      values: Values[]
+    }
 
 export interface RunResult {
   output: Output
@@ -16,7 +27,13 @@ export interface RunResult {
 
 const MAX_ABS = 1_000_000_000
 
-function evaluate(e: Expr, m: Marble, line: number, total = 0): Value {
+function evaluate(e: Expr, m: Marble, line: number, total: number, rec: Values): Value {
+  const v = evalNode(e, m, line, total, rec)
+  if (e.id) rec.set(e.id, v)
+  return v
+}
+
+function evalNode(e: Expr, m: Marble, line: number, total: number, rec: Values): Value {
   switch (e.k) {
     case 'num':
       return e.v
@@ -27,8 +44,8 @@ function evaluate(e: Expr, m: Marble, line: number, total = 0): Value {
     case 'total':
       return total
     case 'bin': {
-      const l = evaluate(e.l, m, line, total) as number
-      const r = evaluate(e.r, m, line, total) as number
+      const l = evaluate(e.l, m, line, total, rec) as number
+      const r = evaluate(e.r, m, line, total, rec) as number
       let v: number
       switch (e.op) {
         case '+':
@@ -50,8 +67,8 @@ function evaluate(e: Expr, m: Marble, line: number, total = 0): Value {
       return v
     }
     case 'cmp': {
-      const l = evaluate(e.l, m, line, total)
-      const r = evaluate(e.r, m, line, total)
+      const l = evaluate(e.l, m, line, total, rec)
+      const r = evaluate(e.r, m, line, total, rec)
       if (e.op === '==' || e.op === '!=') {
         let eq: boolean
         if (r === 'even' || r === 'odd' || l === 'even' || l === 'odd') {
@@ -63,55 +80,51 @@ function evaluate(e: Expr, m: Marble, line: number, total = 0): Value {
       }
       const ln = typeof l === 'number' ? l : SIZES.indexOf(l as (typeof SIZES)[number])
       const rn = typeof r === 'number' ? r : SIZES.indexOf(r as (typeof SIZES)[number])
-      switch (e.op) {
-        case '<':
-          return ln < rn
-        case '>':
-          return ln > rn
-        case '<=':
-          return ln <= rn
-        case '>=':
-          return ln >= rn
-      }
+      if (e.op === '<') return ln < rn
+      if (e.op === '>') return ln > rn
+      if (e.op === '<=') return ln <= rn
+      return ln >= rn
     }
-    // eslint-disable-next-line no-fallthrough
     case 'logic': {
-      const l = evaluate(e.l, m, line, total) as boolean
-      if (e.op === 'and') return l && (evaluate(e.r, m, line, total) as boolean)
-      return l || (evaluate(e.r, m, line, total) as boolean)
+      // evaluate both sides (no short-circuit) so every question can be explained
+      const l = evaluate(e.l, m, line, total, rec) as boolean
+      const r = evaluate(e.r, m, line, total, rec) as boolean
+      return e.op === 'and' ? l && r : l || r
     }
     case 'not':
-      return !(evaluate(e.e, m, line, total) as boolean)
+      return !(evaluate(e.e, m, line, total, rec) as boolean)
   }
 }
 
 const DUMMY: Marble = { color: 'blue', size: 'medium', pattern: 'plain', number: 0 }
 
 function runStep(step: Step, input: Marble[]): { stage: Stage; out: Output } {
+  const values: Values[] = input.map(() => new Map())
   switch (step.kind) {
     case 'filter': {
-      const kept = input.map((m) => evaluate(step.cond, m, step.line) as boolean)
-      return { stage: { kind: 'filter', line: step.line, input, kept }, out: input.filter((_, i) => kept[i]) }
+      const kept = input.map((m, i) => evaluate(step.cond, m, step.line, 0, values[i]) as boolean)
+      return { stage: { kind: 'filter', line: step.line, input, kept, values }, out: input.filter((_, i) => kept[i]) }
     }
     case 'map': {
       const changed: boolean[] = []
-      const output = input.map((m) => {
-        if (step.cond && !(evaluate(step.cond, m, step.line) as boolean)) {
+      const output = input.map((m, i) => {
+        if (step.cond && !(evaluate(step.cond, m, step.line, 0, values[i]) as boolean)) {
           changed.push(false)
           return m
         }
         const n: Marble = { ...m }
         // all changes use the *old* marble's values
-        for (const a of step.assigns) (n as unknown as Record<string, Value>)[a.prop] = evaluate(a.expr, m, step.line)
+        for (const a of step.assigns)
+          (n as unknown as Record<string, Value>)[a.prop] = evaluate(a.expr, m, step.line, 0, values[i])
         changed.push(true)
         return n
       })
-      return { stage: { kind: 'map', line: step.line, input, output, changed }, out: output }
+      return { stage: { kind: 'map', line: step.line, input, output, changed, values }, out: output }
     }
     default: {
       let acc: number | null
       let label: string
-      let next: (acc: number | null, m: Marble) => number
+      let next: (acc: number | null, m: Marble, rec: Values) => number
       if (step.kind === 'count') {
         acc = 0
         label = 'count'
@@ -119,33 +132,33 @@ function runStep(step: Step, input: Marble[]): { stage: Stage; out: Output } {
       } else if (step.kind === 'sum') {
         acc = 0
         label = 'sum'
-        next = (a, m) => (a as number) + (evaluate(step.expr, m, step.line) as number)
+        next = (a, m, rec) => (a as number) + (evaluate(step.expr, m, step.line, 0, rec) as number)
       } else if (step.kind === 'max' || step.kind === 'min') {
         acc = null
         label = step.kind
         const pick = step.kind === 'max' ? Math.max : Math.min
-        next = (a, m) => {
-          const v = evaluate(step.expr, m, step.line) as number
+        next = (a, m, rec) => {
+          const v = evaluate(step.expr, m, step.line, 0, rec) as number
           return a === null ? v : pick(a, v)
         }
       } else {
         const fold = step as Extract<Step, { kind: 'fold' }>
-        acc = evaluate(fold.start, DUMMY, fold.line) as number
+        acc = evaluate(fold.start, DUMMY, fold.line, 0, new Map()) as number
         label = 'total'
-        next = (a, m) => {
-          const v = evaluate(fold.body, m, fold.line, a as number) as number
+        next = (a, m, rec) => {
+          const v = evaluate(fold.body, m, fold.line, a as number, rec) as number
           if (Math.abs(v) > MAX_ABS) throw new LangError('Whoa, the total got way too big!', step.line)
           return v
         }
       }
       const start = acc
       const accs: number[] = []
-      for (const m of input) {
-        acc = next(acc, m)
+      input.forEach((m, i) => {
+        acc = next(acc, m, values[i])
         accs.push(acc)
-      }
+      })
       const result = acc ?? 0
-      return { stage: { kind: 'reduce', line: step.line, input, label, start, accs, result }, out: result }
+      return { stage: { kind: 'reduce', line: step.line, input, label, start, accs, result, values }, out: result }
     }
   }
 }
@@ -164,4 +177,27 @@ export function runProgram(program: Program, input: Marble[]): RunResult {
 /** Parse + run; convenient for tests and level generation. */
 export function run(source: string, input: Marble[]): RunResult {
   return runProgram(parseProgram(source), input)
+}
+
+export interface SafeRunResult {
+  output?: Output
+  stages: Stage[]
+  error?: LangError
+}
+
+/** Like runProgram, but keeps the stages that finished before a runtime error. */
+export function runSafe(program: Program, input: Marble[]): SafeRunResult {
+  let cur: Output = input
+  const stages: Stage[] = []
+  try {
+    for (const step of program.steps) {
+      const { stage, out } = runStep(step, cur as Marble[])
+      stages.push(stage)
+      cur = out
+    }
+  } catch (e) {
+    if (e instanceof LangError) return { stages, error: e }
+    throw e
+  }
+  return { output: cur, stages }
 }

@@ -1,6 +1,6 @@
-import { runProgram, type Stage } from '../lang/interpreter'
+import { runSafe, type Stage } from '../lang/interpreter'
 import { outputsEqual, type Marble, type Output } from '../lang/marble'
-import { LangError, parseProgram, type StepKind } from '../lang/parser'
+import { LangError, parseProgram, type Program, type StepKind } from '../lang/parser'
 import { generateTests, hash, type TestCase } from './generate'
 import type { Level } from './levels'
 
@@ -24,7 +24,7 @@ export interface CaseResult {
   input: Marble[]
   expected: Output
   actual?: Output
-  stages?: Stage[]
+  stages: Stage[]
   error?: LangError
   pass: boolean
   hidden: boolean
@@ -39,21 +39,23 @@ export interface CheckResult {
   stepCount: number
 }
 
-function runCase(program: ReturnType<typeof parseProgram>, tc: TestCase, hidden: boolean): CaseResult {
-  try {
-    const res = runProgram(program, tc.input)
-    return { ...tc, actual: res.output, stages: res.stages, pass: outputsEqual(res.output, tc.expected), hidden }
-  } catch (e) {
-    if (e instanceof LangError) return { ...tc, error: e, pass: false, hidden }
-    throw e
+export function runCase(program: Program, tc: TestCase, hidden = false): CaseResult {
+  const res = runSafe(program, tc.input)
+  return {
+    ...tc,
+    actual: res.output,
+    stages: res.stages,
+    error: res.error,
+    pass: !res.error && outputsEqual(res.output!, tc.expected),
+    hidden,
   }
 }
 
-export function checkSolution(level: Level, source: string): CheckResult {
+export function checkSolution(level: Level, source: string | Program): CheckResult {
   const { visible, hidden } = getTests(level)
-  let program
+  let program: Program
   try {
-    program = parseProgram(source)
+    program = typeof source === 'string' ? parseProgram(source) : source
   } catch (e) {
     if (e instanceof LangError) return { parseError: e, cases: [], solved: false, stepCount: 0 }
     throw e
@@ -69,6 +71,7 @@ export function checkSolution(level: Level, source: string): CheckResult {
   }
 }
 
-export function parCount(level: Level): number {
-  return parseProgram(level.solution).steps.length
+/** Stars for a solved level: start with 3, lose one per mistake (failed run or hint), never below 1. */
+export function starsFor(mistakes: number): number {
+  return Math.max(1, 3 - mistakes)
 }
