@@ -1,0 +1,518 @@
+/* ============================================================ level screen layout
+   Everything fits in the window; each panel scrolls on its own. */
+.level-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.level-screen .topbar {
+  position: static;
+  flex: none;
+  padding: 8px 16px;
+}
+.level-screen .level-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(270px, 300px) minmax(340px, 1fr) minmax(420px, 1.2fr);
+  gap: 14px;
+  padding: 12px 14px 14px;
+  max-width: none;
+  align-items: stretch;
+}
+.level-screen .panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.panel-title {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-bottom: 2px solid #f0ecff;
+  font-weight: 900;
+  font-size: 1.05rem;
+}
+.panel-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 14px 20px;
+}
+.program-panel .intro {
+  margin-bottom: 12px;
+}
+.editing-locked {
+  background: #fff4e5;
+  color: #8a5200;
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+.bench-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.bench-actions .btn.run,
+.bench-actions .btn.debug {
+  font-size: 1rem;
+  padding: 8px 18px;
+}
+.bench .message {
+  flex: none;
+  margin: 8px 14px 0;
+}
+
+/* puzzle column: rule + examples */
+.rail {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #f4f1ff;
+  padding: 10px 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rule-card {
+  background: white;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+.rule-title {
+  font-weight: 900;
+  font-size: 1.15rem;
+}
+.rule-text {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.constraint {
+  font-weight: 800;
+  font-size: 0.9rem;
+  background: #e6efff;
+  color: #1f4c99;
+  border-radius: 10px;
+  padding: 3px 10px;
+}
+.rule-card .hint {
+  width: 100%;
+  margin: 0;
+  font-size: 0.92rem;
+}
+.rule-card .hint.rule {
+  background: #e7f9ee;
+  color: #136b38;
+}
+.rail-title {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* example cards: the one in the machine is highlighted */
+.rail .example {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 3px solid #e2dcff;
+  border-radius: 14px;
+  padding: 6px 8px 8px;
+  background: #fcfbff;
+  position: relative;
+  transition: margin 0.15s, background 0.15s;
+}
+.rail .example:hover {
+  border-color: #b9a9ff;
+}
+.rail .example.selected {
+  background: white;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(108, 76, 245, 0.2), 0 4px 14px rgba(108, 76, 245, 0.18);
+}
+.rail .example.pass {
+  background: #f1fcf5;
+}
+.rail .example.fail {
+  background: #fff4f3;
+}
+.example-head {
+  align-items: center;
+  gap: 6px;
+}
+.loaded-tag {
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: white;
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+.rail .io-box {
+  flex: none;
+  padding: 2px 6px 4px;
+}
+.rail .marble {
+  width: 32px;
+  height: 32px;
+}
+.rail .marble-row {
+  min-height: 32px;
+  gap: 0;
+}
+.rail .number-bubble {
+  height: 32px;
+  min-width: 32px;
+  font-size: 1.05rem;
+  padding: 0 10px;
+}
+
+.engine {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+.engine-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border-bottom: 2px dashed #ece8ff;
+}
+.loaded-chip {
+  font-weight: 900;
+  background: var(--accent);
+  color: white;
+  border-radius: 999px;
+  padding: 4px 14px;
+  animation: chipIn 0.4s ease both;
+}
+@keyframes chipIn {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.engine-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 12px 30px;
+  animation: loadIn 0.35s ease both;
+}
+@keyframes loadIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: none; }
+}
+.engine .debug-controls .btn.small-debug {
+  font-size: 0.95rem;
+  padding: 6px 14px;
+  box-shadow: 0 3px 0 #cc6a00;
+}
+.engine .marble {
+  width: 46px;
+  height: 46px;
+}
+.engine .marble-row {
+  min-height: 46px;
+}
+.engine .narration {
+  font-size: 0.95rem;
+}
+.idle-machine .stage {
+  animation: none;
+}
+.machine-waiting {
+  text-align: center;
+  color: var(--muted);
+  padding: 22px 10px;
+  margin: 14px 0;
+  border: 3px dashed #e6e0ff;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+.machine-waiting .gear {
+  font-size: 2rem;
+  animation: spin 6s linear infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.idle-machine .stage.final {
+  border-color: #ffe08a;
+  background: #fffdf3;
+}
+
+/* tooltips open downwards so they are not cut off by the scrolling engine */
+.engine .slot .tip {
+  bottom: auto;
+  top: calc(100% + 4px);
+  left: -6px;
+  transform: none;
+}
+
+/* small screens: stack everything and let the page scroll */
+@media (max-width: 1000px) {
+  .level-screen {
+    height: auto;
+    overflow: visible;
+  }
+  .level-screen .level-grid {
+    grid-template-columns: 1fr;
+  }
+  .level-screen .panel {
+    overflow: visible;
+  }
+  .panel-scroll,
+  .engine-scroll,
+  .rail {
+    overflow: visible;
+  }
+  .rail {
+    flex: none;
+  }
+}
+
+/* compact example cards so all 5 examples fit next to each other */
+.rail {
+  gap: 7px;
+}
+.rail .example {
+  padding: 4px 6px 6px;
+  gap: 3px;
+}
+.rail .example-head {
+  font-size: 0.78rem;
+}
+.rail .io-box {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 4px;
+  border-width: 1.5px;
+  border-radius: 9px;
+}
+.rail .io-label {
+  flex: none;
+  width: 28px;
+  font-size: 0.62rem;
+}
+.rail .marble {
+  width: 28px;
+  height: 28px;
+}
+.rail .marble-row {
+  min-height: 28px;
+}
+.rail .number-bubble {
+  height: 26px;
+  min-width: 26px;
+  font-size: 0.95rem;
+  padding: 0 8px;
+}
+.rule-card {
+  padding: 8px 10px;
+}
+.rule-title {
+  font-size: 1.05rem;
+}
+
+/* example card: number badge on the left, IN/OUT rows on the right */
+.level-screen .level-grid {
+  grid-template-columns: minmax(290px, 330px) minmax(330px, 1fr) minmax(420px, 1.2fr);
+}
+.rail {
+  gap: 11px;
+}
+.rail .example {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 5px;
+  padding: 5px 6px 5px 4px;
+}
+.ex-badge {
+  flex: none;
+  width: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.ex-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8e2ff;
+  color: var(--accent);
+  font-weight: 900;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rail .example.selected .ex-num {
+  background: var(--accent);
+  color: white;
+}
+.ex-status {
+  font-size: 0.75rem;
+}
+.ex-rows {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.rail .loaded-tag {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  margin: 0;
+  box-shadow: 0 2px 6px rgba(108, 76, 245, 0.35);
+}
+.rail-title {
+  margin-bottom: 2px;
+}
+.rail .io-label {
+  width: 24px;
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+}
+.rail .io-box {
+  gap: 2px;
+}
+.rail .marble {
+  width: 26px;
+  height: 26px;
+}
+.rail .marble-row {
+  min-height: 26px;
+}
+.rule-text {
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+/* ============================================================ machine actions & results list */
+.btn.check {
+  background: linear-gradient(180deg, #8a6cff, #6c4cf5);
+  color: white;
+  font-size: 1rem;
+  padding: 8px 20px;
+  box-shadow: 0 4px 0 #4b2fc2;
+}
+.btn.check:active {
+  box-shadow: 0 2px 0 #4b2fc2;
+}
+.engine-actions {
+  display: flex;
+  gap: 6px;
+}
+.engine .btn.small-run {
+  font-size: 0.95rem;
+  padding: 6px 14px;
+  box-shadow: 0 3px 0 #168a45;
+}
+.loaded-chip.all {
+  background: #2b2550;
+}
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.result-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  text-align: left;
+  border: 2px solid;
+  border-radius: 14px;
+  padding: 6px 10px 6px 6px;
+  background: white;
+  cursor: pointer;
+}
+.result-row.pass {
+  border-color: #bfeccc;
+  background: #f4fcf7;
+}
+.result-row.fail {
+  border-color: #ffc1bc;
+  background: #fff6f5;
+}
+.result-row:hover {
+  filter: brightness(0.98);
+  border-color: var(--accent);
+}
+.result-row.secret {
+  cursor: default;
+  align-items: center;
+  font-weight: 800;
+}
+.result-row.secret:hover {
+  border-color: inherit;
+  filter: none;
+}
+.res-mark {
+  font-size: 0.8rem;
+}
+.res-io {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.res-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.res-line .io-label {
+  flex: none;
+  width: 52px;
+}
+.res-line.wanted .io-label {
+  color: #a61d14;
+}
+.results .marble {
+  width: 30px;
+  height: 30px;
+}
+.results .marble-row {
+  min-height: 30px;
+  gap: 0;
+}
+.results .number-bubble {
+  height: 30px;
+  min-width: 30px;
+  font-size: 1.05rem;
+  padding: 0 10px;
+}
+.machine-waiting > div + div {
+  margin-top: 4px;
+}

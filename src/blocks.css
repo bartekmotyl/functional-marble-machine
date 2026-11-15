@@ -556,15 +556,15 @@
   opacity: 0.3;
 }
 /* stepping mode: no animations, show the final state directly */
-.stepping .stage,
-.stepping .slot,
-.stepping .acc-badge,
-.stepping .x-mark,
-.stepping .sparkle {
+.still .stage,
+.still .slot,
+.still .acc-badge,
+.still .x-mark,
+.still .sparkle {
   animation: none !important;
   opacity: 1;
 }
-.stepping .slot.dropped .marble {
+.still .slot.dropped .marble {
   animation: none;
   transform: translateY(14px) scale(0.75);
   opacity: 0.25;

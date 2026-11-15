@@ -4,7 +4,7 @@ import { LangError, parseProgram, type Program, type StepKind } from '../lang/pa
 import { generateTests, hash, type TestCase } from './generate'
 import type { Level } from './levels'
 
-export const VISIBLE_EXAMPLES = 3
+export const VISIBLE_EXAMPLES = 5
 export const HIDDEN_TESTS = 5
 
 const cache = new Map<string, { visible: TestCase[]; hidden: TestCase[] }>()
@@ -13,8 +13,7 @@ export function getTests(level: Level) {
   let t = cache.get(level.id)
   if (!t) {
     const count = level.count ?? [4, 7]
-    const all = generateTests(level.solution, level.features, count, VISIBLE_EXAMPLES + HIDDEN_TESTS, hash(level.id))
-    t = { visible: all.slice(0, VISIBLE_EXAMPLES), hidden: all.slice(VISIBLE_EXAMPLES) }
+    t = generateTests(level.solution, level.features, count, VISIBLE_EXAMPLES, HIDDEN_TESTS, hash(level.id))
     cache.set(level.id, t)
   }
   return t
@@ -36,6 +35,8 @@ export interface CheckResult {
   /** all visible and hidden cases pass and mustUse is satisfied */
   solved: boolean
   missing?: StepKind[]
+  /** the machine has more steps than the level allows */
+  tooLong?: boolean
   stepCount: number
 }
 
@@ -63,12 +64,31 @@ export function checkSolution(level: Level, source: string | Program): CheckResu
   const cases = [...visible.map((tc) => runCase(program, tc, false)), ...hidden.map((tc) => runCase(program, tc, true))]
   const kinds = new Set(program.steps.map((s) => s.kind))
   const missing = (level.mustUse ?? []).filter((k) => !kinds.has(k))
+  const tooLong = level.maxSteps !== undefined && program.steps.length > level.maxSteps
   return {
     cases,
-    solved: cases.every((c) => c.pass) && missing.length === 0,
+    solved: cases.every((c) => c.pass) && missing.length === 0 && !tooLong,
     missing: missing.length ? missing : undefined,
+    tooLong: tooLong || undefined,
     stepCount: program.steps.length,
   }
+}
+
+/** Extra rules of a level, shown to the player, e.g. "Use only 1 step". */
+export function constraintsOf(level: Level): string[] {
+  const out: string[] = []
+  const names: Record<string, string> = {
+    fold: 'reduce from',
+    count: 'reduce count',
+    sum: 'reduce sum',
+    max: 'reduce max',
+    min: 'reduce min',
+    filter: 'filter',
+    map: 'map',
+  }
+  for (const k of level.mustUse ?? []) out.push(`You must use "${names[k]}"`)
+  if (level.maxSteps !== undefined) out.push(`Use only ${level.maxSteps} step${level.maxSteps === 1 ? '' : 's'}`)
+  return out
 }
 
 /** Stars for a solved level: start with 3, lose one per mistake (failed run or hint), never below 1. */

@@ -1,4 +1,5 @@
-import { run, type RunResult } from '../lang/interpreter'
+import { runProgram, type RunResult } from '../lang/interpreter'
+import { parseProgram, type Expr, type Program } from '../lang/parser'
 import { type Color, type Marble, type Output, type Pattern, type Size } from '../lang/marble'
 
 export interface Features {
@@ -67,30 +68,111 @@ function hasConditionalMap(source: string): boolean {
   return source.split('\n').some((l) => /^\s*map\b.*\bif\b/.test(l))
 }
 
+/** Give every question in the program an id, so its yes/no answers get recorded. */
+function labelQuestions(program: Program): void {
+  let n = 0
+  const walk = (e: Expr) => {
+    if (e.k === 'cmp' || e.k === 'logic' || e.k === 'not') e.id = `q${n++}`
+    if (e.k === 'bin' || e.k === 'cmp' || e.k === 'logic') {
+      walk(e.l)
+      walk(e.r)
+    }
+    if (e.k === 'not') walk(e.e)
+  }
+  for (const st of program.steps) {
+    if (st.kind === 'filter') walk(st.cond)
+    if (st.kind === 'map' && st.cond) walk(st.cond)
+  }
+}
+
+/**
+ * What a test case shows the player. "Branch" signatures describe how a marble went through
+ * the rule (which questions said yes/no) - the most important thing for finding the rule.
+ * "Variety" signatures reward different colors, numbers and results.
+ */
+function signatures(input: Marble[], res: RunResult): Map<string, number> {
+  const sig = new Map<string, number>()
+  const add = (k: string, w: number) => sig.set(k, w)
+  res.stages.forEach((st, si) => {
+    st.input.forEach((_, i) => {
+      const answers = [...st.values[i].entries()]
+        .filter(([, v]) => typeof v === 'boolean')
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([, v]) => (v ? 'Y' : 'N'))
+        .join('')
+      if (answers) add(`b${si}:${answers}`, 5)
+      if (st.kind === 'reduce' && (st.label === 'max' || st.label === 'min'))
+        add(`b${si}:new-best:${(i === 0 ? st.start : st.accs[i - 1]) !== st.accs[i]}`, 2)
+    })
+  })
+  for (const m of input) {
+    add(`a:color=${m.color}`, 1)
+    add(`a:size=${m.size}`, 1)
+    add(`a:pattern=${m.pattern}`, 1)
+    add(`a:number=${m.number}`, 1)
+  }
+  add(`o:${typeof res.output === 'number' ? res.output : res.output.length}`, 1)
+  add(`len:${input.length}`, 1)
+  return sig
+}
+
+/** Pick tests one by one, each time the one that shows the most new things. */
+function pickDiverse<T extends { sig: Map<string, number> }>(pool: T[], n: number, covered = new Set<string>()): T[] {
+  const left = [...pool]
+  const out: T[] = []
+  while (out.length < n && left.length) {
+    let best = 0
+    let bestScore = -1
+    left.forEach((c, i) => {
+      let score = 0
+      c.sig.forEach((w, k) => {
+        if (!covered.has(k)) score += w
+      })
+      if (score > bestScore) {
+        bestScore = score
+        best = i
+      }
+    })
+    const [c] = left.splice(best, 1)
+    c.sig.forEach((_, k) => covered.add(k))
+    out.push(c)
+  }
+  return out
+}
+
 export function generateTests(
   solution: string,
   features: Features,
   count: [number, number],
-  howMany: number,
+  visibleCount: number,
+  hiddenCount: number,
   seed: number,
-): TestCase[] {
+): { visible: TestCase[]; hidden: TestCase[] } {
   const r = rng(seed)
-  const tests: TestCase[] = []
-  const seen = new Set<string>()
+  const program = parseProgram(solution)
+  labelQuestions(program)
   const conditional = hasConditionalMap(solution)
-  for (let attempt = 0; tests.length < howMany && attempt < 2000; attempt++) {
+  const pool: (TestCase & { sig: Map<string, number> })[] = []
+  const seen = new Set<string>()
+  const want = Math.max(60, (visibleCount + hiddenCount) * 4)
+  for (let attempt = 0; pool.length < want && attempt < 4000; attempt++) {
     const input = randomMarbles(r, features, count)
     const key = JSON.stringify(input)
     if (seen.has(key)) continue
-    const res = run(solution, input)
-    const relaxed = attempt > 1500
+    seen.add(key)
+    const res = runProgram(program, input)
+    const relaxed = attempt > 3000
     if (!relaxed) {
       if (!isInteresting(res)) continue
       if (conditional && !res.stages.some((s) => s.kind === 'map' && s.changed.includes(false) && s.changed.includes(true)))
         continue
     }
-    seen.add(key)
-    tests.push({ input, expected: res.output })
+    pool.push({ input, expected: res.output, sig: signatures(input, res) })
   }
-  return tests
+  const covered = new Set<string>()
+  const strip = ({ input, expected }: TestCase) => ({ input, expected })
+  const visible = pickDiverse(pool, visibleCount, covered)
+  const rest = pool.filter((c) => !visible.includes(c))
+  const hidden = pickDiverse(rest, hiddenCount, covered)
+  return { visible: visible.map(strip), hidden: hidden.map(strip) }
 }

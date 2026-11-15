@@ -6,8 +6,6 @@ import type { Block } from '../blocks/model'
 import { Marble, OutputView } from './Marble'
 import { Explain } from './Explain'
 
-export const STAGE_DELAY = 0.9 // seconds between stages in the animation
-
 /** One position of the step-by-step debugger. stage -1 = before start, stage = stages.length = the end. */
 export interface Tick {
   stage: number
@@ -120,7 +118,7 @@ interface Props {
   expected: Output
   error?: LangError
   showNumber?: boolean
-  /** null = play the whole animation; otherwise show this debugger position */
+  /** null = show the whole run at once; otherwise show this debugger position */
   tick?: Tick | null
   onPick?: (stage: number, index: number) => void
 }
@@ -130,10 +128,11 @@ export function Machine({ input, stages, blocks, actual, expected, error, showNu
   const lastStage = stepping ? tick!.stage : stages.length
   const atEnd = !stepping || tick!.stage >= stages.length
   const pass = actual !== undefined && !error && JSON.stringify(actual) === JSON.stringify(expected)
-  const delay = (k: number) => ({ '--d': stepping ? '0s' : `${k * STAGE_DELAY}s` }) as CSSProperties
+  // everything is shown at once - no animation
+  const delay = (_k: number) => ({ '--d': '0s' }) as CSSProperties
 
   return (
-    <div className={`pipeline ${stepping ? 'stepping' : ''}`}>
+    <div className={`pipeline still ${stepping ? 'stepping' : ''}`}>
       <div className={`stage ${stepping && tick!.stage === -1 ? 'focus' : ''}`} style={delay(0)}>
         <div className="stage-label">
           <span className="kind in">📥 in</span>

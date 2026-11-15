@@ -25,7 +25,7 @@ export type Concept =
 export interface Level {
   id: string
   title: string
-  /** One-sentence task shown in big letters. */
+  /** The rule, in words. Hidden: the player finds it from the examples (or reveals it as a hint). */
   goal: string
   /** Explanation of anything new. Paragraphs separated by blank lines, `code` and ``` blocks allowed. */
   intro?: string
@@ -35,6 +35,8 @@ export interface Level {
   hints: string[]
   unlocks?: Concept[]
   mustUse?: StepKind[]
+  /** the machine may have at most this many steps */
+  maxSteps?: number
   starter?: string
 }
 
@@ -64,7 +66,7 @@ export const CHAPTERS: Chapter[] = [
         goal: 'Keep only the red marbles.',
         intro: `Welcome to the Marble Machine! You build a machine, and marbles roll through it.
 
-Look at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you spot the pattern?
+Look at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you find the rule? Click an example to put it in the machine.
 
 **filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This machine keeps blue marbles:
 
@@ -177,7 +179,7 @@ The first gate lets only blue marbles through. The second gate checks those blue
       {
         id: 'f8',
         title: 'The ALL Box',
-        goal: 'Keep the marbles that are green AND striped - using only one gate.',
+        goal: 'Keep the marbles that are green AND striped.',
         intro: `One gate can ask several questions. Press **+ and** next to a question. Your questions go into a **blue ALL box**:
 
 \`\`\`
@@ -190,6 +192,7 @@ An ALL box says *yes* only when **every** question inside says *yes*. A big blue
         count: [5, 8],
         hints: ['Press "+ and" next to the first question.', 'filter color is green and pattern is striped'],
         unlocks: ['and'],
+        maxSteps: 1,
       },
       {
         id: 'fa2',
@@ -200,6 +203,7 @@ An ALL box says *yes* only when **every** question inside says *yes*. A big blue
         features: { colors: RB.colors, sizes: ['small', 'big'], patterns: ['plain', 'dotted'] },
         count: [6, 9],
         hints: ['Press "+ and" twice.', 'filter color is blue and size is small and pattern is dotted'],
+        maxSteps: 1,
       },
       {
         id: 'f9',
@@ -237,10 +241,10 @@ Careful: two separate gates can't do this! The first gate would already throw aw
         intro: `Now put a box inside a box! Build **color is red**, press **+ and**. Then, on the *second* question, press **+ or**:
 
 \`\`\`
-filter color is red and (size is big or pattern is striped)
+filter color is blue and (size is small or pattern is dotted)
 \`\`\`
 
-The machine answers the **inner** box first: "is it big or striped?". Then the outer ALL box checks: "is it red, AND did the inner box say yes?"
+The machine answers the **inner** box first: "is it small or dotted?". Then the outer ALL box checks: "is it blue, AND did the inner box say yes?"
 
 Use **🐞 Step by step** to see every box light up green ✓ or red ✗.`,
         solution: 'filter color is red and (size is big or pattern is striped)',
@@ -251,6 +255,7 @@ Use **🐞 Step by step** to see every box light up green ✓ or red ✗.`,
           'filter color is red and (size is big or pattern is striped)',
         ],
         unlocks: ['brackets'],
+        maxSteps: 1,
       },
       {
         id: 'fg2',
@@ -259,7 +264,7 @@ Use **🐞 Step by step** to see every box light up green ✓ or red ✗.`,
         intro: `This time the outer box is a ONE-YES box, with two ALL boxes inside - one for each team:
 
 \`\`\`
-filter (color is red and size is big) or (color is blue and size is small)
+filter (color is green and size is small) or (color is yellow and size is big)
 \`\`\``,
         solution: 'filter (color is red and size is big) or (color is blue and size is small)',
         features: { colors: RB.colors, sizes: ['small', 'big'] },

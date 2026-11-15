@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { checkSolution, getTests, runCase, starsFor, type CheckResult } from '../game/check'
+import { checkSolution, constraintsOf, getTests, runCase, starsFor, type CheckResult } from '../game/check'
 import { conceptsUpTo, CHAPTERS, type Level } from '../game/levels'
 import { CONCEPT_DOCS } from '../game/concepts'
 import { BlockEditor } from '../blocks/BlockEditor'
@@ -16,7 +16,7 @@ import {
 } from '../blocks/model'
 import { LangError, type Program } from '../lang/parser'
 import { MarbleRow, OutputView } from './Marble'
-import { Machine, STAGE_DELAY, buildTicks, type Tick } from './Machine'
+import { Machine, buildTicks, type Tick } from './Machine'
 import { Explain, StepStatus } from './Explain'
 import { RichText } from './RichText'
 
@@ -91,7 +91,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
   )
   const [history, setHistory] = useState<BlockProgram[]>([])
   const [result, setResult] = useState<CheckResult | null>(null)
-  const [runId, setRunId] = useState(0)
+  const [view, setView] = useState<'idle' | 'run' | 'all'>('idle')
   const [selected, setSelected] = useState(0)
   const [revealed, setRevealed] = useState<number[]>([]) // hidden test indices shown to the player
   const [hints, setHints] = useState(0)
@@ -103,6 +103,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
   const [introOpen, setIntroOpen] = useState(true)
   const [debug, setDebug] = useState<{ tick: number } | null>(null)
   const [playing, setPlaying] = useState(false)
+  const [loadFlash, setLoadFlash] = useState(0)
 
   const tests = getTests(level)
   const showNumber = !!level.features.numbers
@@ -135,6 +136,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
       onSaveCode(toSource(next))
       setResult(null)
       setMessage(null)
+      setView((v) => (v === 'all' ? 'idle' : v))
     },
     [blocks, onSaveCode],
   )
@@ -151,6 +153,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     onSaveCode(toSource(prev))
     setResult(null)
     setMessage(null)
+    setView((v) => (v === 'all' ? 'idle' : v))
   }
   const clear = () => {
     if (blocks.length && confirm('Remove all steps and start from scratch?')) update([])
@@ -158,7 +161,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
 
   // ------------------------------------------------------------ running
 
-  function runIt() {
+  function checkAll() {
     setDebug(null)
     setPlaying(false)
     setIntroOpen(false)
@@ -173,49 +176,60 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     }
     const r = checkSolution(level, compiled.program)
     setResult(r)
-    setRunId((x) => x + 1)
+    setView('all')
     const visibleCount = tests.visible.length
     const shown = cards.map((c) => c.caseIndex)
-    const firstShownFail = shown.find((ci) => !r.cases[ci].pass)
+    const shownPass = shown.filter((ci) => r.cases[ci].pass).length
     const mistake = (text: string) => {
       setMistakes((m) => m + 1)
       const left = starsFor(mistakes + 1)
       setMessage({ tone: 'warn', text: `${text} ${left < potential ? `(you can still win ${'⭐'.repeat(left)})` : ''}` })
     }
-    if (firstShownFail !== undefined) {
-      setSelected(shown.indexOf(firstShownFail))
-      const c = r.cases[firstShownFail]
-      mistake(
-        c.error
-          ? `Oops! Step ${c.error.line}: ${c.error.message}`
-          : 'Not quite yet! Watch the machine below, or press 🐞 Step by step to see what happens to each marble.',
-      )
+    if (shownPass < shown.length) {
+      mistake(`${shownPass} of ${shown.length} examples work. Click a ❌ example to see what goes wrong.`)
       return
     }
-    const hiddenFail = r.cases.findIndex((c, i) => i >= visibleCount && !c.pass)
+    const hiddenFail = r.cases.findIndex((c, i) => i >= visibleCount && !c.pass && !revealed.includes(i - visibleCount))
     if (hiddenFail >= 0) {
       setRevealed((rv) => [...rv, hiddenFail - visibleCount])
-      setSelected(cards.length) // the newly revealed card
-      mistake('Your machine works for the examples... but a secret test found a problem! Look at the new secret test.')
+      mistake('All examples work... but a secret test found a problem! It is now in the list with the examples.')
       return
     }
     if (r.missing) {
-      setSelected(0)
       setMessage({
         tone: 'info',
         text: `It works! But in this level you have to use "${r.missing.map((m) => STEP_NAMES[m]).join('", "')}". Try again!`,
       })
       return
     }
+    if (r.tooLong) {
+      setMessage({
+        tone: 'info',
+        text: `It works! But in this level your machine may have only ${level.maxSteps} step${level.maxSteps === 1 ? '' : 's'}. Can you squeeze it into fewer steps?`,
+      })
+      return
+    }
     const earned = starsFor(mistakes)
-    setMessage({ tone: 'good', text: 'It works! 🎉' })
-    setSelected(0)
+    setMessage({ tone: 'good', text: 'Everything works! 🎉' })
     onSolved(earned)
-    // let the marble machine finish its animation before celebrating
-    const st = r.cases[0]?.stages ?? []
-    const last = st[st.length - 1]
-    const reduceExtra = last?.kind === 'reduce' ? last.input.length * 260 : 0
-    setTimeout(() => setSuccess(earned), (st.length + 1) * STAGE_DELAY * 1000 + 900 + reduceExtra)
+    setTimeout(() => setSuccess(earned), 700)
+  }
+
+  /** Run only the loaded example - instantly, for free. Updates live while you edit. */
+  const singleRun = useMemo(
+    () => (view === 'run' && compiled.program ? runCase(compiled.program, card.tc) : null),
+    [view, compiled.program, card.tc],
+  )
+  const runOne = () => {
+    setDebug(null)
+    setPlaying(false)
+    setIntroOpen(false)
+    if (!compiled.program || blocks.length === 0) {
+      setMessage({ tone: 'info', text: 'Add a step to your machine first!' })
+      return
+    }
+    setMessage(null)
+    setView('run')
   }
 
   // ------------------------------------------------------------ step-by-step debugger
@@ -278,15 +292,26 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     startDebug(Math.max(0, t))
   }
 
-  const caseResult = result ? result.cases[card.caseIndex] : null
   const stepNarration = (() => {
     if (!debugRun || !tick) return null
-    if (tick.stage === -1) return 'These marbles are about to roll into your machine. Press ▶ to send the first one!'
+    if (tick.stage === -1) return 'These marbles are about to roll into your machine. Press ▶ Next to send the first one!'
     if (tick.stage >= debugRun.stages.length)
       return debugRun.error ? 'The machine stopped with an error.' : 'All marbles went through. Compare with what was expected!'
     if (tick.index < 0) return 'No marbles reached this step.'
     return null
   })()
+
+  // The rule itself is hidden - revealing it is the first hint.
+  const ruleHint = /find the pattern/i.test(level.goal) ? null : level.goal
+  const allHints = [...(ruleHint ? [ruleHint] : []), ...level.hints]
+  const constraints = constraintsOf(level)
+
+  const loadCard = (i: number) => {
+    setSelected(i)
+    setLoadFlash((x) => x + 1)
+    if (debug) setDebug({ tick: 0 })
+    else if (view === 'all') setView('run')
+  }
 
   return (
     <div className="level-screen">
@@ -315,68 +340,79 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
       </header>
 
       <div className="level-grid">
-        <section className="panel task">
-          <h1 className="goal">{level.goal}</h1>
-          {level.intro && (
-            <details className="intro" open={introOpen} onToggle={(e) => setIntroOpen((e.target as HTMLDetailsElement).open)}>
-              <summary>📖 How it works</summary>
-              <RichText text={level.intro} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
-            </details>
-          )}
-          <div className="examples">
+        {/* ------------------------------------------------ puzzle: rule + examples */}
+        <section className="panel puzzle-panel">
+          <div className="panel-title">
+            <span>🧩 Puzzle</span>
+          </div>
+          <div className="rail">
+            <div className="rule-card">
+              <div className="rule-title">🔍 Find the rule!</div>
+              <div className="rule-text">
+                Look at what goes <b>IN</b> and what comes <b>OUT</b>. What does the machine have to do?
+              </div>
+              {constraints.map((c) => (
+                <div key={c} className="constraint">
+                  📏 {c}
+                </div>
+              ))}
+              {allHints.slice(0, hints).map((h, i) => (
+                <div key={i} className={`hint ${ruleHint && i === 0 ? 'rule' : ''}`}>
+                  {ruleHint && i === 0 ? <b>The rule: </b> : '💡 '}
+                  {h.includes('\n') || /^(filter|map|reduce)\b/.test(h) ? <CodeSample code={h} concepts={concepts} /> : h}
+                </div>
+              ))}
+              {hints < allHints.length && (
+                <button
+                  className="btn ghost small"
+                  onClick={() => {
+                    setHints(hints + 1)
+                    setMistakes((m) => m + 1)
+                  }}
+                >
+                  💡 {hints === 0 ? (ruleHint ? 'Tell me the rule' : 'Need a hint?') : 'Another hint'}{' '}
+                  <span className="cost">(costs a ⭐)</span>
+                </button>
+              )}
+            </div>
+
+            <div className="rail-title">Examples - click one to put it in the machine</div>
             {cards.map((c, i) => {
               const cr = result ? result.cases[c.caseIndex] : null
               return (
                 <button
                   key={i}
                   className={`example ${i === selected ? 'selected' : ''} ${cr ? (cr.pass ? 'pass' : 'fail') : ''}`}
-                  onClick={() => {
-                    setSelected(i)
-                    if (debug) setDebug({ tick: 0 })
-                  }}
+                  onClick={() => loadCard(i)}
+                  aria-pressed={i === selected}
+                  aria-label={c.label}
+                  title={c.label}
                 >
-                  <div className="example-head">
-                    <span>{c.label}</span>
-                    {cr && <span>{cr.pass ? '✅' : '❌'}</span>}
+                  <div className="ex-badge">
+                    <span className="ex-num">{c.caseIndex >= tests.visible.length ? '🕵️' : i + 1}</span>
+                    {cr && <span className="ex-status">{cr.pass ? '✅' : '❌'}</span>}
                   </div>
-                  <div className="example-body">
+                  <div className="ex-rows">
                     <div className="io-box in">
                       <div className="io-label">IN</div>
                       <MarbleRow marbles={c.tc.input} showNumber={showNumber} />
                     </div>
-                    <div className="io-arrow">➜</div>
                     <div className="io-box out">
                       <div className="io-label">OUT</div>
                       <OutputView output={c.tc.expected} showNumber={showNumber} />
                     </div>
                   </div>
+                  {i === selected && <span className="loaded-tag">⚙️ in the machine</span>}
                 </button>
               )
             })}
           </div>
-          <div className="hints">
-            {level.hints.slice(0, hints).map((h, i) => (
-              <div key={i} className="hint">
-                💡 {h.includes('\n') || /^(filter|map|reduce)\b/.test(h) ? <CodeSample code={h} concepts={concepts} /> : h}
-              </div>
-            ))}
-            {hints < level.hints.length && (
-              <button
-                className="btn ghost small"
-                onClick={() => {
-                  setHints(hints + 1)
-                  setMistakes((m) => m + 1)
-                }}
-              >
-                💡 {hints === 0 ? 'Need a hint?' : 'Another hint'} <span className="cost">(costs a ⭐)</span>
-              </button>
-            )}
-          </div>
         </section>
 
-        <section className="panel workbench">
-          <div className="editor-head">
-            <span>🛠️ Your machine</span>
+        {/* ------------------------------------------------ program editor */}
+        <section className="panel program-panel">
+          <div className="panel-title">
+            <span>🛠️ Your program</span>
             <div className="editor-actions">
               {!debug && (
                 <>
@@ -396,129 +432,236 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
               </button>
             </div>
           </div>
-
-          <BlockEditor
-            program={blocks}
-            concepts={concepts}
-            readOnly={!!debug}
-            onChange={update}
-            edit={edit}
-            addQuestion={addQ}
-            active={active}
-          />
-          {showCode && (
-            <div className="code-view">
-              <div className="code-view-title">Your machine written as code:</div>
-              <pre className="code-sample">{toSource(blocks) || '(empty)'}</pre>
-            </div>
-          )}
-
-          {!debug ? (
-            <div className="run-row">
-              <button className="btn run" onClick={runIt}>
-                ▶ Run
-              </button>
-              <button className="btn debug" onClick={() => startDebug(0)}>
-                🐞 Step by step
-              </button>
-              <span className="kbd-hint">Step by step is free - it doesn't cost stars.</span>
-            </div>
-          ) : (
-            <div className="debug-bar">
-              <div className="debug-controls">
-                <button className="btn ghost small" title="Back to the start" onClick={() => setTick(0)} disabled={tickIdx === 0}>
-                  ⏮
-                </button>
-                <button className="btn ghost small" title="One step back (←)" onClick={() => setTick(tickIdx - 1)} disabled={tickIdx === 0}>
-                  ◀
-                </button>
-                <button
-                  className="btn debug"
-                  title="Next step (→)"
-                  onClick={() => setTick(Math.min(tickIdx + 1, ticks.length - 1))}
-                  disabled={tickIdx >= ticks.length - 1}
-                >
-                  ▶ Next
-                </button>
-                <button className="btn ghost small" title="Play automatically" onClick={() => setPlaying(!playing)}>
-                  {playing ? '⏸ Pause' : '⏵ Play'}
-                </button>
-                <button
-                  className="btn ghost small"
-                  title="Jump to the end"
-                  onClick={() => setTick(ticks.length - 1)}
-                  disabled={tickIdx >= ticks.length - 1}
-                >
-                  ⏭
-                </button>
-                <span className="step-count">
-                  {tickIdx + 1} / {ticks.length}
-                </span>
+          <div className="panel-scroll">
+            {level.intro && (
+              <details className="intro" open={introOpen} onToggle={(e) => setIntroOpen((e.target as HTMLDetailsElement).open)}>
+                <summary>📖 How it works</summary>
+                <RichText text={level.intro} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
+              </details>
+            )}
+            {debug && <div className="editing-locked">🐞 Stepping through - press ✏️ Edit program to change it.</div>}
+            <BlockEditor
+              program={blocks}
+              concepts={concepts}
+              readOnly={!!debug}
+              onChange={update}
+              edit={edit}
+              addQuestion={addQ}
+              active={active}
+            />
+            {showCode && (
+              <div className="code-view">
+                <div className="code-view-title">Your machine written as code:</div>
+                <pre className="code-sample">{toSource(blocks) || '(empty)'}</pre>
               </div>
-              <button className="btn ghost small" onClick={() => setDebug(null)}>
-                ✏️ Back to editing
-              </button>
-            </div>
-          )}
+            )}
+          </div>
+        </section>
+
+        {/* ------------------------------------------------ execution engine */}
+        <section className="panel bench">
+          <div className="panel-title">
+            <span>⚙️ Machine</span>
+            {!debug ? (
+              <div className="bench-actions">
+                <button
+                  className={`btn check ${view === 'all' ? 'on' : ''}`}
+                  onClick={checkAll}
+                  title="Your answer: tests all examples and the secret tests. A wrong answer costs a star."
+                >
+                  ✔ Check all
+                </button>
+              </div>
+            ) : (
+              <div className="bench-actions">
+                <button className="btn ghost" onClick={() => setDebug(null)}>
+                  ✏️ Edit program
+                </button>
+              </div>
+            )}
+          </div>
           {message && !debug && <div className={`message ${message.tone}`}>{message.text}</div>}
 
-          {debug && debugRun && tick ? (
-            <div className="machine">
-              <div className="machine-title">
-                <span>
-                  🐞 Stepping through <strong>{card.label}</strong>
+          <div className="engine">
+            <div className="engine-head">
+              {view === 'all' && !debug ? (
+                <span className="loaded-chip all">📋 All examples</span>
+              ) : (
+                <span key={loadFlash} className="loaded-chip">
+                  📼 {card.label}
                 </span>
-              </div>
-              <div className="narration">
-                {stepNarration ??
-                  (activeStage && tick.index >= 0 && (
-                    <>
-                      <div className="narration-title">
-                        Marble {tick.index + 1} at step {tick.stage + 1}:
+              )}
+              {debug ? (
+                <div className="debug-controls">
+                  <button className="btn ghost small" title="Back to the start" onClick={() => setTick(0)} disabled={tickIdx === 0}>
+                    ⏮
+                  </button>
+                  <button className="btn ghost small" title="One step back (←)" onClick={() => setTick(tickIdx - 1)} disabled={tickIdx === 0}>
+                    ◀
+                  </button>
+                  <button
+                    className="btn debug small-debug"
+                    title="Next step (→)"
+                    onClick={() => setTick(Math.min(tickIdx + 1, ticks.length - 1))}
+                    disabled={tickIdx >= ticks.length - 1}
+                  >
+                    ▶ Next
+                  </button>
+                  <button className="btn ghost small" title="Play automatically" onClick={() => setPlaying(!playing)}>
+                    {playing ? '⏸' : '⏵ Play'}
+                  </button>
+                  <button
+                    className="btn ghost small"
+                    title="Jump to the end"
+                    onClick={() => setTick(ticks.length - 1)}
+                    disabled={tickIdx >= ticks.length - 1}
+                  >
+                    ⏭
+                  </button>
+                  <span className="step-count">
+                    {tickIdx + 1}/{ticks.length}
+                  </span>
+                </div>
+              ) : (
+                <div className="engine-actions">
+                  <button
+                    className={`btn run small-run ${view === 'run' ? 'on' : ''}`}
+                    onClick={runOne}
+                    title={`Run ${card.label} - instantly, for free`}
+                  >
+                    ▶ Run {view === 'all' ? card.label : 'this'}
+                  </button>
+                  <button className="btn debug small-debug" onClick={() => startDebug(0)} title="Follow the marbles one by one - for free">
+                    🐞 Step by step
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="engine-scroll" key={`load-${loadFlash}-${view}-${debug ? 'd' : ''}`}>
+              {debug && debugRun && tick ? (
+                <>
+                  <div className="narration">
+                    {stepNarration ??
+                      (activeStage && tick.index >= 0 && (
+                        <>
+                          <div className="narration-title">
+                            Marble {tick.index + 1} at step {tick.stage + 1}:
+                          </div>
+                          <Explain block={blocks[tick.stage]} stage={activeStage} index={tick.index} />
+                        </>
+                      ))}
+                  </div>
+                  <Machine
+                    input={card.tc.input}
+                    stages={debugRun.stages}
+                    blocks={blocks}
+                    actual={debugRun.actual}
+                    expected={card.tc.expected}
+                    error={debugRun.error}
+                    showNumber={showNumber}
+                    tick={tick}
+                  />
+                </>
+              ) : view === 'all' && result ? (
+                <div className="results">
+                  {cards.map((c, i) => {
+                    const cr = result.cases[c.caseIndex]
+                    return (
+                      <button
+                        key={i}
+                        className={`result-row ${cr.pass ? 'pass' : 'fail'}`}
+                        onClick={() => {
+                          loadCard(i)
+                          setView('run')
+                        }}
+                        title={`Show ${c.label} in the machine`}
+                      >
+                        <div className="ex-badge">
+                          <span className="ex-num">{c.caseIndex >= tests.visible.length ? '🕵️' : i + 1}</span>
+                          <span className="res-mark">{cr.pass ? '✅' : '❌'}</span>
+                        </div>
+                        <div className="res-io">
+                          <div className="res-line">
+                            <span className="io-label">IN</span>
+                            <MarbleRow marbles={cr.input} showNumber={showNumber} />
+                          </div>
+                          <div className="res-line">
+                            <span className="io-label">YOURS</span>
+                            {cr.error ? (
+                              <span className="run-error">💥 {cr.error.message}</span>
+                            ) : (
+                              <OutputView output={cr.actual!} showNumber={showNumber} />
+                            )}
+                          </div>
+                          {!cr.pass && (
+                            <div className="res-line wanted">
+                              <span className="io-label">WANTED</span>
+                              <OutputView output={cr.expected} showNumber={showNumber} />
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    )
+                  })}
+                  {(() => {
+                    const secret = result.cases.filter((c, i) => c.hidden && !revealed.includes(i - tests.visible.length))
+                    const ok = secret.filter((c) => c.pass).length
+                    return (
+                      <div className={`result-row secret ${ok === secret.length ? 'pass' : 'fail'}`}>
+                        <div className="ex-badge">
+                          <span className="ex-num">🕵️</span>
+                        </div>
+                        <div className="res-io">
+                          {cards.every((c) => result.cases[c.caseIndex].pass)
+                            ? `Secret tests: ${ok} of ${secret.length} ${ok === secret.length ? '✅' : '❌'}`
+                            : 'Secret tests: make all examples work first.'}
+                        </div>
                       </div>
-                      <Explain block={blocks[tick.stage]} stage={activeStage} index={tick.index} />
-                    </>
-                  ))}
-              </div>
-              <Machine
-                input={card.tc.input}
-                stages={debugRun.stages}
-                blocks={blocks}
-                actual={debugRun.actual}
-                expected={card.tc.expected}
-                error={debugRun.error}
-                showNumber={showNumber}
-                tick={tick}
-              />
+                    )
+                  })()}
+                </div>
+              ) : view === 'run' && singleRun ? (
+                <Machine
+                  input={singleRun.input}
+                  stages={singleRun.stages}
+                  blocks={blocks}
+                  actual={singleRun.actual}
+                  expected={singleRun.expected}
+                  error={singleRun.error}
+                  showNumber={showNumber}
+                  onPick={pickMarble}
+                />
+              ) : (
+                <div className="pipeline idle-machine">
+                  <div className="stage">
+                    <div className="stage-label">
+                      <span className="kind in">📥 in</span>
+                    </div>
+                    <MarbleRow marbles={card.tc.input} showNumber={showNumber} />
+                  </div>
+                  <div className="machine-waiting">
+                    <div className="gear">⚙️</div>
+                    <div>
+                      <strong>▶ Run this</strong> - see what your machine does with {card.label}
+                    </div>
+                    <div>
+                      <strong>🐞 Step by step</strong> - follow these marbles one at a time
+                    </div>
+                    <div>
+                      <strong>✔ Check all</strong> - your answer: tests every example
+                    </div>
+                  </div>
+                  <div className="stage final">
+                    <div className="io-box expected">
+                      <div className="io-label">Expected out</div>
+                      <OutputView output={card.tc.expected} showNumber={showNumber} />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          ) : caseResult ? (
-            <div className="machine">
-              <div className="machine-title">
-                <span>
-                  ⚙️ The machine working on <strong>{card.label}</strong>
-                </span>
-                <button className="btn ghost small" onClick={() => setRunId((x) => x + 1)}>
-                  ⟳ Replay
-                </button>
-              </div>
-              <Machine
-                key={`${runId}-${selected}`}
-                input={caseResult.input}
-                stages={caseResult.stages}
-                blocks={blocks}
-                actual={caseResult.actual}
-                expected={caseResult.expected}
-                error={caseResult.error}
-                showNumber={showNumber}
-                onPick={pickMarble}
-              />
-            </div>
-          ) : (
-            <div className="machine idle">
-              Press <strong>▶ Run</strong> to test your machine on all examples, or <strong>🐞 Step by step</strong> to follow the
-              marbles of {card.label} one at a time.
-            </div>
-          )}
+          </div>
         </section>
       </div>
 
