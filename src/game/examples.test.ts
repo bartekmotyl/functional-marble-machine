@@ -10,7 +10,7 @@ import { getTests, VISIBLE_EXAMPLES } from './check'
  */
 describe('visible examples explain the rule', () => {
   for (const level of ALL_LEVELS) {
-    it(`${level.id} "${level.title}"`, () => {
+    it(level.id, () => {
       const { visible } = getTests(level)
       expect(visible).toHaveLength(VISIBLE_EXAMPLES)
       // all examples are different

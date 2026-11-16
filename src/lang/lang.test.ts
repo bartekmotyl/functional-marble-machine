@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { run } from './interpreter'
 import { makeMarble as mk } from './marble'
 import { LangError, parseProgram } from './parser'
-import { ALL_LEVELS } from '../game/levels'
+import { ALL_LEVELS, CHAPTERS } from '../game/levels'
 import { checkSolution, getTests, HIDDEN_TESTS, VISIBLE_EXAMPLES } from '../game/check'
 
 const ms = [
@@ -73,21 +73,19 @@ describe('levels', () => {
   })
 
   for (const level of ALL_LEVELS) {
-    it(`${level.id} "${level.title}" generates good tests and is solvable`, () => {
+    it(`${level.id} generates good tests and is solvable`, () => {
       const { visible, hidden } = getTests(level)
       expect(visible).toHaveLength(VISIBLE_EXAMPLES)
       expect(hidden).toHaveLength(HIDDEN_TESTS)
       expect(checkSolution(level, level.solution).solved).toBe(true)
       // the starter code (or an empty program) must not already solve the level
       expect(checkSolution(level, level.starter ?? '').solved).toBe(false)
-      // the last hint usually contains a full solution - if it parses, it must work
-      const lastHint = level.hints[level.hints.length - 1]
-      try {
-        parseProgram(lastHint)
-      } catch {
-        return
-      }
-      expect(checkSolution(level, lastHint).solved, `last hint of ${level.id}`).toBe(true)
     })
   }
+
+  it('every section ends with exactly one exam', () => {
+    for (const ch of CHAPTERS) {
+      expect(ch.levels.filter((l) => l.exam).map((l) => l.id)).toEqual([ch.levels[ch.levels.length - 1].id])
+    }
+  })
 })

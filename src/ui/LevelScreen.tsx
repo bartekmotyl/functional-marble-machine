@@ -1,20 +1,14 @@
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { checkSolution, constraintsOf, getTests, runCase, starsFor, type CheckResult } from '../game/check'
-import { conceptsUpTo, CHAPTERS, type Level } from '../game/levels'
-import { CONCEPT_DOCS } from '../game/concepts'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { checkSolution, getTests, runCase, starsFor, type CheckResult } from '../game/check'
+import { chapterOf, conceptsUpTo, type Level } from '../game/levels'
+import type { Progress } from '../game/progress'
+import { levelNumber } from '../game/progression'
+import { CONCEPT_CODE } from '../game/concepts'
 import { BlockEditor } from '../blocks/BlockEditor'
-import {
-  addQuestion,
-  cmp,
-  fromSource,
-  propValues,
-  replaceNode,
-  toProgram,
-  toSource,
-  type BlockProgram,
-  type Cond,
-} from '../blocks/model'
+import { addQuestion, cmp, fromSource, propValues, replaceNode, toProgram, toSource, type BlockProgram, type Cond } from '../blocks/model'
 import { LangError, type Program } from '../lang/parser'
+import { has, t, tl, tn } from '../i18n'
+import { localizeCode } from '../i18n/words'
 import { MarbleRow, OutputView } from './Marble'
 import { Machine, buildTicks, type Tick } from './Machine'
 import { Explain, StepStatus } from './Explain'
@@ -22,26 +16,21 @@ import { RichText } from './RichText'
 
 interface Props {
   level: Level
-  levelNumber: number
   savedCode?: string
   stars: number
+  progress: Progress
   onSaveCode: (code: string) => void
   onSolved: (stars: number) => void
   onBack: () => void
+  onChapter: () => void
   onNext?: () => void
+  /** is the section's exam open, given the progress after solving this level? */
+  examReady: (after: Progress) => boolean
+  onExam: () => void
+  onNextSection?: () => void
 }
 
 type Message = { tone: 'error' | 'warn' | 'info' | 'good'; text: string }
-
-const STEP_NAMES: Record<string, string> = {
-  fold: 'reduce from',
-  filter: 'filter',
-  map: 'map',
-  count: 'reduce count',
-  sum: 'reduce sum',
-  max: 'reduce max',
-  min: 'reduce min',
-}
 
 /** Read-only blocks for code samples in texts, hints and the spellbook. */
 export function CodeSample({ code, concepts }: { code: string; concepts: string[] }) {
@@ -85,7 +74,8 @@ function findCond(p: BlockProgram, id: string): Cond | null {
   return found
 }
 
-export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, onSolved, onBack, onNext }: Props) {
+export function LevelScreen(props: Props) {
+  const { level, savedCode, stars, progress, onSaveCode, onSolved, onBack, onChapter, onNext, examReady, onExam, onNextSection } = props
   const [blocks, setBlocks] = useState<BlockProgram>(
     () => (savedCode !== undefined ? fromSource(savedCode) : null) ?? fromSource(level.starter ?? '') ?? [],
   )
@@ -104,17 +94,20 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
   const [debug, setDebug] = useState<{ tick: number } | null>(null)
   const [playing, setPlaying] = useState(false)
   const [loadFlash, setLoadFlash] = useState(0)
+  const [benchFlash, setBenchFlash] = useState(0)
+  const benchRef = useRef<HTMLElement>(null)
 
   const tests = getTests(level)
   const showNumber = !!level.features.numbers
   const concepts = useMemo(() => conceptsUpTo(level.id), [level.id])
-  const chapter = CHAPTERS.find((c) => c.levels.includes(level))!
+  const chapter = chapterOf(level.id)
   const potential = starsFor(mistakes)
+  const lv = `levels.${level.id}`
 
-  // Cards on the left: visible examples + any secret tests that were revealed.
+  // Cards: visible examples + any secret tests that were revealed.
   const cards = [
-    ...tests.visible.map((tc, i) => ({ tc, label: `Example ${i + 1}`, caseIndex: i })),
-    ...revealed.map((h) => ({ tc: tests.hidden[h], label: '🕵️ Secret test', caseIndex: tests.visible.length + h })),
+    ...tests.visible.map((tc, i) => ({ tc, label: t('ui.example', { n: i + 1 }), caseIndex: i, secret: false })),
+    ...revealed.map((h) => ({ tc: tests.hidden[h], label: t('ui.secretTest'), caseIndex: tests.visible.length + h, secret: true })),
   ]
   const card = cards[Math.min(selected, cards.length - 1)]
 
@@ -156,22 +149,28 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     setView((v) => (v === 'all' ? 'idle' : v))
   }
   const clear = () => {
-    if (blocks.length && confirm('Remove all steps and start from scratch?')) update([])
+    if (blocks.length && confirm(t('ui.clearConfirm'))) update([])
   }
 
-  // ------------------------------------------------------------ running
+  /** Draw attention to the machine (used when a button in the program column starts it). */
+  const flashBench = () => {
+    setBenchFlash((x) => x + 1)
+    benchRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+
+  // ------------------------------------------------------------ checking (the answer)
 
   function checkAll() {
     setDebug(null)
     setPlaying(false)
     setIntroOpen(false)
     if (compiled.error || !compiled.program) {
-      setMessage({ tone: 'error', text: compiled.error?.message ?? 'Something is wrong with the program.' })
+      setMessage({ tone: 'error', text: t('errors.generic') })
       return
     }
     if (blocks.length === 0) {
       setResult(null)
-      setMessage({ tone: 'info', text: 'Your machine is empty, so the marbles just roll straight through. Add a step first!' })
+      setMessage({ tone: 'info', text: t('ui.msg.empty') })
       return
     }
     const r = checkSolution(level, compiled.program)
@@ -183,37 +182,33 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     const mistake = (text: string) => {
       setMistakes((m) => m + 1)
       const left = starsFor(mistakes + 1)
-      setMessage({ tone: 'warn', text: `${text} ${left < potential ? `(you can still win ${'⭐'.repeat(left)})` : ''}` })
+      setMessage({ tone: 'warn', text: `${text} ${left < potential ? t('ui.msg.stillWin', { stars: '⭐'.repeat(left) }) : ''}` })
     }
     if (shownPass < shown.length) {
-      mistake(`${shownPass} of ${shown.length} examples work. Click a ❌ example to see what goes wrong.`)
+      mistake(t('ui.msg.someWork', { ok: shownPass, all: shown.length }))
       return
     }
     const hiddenFail = r.cases.findIndex((c, i) => i >= visibleCount && !c.pass && !revealed.includes(i - visibleCount))
     if (hiddenFail >= 0) {
       setRevealed((rv) => [...rv, hiddenFail - visibleCount])
-      mistake('All examples work... but a secret test found a problem! It is now in the list with the examples.')
+      mistake(t('ui.msg.secretFail'))
       return
     }
     if (r.missing) {
-      setMessage({
-        tone: 'info',
-        text: `It works! But in this level you have to use "${r.missing.map((m) => STEP_NAMES[m]).join('", "')}". Try again!`,
-      })
+      setMessage({ tone: 'info', text: t('ui.msg.mustUse', { what: r.missing.map((m) => t(`steps.${m}`)).join('", "') }) })
       return
     }
     if (r.tooLong) {
-      setMessage({
-        tone: 'info',
-        text: `It works! But in this level your machine may have only ${level.maxSteps} step${level.maxSteps === 1 ? '' : 's'}. Can you squeeze it into fewer steps?`,
-      })
+      setMessage({ tone: 'info', text: tn('ui.msg.tooLong', level.maxSteps ?? 1) })
       return
     }
     const earned = starsFor(mistakes)
-    setMessage({ tone: 'good', text: 'Everything works! 🎉' })
+    setMessage({ tone: 'good', text: t('ui.msg.allWork') })
     onSolved(earned)
     setTimeout(() => setSuccess(earned), 700)
   }
+
+  // ------------------------------------------------------------ running one example
 
   /** Run only the loaded example - instantly, for free. Updates live while you edit. */
   const singleRun = useMemo(
@@ -225,7 +220,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     setPlaying(false)
     setIntroOpen(false)
     if (!compiled.program || blocks.length === 0) {
-      setMessage({ tone: 'info', text: 'Add a step to your machine first!' })
+      setMessage({ tone: 'info', text: t('ui.msg.addStep') })
       return
     }
     setMessage(null)
@@ -241,12 +236,12 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
   )
   const ticks = useMemo(() => (debugRun ? buildTicks(debugRun.stages) : []), [debugRun])
   const tickIdx = debug ? Math.min(debug.tick, ticks.length - 1) : 0
-  const tick: Tick | null = debug ? ticks[tickIdx] ?? null : null
+  const tick: Tick | null = debug ? (ticks[tickIdx] ?? null) : null
 
-  const setTick = useCallback((t: number) => setDebug({ tick: Math.max(0, t) }), [])
+  const setTick = useCallback((n: number) => setDebug({ tick: Math.max(0, n) }), [])
   const startDebug = (at = 0) => {
     if (!compiled.program || blocks.length === 0) {
-      setMessage({ tone: 'info', text: 'Add a step to your machine first!' })
+      setMessage({ tone: 'info', text: t('ui.msg.addStep') })
       return
     }
     setIntroOpen(false)
@@ -260,8 +255,8 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
       setPlaying(false)
       return
     }
-    const t = setTimeout(() => setTick(tickIdx + 1), 900)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => setTick(tickIdx + 1), 900)
+    return () => clearTimeout(timer)
   }, [playing, debug, tickIdx, ticks.length, setTick])
 
   useEffect(() => {
@@ -288,23 +283,31 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
   const pickMarble = (stage: number, index: number) => {
     if (!compiled.program) return
     const run = runCase(compiled.program, card.tc)
-    const t = buildTicks(run.stages).findIndex((x) => x.stage === stage && x.index === index)
-    startDebug(Math.max(0, t))
+    const at = buildTicks(run.stages).findIndex((x) => x.stage === stage && x.index === index)
+    startDebug(Math.max(0, at))
   }
 
   const stepNarration = (() => {
     if (!debugRun || !tick) return null
-    if (tick.stage === -1) return 'These marbles are about to roll into your machine. Press ▶ Next to send the first one!'
-    if (tick.stage >= debugRun.stages.length)
-      return debugRun.error ? 'The machine stopped with an error.' : 'All marbles went through. Compare with what was expected!'
-    if (tick.index < 0) return 'No marbles reached this step.'
+    if (tick.stage === -1) return t('ui.narration.start')
+    if (tick.stage >= debugRun.stages.length) return debugRun.error ? t('ui.narration.error') : t('ui.narration.end')
+    if (tick.index < 0) return t('ui.narration.none')
     return null
   })()
 
-  // The rule itself is hidden - revealing it is the first hint.
-  const ruleHint = /find the pattern/i.test(level.goal) ? null : level.goal
-  const allHints = [...(ruleHint ? [ruleHint] : []), ...level.hints]
-  const constraints = constraintsOf(level)
+  // ------------------------------------------------------------ hints: the rule, then tips, then a solution
+
+  const allHints: { kind: 'rule' | 'tip' | 'solution'; text: string }[] = [
+    { kind: 'rule', text: t(`${lv}.goal`) },
+    ...tl(`${lv}.hints`).map((h) => ({ kind: 'tip' as const, text: h })),
+    { kind: 'solution', text: level.solution },
+  ]
+  const constraints = [
+    ...(level.mustUse ?? []).map((k) => t('ui.mustUse', { what: t(`steps.${k}`) })),
+    ...(level.maxSteps !== undefined ? [tn('ui.maxSteps', level.maxSteps)] : []),
+  ]
+  const nextHintLabel =
+    hints === 0 ? t('ui.tellRule') : hints === allHints.length - 1 ? t('ui.showSolution') : hints === 1 ? t('ui.needHint') : t('ui.anotherHint')
 
   const loadCard = (i: number) => {
     setSelected(i)
@@ -313,27 +316,29 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
     else if (view === 'all') setView('run')
   }
 
+  const progressAfter: Progress = { ...progress, stars: { ...progress.stars, [level.id]: Math.max(stars, success ?? 0) } }
+  const title = level.exam ? t('level.exam') : t('level.name', { n: levelNumber(level.id) })
+  const runLabel = cards.length > 1 ? t('ui.runExample', { label: card.label }) : t('ui.runThis')
+
   return (
     <div className="level-screen">
       <header className="topbar">
         <button className="btn ghost" onClick={onBack}>
-          ← Map
+          {t('ui.map')}
         </button>
-        <div className="crumbs">
+        <button className="crumbs" onClick={onChapter}>
           <span className="chapter-name">
-            {chapter.emoji} {chapter.title}
+            {chapter.emoji} {t(`chapters.${chapter.id}.title`)}
           </span>
-          <span className="level-name">
-            Level {levelNumber}: {level.title}
-          </span>
-        </div>
-        <div className="star-box" title="Solve without mistakes for 3 stars. Each wrong run or hint costs a star.">
-          <span className="star-label">this try</span>
+          <span className={`level-name ${level.exam ? 'exam' : ''}`}>{title}</span>
+        </button>
+        <div className="star-box" title={t('level.starsTitle')}>
+          <span className="star-label">{t('level.thisTry')}</span>
           <Stars n={potential} />
         </div>
         {stars > 0 && (
           <div className="star-box best">
-            <span className="star-label">best</span>
+            <span className="star-label">{t('level.best')}</span>
             <Stars n={stars} />
           </div>
         )}
@@ -343,23 +348,40 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
         {/* ------------------------------------------------ puzzle: rule + examples */}
         <section className="panel puzzle-panel">
           <div className="panel-title">
-            <span>🧩 Puzzle</span>
+            <span>{t('ui.puzzle')}</span>
           </div>
           <div className="rail">
-            <div className="rule-card">
-              <div className="rule-title">🔍 Find the rule!</div>
-              <div className="rule-text">
-                Look at what goes <b>IN</b> and what comes <b>OUT</b>. What does the machine have to do?
+            {level.exam && (
+              <div className="exam-banner">
+                <div>{t('level.examIntro')}</div>
+                <div className="exam-leave">
+                  <span>{t('level.examLeave')}</span>
+                  <button className="btn ghost small" onClick={onChapter}>
+                    {t('level.backToPractice')}
+                  </button>
+                </div>
               </div>
+            )}
+            <div className="rule-card">
+              <div className="rule-title">{t('ui.findRule')}</div>
+              <div className="rule-text">{t('ui.findRuleText')}</div>
               {constraints.map((c) => (
                 <div key={c} className="constraint">
-                  📏 {c}
+                  {c}
                 </div>
               ))}
               {allHints.slice(0, hints).map((h, i) => (
-                <div key={i} className={`hint ${ruleHint && i === 0 ? 'rule' : ''}`}>
-                  {ruleHint && i === 0 ? <b>The rule: </b> : '💡 '}
-                  {h.includes('\n') || /^(filter|map|reduce)\b/.test(h) ? <CodeSample code={h} concepts={concepts} /> : h}
+                <div key={i} className={`hint ${h.kind}`}>
+                  {h.kind === 'rule' && <b>{t('ui.ruleLabel')} </b>}
+                  {h.kind === 'tip' && '💡 '}
+                  {h.kind === 'solution' ? (
+                    <>
+                      <b>{t('ui.solutionLabel')}</b>
+                      <CodeSample code={h.text} concepts={concepts} />
+                    </>
+                  ) : (
+                    h.text
+                  )}
                 </div>
               ))}
               {hints < allHints.length && (
@@ -370,13 +392,12 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                     setMistakes((m) => m + 1)
                   }}
                 >
-                  💡 {hints === 0 ? (ruleHint ? 'Tell me the rule' : 'Need a hint?') : 'Another hint'}{' '}
-                  <span className="cost">(costs a ⭐)</span>
+                  {nextHintLabel} <span className="cost">{t('ui.costsStar')}</span>
                 </button>
               )}
             </div>
 
-            <div className="rail-title">Examples - click one to put it in the machine</div>
+            <div className="rail-title">{t('ui.examples')}</div>
             {cards.map((c, i) => {
               const cr = result ? result.cases[c.caseIndex] : null
               return (
@@ -389,20 +410,20 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                   title={c.label}
                 >
                   <div className="ex-badge">
-                    <span className="ex-num">{c.caseIndex >= tests.visible.length ? '🕵️' : i + 1}</span>
+                    <span className="ex-num">{c.secret ? '🕵️' : i + 1}</span>
                     {cr && <span className="ex-status">{cr.pass ? '✅' : '❌'}</span>}
                   </div>
                   <div className="ex-rows">
                     <div className="io-box in">
-                      <div className="io-label">IN</div>
+                      <div className="io-label" title={t('ui.in')}>{t('ui.inShort')}</div>
                       <MarbleRow marbles={c.tc.input} showNumber={showNumber} />
                     </div>
                     <div className="io-box out">
-                      <div className="io-label">OUT</div>
+                      <div className="io-label" title={t('ui.out')}>{t('ui.outShort')}</div>
                       <OutputView output={c.tc.expected} showNumber={showNumber} />
                     </div>
                   </div>
-                  {i === selected && <span className="loaded-tag">⚙️ in the machine</span>}
+                  {i === selected && <span className="loaded-tag">{t('ui.inMachine')}</span>}
                 </button>
               )
             })}
@@ -412,80 +433,95 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
         {/* ------------------------------------------------ program editor */}
         <section className="panel program-panel">
           <div className="panel-title">
-            <span>🛠️ Your program</span>
+            <span>{t('ui.program')}</span>
             <div className="editor-actions">
               {!debug && (
                 <>
-                  <button className="btn ghost small" onClick={undo} disabled={history.length === 0} title="Undo">
-                    ↶ Undo
+                  <button className="btn ghost small" onClick={undo} disabled={history.length === 0}>
+                    {t('ui.undo')}
                   </button>
                   <button className="btn ghost small" onClick={clear} disabled={blocks.length === 0}>
-                    🧹 Clear
+                    {t('ui.clear')}
                   </button>
                 </>
               )}
               <button className={`btn ghost small ${showCode ? 'on' : ''}`} onClick={() => setShowCode(!showCode)}>
-                {'</>'} Code
+                {t('ui.code')}
               </button>
               <button className="btn ghost small" onClick={() => setSpellbook(true)}>
-                📕 Spellbook
+                {t('ui.spellbook')}
               </button>
             </div>
           </div>
           <div className="panel-scroll">
-            {level.intro && (
+            {has(`${lv}.intro`) && (
               <details className="intro" open={introOpen} onToggle={(e) => setIntroOpen((e.target as HTMLDetailsElement).open)}>
-                <summary>📖 How it works</summary>
-                <RichText text={level.intro} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
+                <summary>{t('ui.howItWorks')}</summary>
+                <RichText text={t(`${lv}.intro`)} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
               </details>
             )}
-            {debug && <div className="editing-locked">🐞 Stepping through - press ✏️ Edit program to change it.</div>}
-            <BlockEditor
-              program={blocks}
-              concepts={concepts}
-              readOnly={!!debug}
-              onChange={update}
-              edit={edit}
-              addQuestion={addQ}
-              active={active}
-            />
+            {debug && <div className="editing-locked">{t('ui.steppingLocked')}</div>}
+            <BlockEditor program={blocks} concepts={concepts} readOnly={!!debug} onChange={update} edit={edit} addQuestion={addQ} active={active} />
             {showCode && (
               <div className="code-view">
-                <div className="code-view-title">Your machine written as code:</div>
-                <pre className="code-sample">{toSource(blocks) || '(empty)'}</pre>
+                <div className="code-view-title">{t('ui.codeTitle')}</div>
+                <pre className="code-sample">{localizeCode(toSource(blocks)) || t('ui.codeEmpty')}</pre>
               </div>
+            )}
+          </div>
+          <div className="panel-foot">
+            {debug ? (
+              <button className="btn ghost" onClick={() => setDebug(null)}>
+                {t('ui.stopDebug')}
+              </button>
+            ) : (
+              <>
+                <button
+                  className="btn run small-run"
+                  onClick={() => {
+                    runOne()
+                    flashBench()
+                  }}
+                  title={t('ui.runTitle', { label: card.label })}
+                >
+                  {runLabel}
+                </button>
+                <button
+                  className="btn debug small-debug"
+                  onClick={() => {
+                    startDebug(0)
+                    flashBench()
+                  }}
+                  title={t('ui.stepTitle')}
+                >
+                  {t('ui.stepByStep')}
+                </button>
+              </>
             )}
           </div>
         </section>
 
         {/* ------------------------------------------------ execution engine */}
-        <section className="panel bench">
+        <section ref={benchRef} className={`panel bench ${benchFlash ? `flash-${benchFlash % 2}` : ''}`}>
           <div className="panel-title">
-            <span>⚙️ Machine</span>
-            {!debug ? (
-              <div className="bench-actions">
-                <button
-                  className={`btn check ${view === 'all' ? 'on' : ''}`}
-                  onClick={checkAll}
-                  title="Your answer: tests all examples and the secret tests. A wrong answer costs a star."
-                >
-                  ✔ Check all
+            <span>{t('ui.machine')}</span>
+            <div className="bench-actions">
+              {debug && (
+                <button className="btn ghost small" onClick={() => setDebug(null)}>
+                  {t('ui.stopDebug')}
                 </button>
-              </div>
-            ) : (
-              <div className="bench-actions">
-                <button className="btn ghost" onClick={() => setDebug(null)}>
-                  ✏️ Edit program
-                </button>
-              </div>
-            )}
+              )}
+              <button className={`btn check ${view === 'all' && !debug ? 'on' : ''}`} onClick={checkAll} title={t('ui.checkAllTitle')}>
+                {t('ui.checkAll')}
+              </button>
+            </div>
           </div>
           {message && !debug && <div className={`message ${message.tone}`}>{message.text}</div>}
 
           <div className="engine">
             <div className="engine-head">
               {view === 'all' && !debug ? (
-                <span className="loaded-chip all">📋 All examples</span>
+                <span className="loaded-chip all">{t('ui.allExamples')}</span>
               ) : (
                 <span key={loadFlash} className="loaded-chip">
                   📼 {card.label}
@@ -493,29 +529,24 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
               )}
               {debug ? (
                 <div className="debug-controls">
-                  <button className="btn ghost small" title="Back to the start" onClick={() => setTick(0)} disabled={tickIdx === 0}>
+                  <button className="btn ghost small" title={t('ui.toStart')} onClick={() => setTick(0)} disabled={tickIdx === 0}>
                     ⏮
                   </button>
-                  <button className="btn ghost small" title="One step back (←)" onClick={() => setTick(tickIdx - 1)} disabled={tickIdx === 0}>
+                  <button className="btn ghost small" title={t('ui.back')} onClick={() => setTick(tickIdx - 1)} disabled={tickIdx === 0}>
                     ◀
                   </button>
                   <button
                     className="btn debug small-debug"
-                    title="Next step (→)"
+                    title={t('ui.nextTitle')}
                     onClick={() => setTick(Math.min(tickIdx + 1, ticks.length - 1))}
                     disabled={tickIdx >= ticks.length - 1}
                   >
-                    ▶ Next
+                    {t('ui.next')}
                   </button>
-                  <button className="btn ghost small" title="Play automatically" onClick={() => setPlaying(!playing)}>
-                    {playing ? '⏸' : '⏵ Play'}
+                  <button className="btn ghost small" title={t('ui.playTitle')} onClick={() => setPlaying(!playing)}>
+                    {playing ? t('ui.pause') : t('ui.play')}
                   </button>
-                  <button
-                    className="btn ghost small"
-                    title="Jump to the end"
-                    onClick={() => setTick(ticks.length - 1)}
-                    disabled={tickIdx >= ticks.length - 1}
-                  >
+                  <button className="btn ghost small" title={t('ui.toEnd')} onClick={() => setTick(ticks.length - 1)} disabled={tickIdx >= ticks.length - 1}>
                     ⏭
                   </button>
                   <span className="step-count">
@@ -524,15 +555,11 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                 </div>
               ) : (
                 <div className="engine-actions">
-                  <button
-                    className={`btn run small-run ${view === 'run' ? 'on' : ''}`}
-                    onClick={runOne}
-                    title={`Run ${card.label} - instantly, for free`}
-                  >
-                    ▶ Run {view === 'all' ? card.label : 'this'}
+                  <button className={`btn run small-run ${view === 'run' ? 'on' : ''}`} onClick={runOne} title={t('ui.runTitle', { label: card.label })}>
+                    {view === 'all' ? runLabel : t('ui.runThis')}
                   </button>
-                  <button className="btn debug small-debug" onClick={() => startDebug(0)} title="Follow the marbles one by one - for free">
-                    🐞 Step by step
+                  <button className="btn debug small-debug" onClick={() => startDebug(0)} title={t('ui.stepTitle')}>
+                    {t('ui.stepByStep')}
                   </button>
                 </div>
               )}
@@ -545,9 +572,7 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                     {stepNarration ??
                       (activeStage && tick.index >= 0 && (
                         <>
-                          <div className="narration-title">
-                            Marble {tick.index + 1} at step {tick.stage + 1}:
-                          </div>
+                          <div className="narration-title">{t('ui.narration.marble', { i: tick.index + 1, s: tick.stage + 1 })}</div>
                           <Explain block={blocks[tick.stage]} stage={activeStage} index={tick.index} />
                         </>
                       ))}
@@ -575,28 +600,28 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                           loadCard(i)
                           setView('run')
                         }}
-                        title={`Show ${c.label} in the machine`}
+                        title={t('ui.showInMachine', { label: c.label })}
                       >
                         <div className="ex-badge">
-                          <span className="ex-num">{c.caseIndex >= tests.visible.length ? '🕵️' : i + 1}</span>
+                          <span className="ex-num">{c.secret ? '🕵️' : i + 1}</span>
                           <span className="res-mark">{cr.pass ? '✅' : '❌'}</span>
                         </div>
                         <div className="res-io">
                           <div className="res-line">
-                            <span className="io-label">IN</span>
+                            <span className="io-label">{t('ui.in')}</span>
                             <MarbleRow marbles={cr.input} showNumber={showNumber} />
                           </div>
                           <div className="res-line">
-                            <span className="io-label">YOURS</span>
+                            <span className="io-label">{t('ui.yours')}</span>
                             {cr.error ? (
-                              <span className="run-error">💥 {cr.error.message}</span>
+                              <span className="run-error">💥 {cr.error.code ? t(`errors.${cr.error.code}`) : cr.error.message}</span>
                             ) : (
                               <OutputView output={cr.actual!} showNumber={showNumber} />
                             )}
                           </div>
                           {!cr.pass && (
                             <div className="res-line wanted">
-                              <span className="io-label">WANTED</span>
+                              <span className="io-label">{t('ui.wanted')}</span>
                               <OutputView output={cr.expected} showNumber={showNumber} />
                             </div>
                           )}
@@ -614,8 +639,8 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                         </div>
                         <div className="res-io">
                           {cards.every((c) => result.cases[c.caseIndex].pass)
-                            ? `Secret tests: ${ok} of ${secret.length} ${ok === secret.length ? '✅' : '❌'}`
-                            : 'Secret tests: make all examples work first.'}
+                            ? `${t('ui.secretResult', { ok, all: secret.length })} ${ok === secret.length ? '✅' : '❌'}`
+                            : t('ui.secretWait')}
                         </div>
                       </div>
                     )
@@ -636,25 +661,25 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                 <div className="pipeline idle-machine">
                   <div className="stage">
                     <div className="stage-label">
-                      <span className="kind in">📥 in</span>
+                      <span className="kind in">{t('machine.in')}</span>
                     </div>
                     <MarbleRow marbles={card.tc.input} showNumber={showNumber} />
                   </div>
                   <div className="machine-waiting">
                     <div className="gear">⚙️</div>
                     <div>
-                      <strong>▶ Run this</strong> - see what your machine does with {card.label}
+                      <strong>{t('ui.runThis')}</strong> - {t('ui.idleRun', { label: card.label })}
                     </div>
                     <div>
-                      <strong>🐞 Step by step</strong> - follow these marbles one at a time
+                      <strong>{t('ui.stepByStep')}</strong> - {t('ui.idleStep')}
                     </div>
                     <div>
-                      <strong>✔ Check all</strong> - your answer: tests every example
+                      <strong>{t('ui.checkAll')}</strong> - {t('ui.idleCheck')}
                     </div>
                   </div>
                   <div className="stage final">
                     <div className="io-box expected">
-                      <div className="io-label">Expected out</div>
+                      <div className="io-label">{t('ui.expectedOut')}</div>
                       <OutputView output={card.tc.expected} showNumber={showNumber} />
                     </div>
                   </div>
@@ -673,27 +698,38 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
                 <span key={i} style={{ '--i': i } as CSSProperties} />
               ))}
             </div>
-            <h2>Level complete!</h2>
+            <h2>{level.exam ? t('ui.modal.examPassed') : t('ui.modal.complete')}</h2>
             <div className="big-stars">
               <Stars n={success} />
             </div>
-            <p>
-              {success >= 3
-                ? 'Perfect - no mistakes!'
-                : `Solved! Play it again without mistakes or hints to get all 3 stars.`}
-            </p>
+            <p>{success >= 3 ? t('ui.modal.perfect') : t('ui.modal.solved')}</p>
             <div className="modal-actions">
               <button className="btn ghost" onClick={() => setSuccess(null)}>
-                Stay here
+                {t('ui.modal.stay')}
               </button>
-              {onNext ? (
-                <button className="btn run" onClick={onNext}>
-                  Next level ➜
-                </button>
+              {level.exam ? (
+                onNextSection ? (
+                  <button className="btn run" onClick={onNextSection}>
+                    {t('ui.modal.nextSection')}
+                  </button>
+                ) : (
+                  <button className="btn run" onClick={onBack}>
+                    {t('ui.modal.finished')}
+                  </button>
+                )
               ) : (
-                <button className="btn run" onClick={onBack}>
-                  🏆 You finished them all!
-                </button>
+                <>
+                  {examReady(progressAfter) && (
+                    <button className="btn check" onClick={onExam}>
+                      {t('ui.modal.toExam')}
+                    </button>
+                  )}
+                  {onNext && (
+                    <button className="btn run" onClick={onNext}>
+                      {t('ui.modal.next')}
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -703,20 +739,20 @@ export function LevelScreen({ level, levelNumber, savedCode, stars, onSaveCode, 
       {spellbook && (
         <div className="modal-backdrop" onClick={() => setSpellbook(false)}>
           <div className="modal spellbook" onClick={(e) => e.stopPropagation()}>
-            <h2>📕 Spellbook</h2>
-            <p className="muted">Everything you have learned so far:</p>
+            <h2>{t('ui.spellbookTitle')}</h2>
+            <p className="muted">{t('ui.spellbookText')}</p>
             <div className="spells">
               {concepts.map((c) => (
                 <div key={c} className="spell">
-                  <h3>{CONCEPT_DOCS[c].title}</h3>
-                  <CodeSample code={CONCEPT_DOCS[c].code} concepts={concepts} />
-                  <p>{CONCEPT_DOCS[c].text}</p>
+                  <h3>{t(`concepts.${c}.title`)}</h3>
+                  <CodeSample code={CONCEPT_CODE[c]} concepts={concepts} />
+                  <p>{t(`concepts.${c}.text`)}</p>
                 </div>
               ))}
             </div>
             <div className="modal-actions">
               <button className="btn run" onClick={() => setSpellbook(false)}>
-                Close
+                {t('ui.close')}
               </button>
             </div>
           </div>

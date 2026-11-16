@@ -1,9 +1,12 @@
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, type ReactNode } from 'react'
 import type { Values } from '../lang/interpreter'
 import { COLORS, PATTERNS, SIZES, type Marble as M, type PropName } from '../lang/marble'
 import type { CmpOp } from '../lang/parser'
 import type { Concept } from '../game/levels'
+import { t } from '../i18n'
+import { kw, word } from '../i18n/words'
 import { Marble } from '../ui/Marble'
+import { KindIcon } from '../ui/icons'
 import {
   bin,
   cmp,
@@ -13,6 +16,7 @@ import {
   newBlock,
   nid,
   numProp,
+  tidyCond,
   total,
   type Block,
   type BlockProgram,
@@ -31,8 +35,46 @@ interface EditorCtx {
   readOnly: boolean
   edit: (id: string, fn: (node: any) => any) => void
   addQuestion: (id: string, op: 'and' | 'or') => void
+  /** questions and boxes that were just added - they pop in with an animation */
+  fresh: Set<string>
 }
-const Ctx = createContext<EditorCtx>({ concepts: new Set(), readOnly: true, edit: () => {}, addQuestion: () => {} })
+const Ctx = createContext<EditorCtx>({
+  concepts: new Set(),
+  readOnly: true,
+  edit: () => {},
+  addQuestion: () => {},
+  fresh: new Set(),
+})
+
+/** Ids of all questions and boxes in the program. */
+function condIds(program: BlockProgram): Set<string> {
+  const ids = new Set<string>()
+  const walk = (c: Cond | undefined) => {
+    if (!c) return
+    ids.add(c.id)
+    if (c.t === 'group') c.items.forEach(walk)
+  }
+  for (const b of program) if (b.kind !== 'reduce') walk(b.cond)
+  return ids
+}
+
+/**
+ * Questions and boxes that appeared since the last edit. A program that was replaced as a
+ * whole (new level, reset) shares no ids with the old one - nothing is animated then.
+ */
+function useFresh(program: BlockProgram): Set<string> {
+  const prev = useRef<Set<string> | null>(null)
+  const ids = useMemo(() => condIds(program), [program])
+  const fresh = useMemo(() => {
+    const before = prev.current
+    if (!before || ![...ids].some((id) => before.has(id))) return new Set<string>()
+    return new Set([...ids].filter((id) => !before.has(id)))
+  }, [ids])
+  useEffect(() => {
+    prev.current = ids
+  }, [ids])
+  return fresh
+}
 
 /** Values for the marble currently being explained (only inside the active block). */
 export interface Trace {
@@ -42,6 +84,9 @@ export interface Trace {
 const TraceCtx = createContext<Trace | null>(null)
 
 const useEd = () => useContext(Ctx)
+
+/** Boxes may be nested only this deep: a box inside a box, but no deeper (kids get lost). */
+const MAX_BOX_DEPTH = 2
 
 // ---------------------------------------------------------------- option lists
 
@@ -62,7 +107,7 @@ function wordOptions(prop: PropName): Option<string>[] {
         <span className="mini" aria-hidden>
           <Marble marble={MARBLE_FOR(prop, v)} title="" />
         </span>
-        {v}
+        {word(v)}
       </span>
     ),
   }))
@@ -76,21 +121,21 @@ function propOptions(concepts: Set<Concept>, forMap: boolean): Option<PropName>[
   if (concepts.has('size')) props.push('size')
   if (concepts.has('pattern')) props.push('pattern')
   if (forMap ? concepts.has('math') : concepts.has('compare')) props.push('number')
-  return props.map((p) => ({ value: p, label: p, className: 'w-prop' }))
+  return props.map((p) => ({ value: p, label: word(p), className: 'w-prop' }))
 }
 
 function opOptions(prop: PropName, concepts: Set<Concept>): Option<CmpOp>[] {
   const ops: CmpOp[] = ['==']
   if (concepts.has('isnot')) ops.push('!=')
   if ((prop === 'number' || prop === 'size') && concepts.has('compare')) ops.push('>', '<', '>=', '<=')
-  const label: Record<CmpOp, string> = { '==': 'is', '!=': 'is not', '>': '>', '<': '<', '>=': '>=', '<=': '<=' }
+  const label: Record<CmpOp, string> = { '==': kw('is'), '!=': kw('isnot'), '>': '>', '<': '<', '>=': '>=', '<=': '<=' }
   return ops.map((o) => ({ value: o, label: label[o], className: 'w-logic' }))
 }
 
 // ---------------------------------------------------------------- small pieces
 
 function Verdict({ ok }: { ok: boolean }) {
-  return <span className={`verdict-badge ${ok ? 'yes' : 'no'}`}>{ok ? '✓ yes' : '✗ no'}</span>
+  return <span className={`verdict-badge ${ok ? 'yes' : 'no'}`}>{ok ? t('blocks.yes') : t('blocks.no')}</span>
 }
 
 function IconBtn({ onClick, title, children, className = '' }: { onClick: () => void; title: string; children: ReactNode; className?: string }) {
@@ -101,27 +146,47 @@ function IconBtn({ onClick, title, children, className = '' }: { onClick: () => 
   )
 }
 
+const other = (op: 'and' | 'or') => (op === 'and' ? 'or' : 'and')
+
 // ---------------------------------------------------------------- questions
 
-function CmpView({ c, removable }: { c: Extract<Cond, { t: 'cmp' }>; removable: boolean }) {
+interface CondProps {
+  c: Cond
+  /** how many boxes this question sits in */
+  depth?: number
+  /** the box around it, if any */
+  parentOp?: 'and' | 'or'
+  removable?: boolean
+}
+
+function CmpView({ c, depth = 0, parentOp, removable }: CondProps & { c: Extract<Cond, { t: 'cmp' }> }) {
   const ed = useEd()
   const trace = useContext(TraceCtx)
   const result = trace?.values.get(c.id)
   const isNumber = c.prop === 'number'
   const parity = c.value === 'even' || c.value === 'odd'
 
-  const valueOptions: Option<string | number>[] =
-    isNumber
-      ? [
-          ...(ed.concepts.has('evenodd') && (c.op === '==' || c.op === '!=')
-            ? (['even', 'odd'] as const).map((v) => ({ value: v, label: v, className: 'w-value' }))
-            : []),
-          ...NUMBERS.map((n) => ({ value: n, label: String(n), className: 'w-num' })),
-        ]
-      : wordOptions(c.prop)
+  const valueOptions: Option<string | number>[] = isNumber
+    ? [
+        ...(ed.concepts.has('evenodd') && (c.op === '==' || c.op === '!=')
+          ? (['even', 'odd'] as const).map((v) => ({ value: v, label: word(v), className: 'w-value' }))
+          : []),
+        ...NUMBERS.map((n) => ({ value: n, label: String(n), className: 'w-num' })),
+      ]
+    : wordOptions(c.prop)
+
+  // Joining buttons: a lonely question can start a box; inside a box you may start
+  // a box of the other kind - but only one level deep.
+  const joins: ('and' | 'or')[] = []
+  if (!parentOp) {
+    if (ed.concepts.has('and')) joins.push('and')
+    if (ed.concepts.has('or')) joins.push('or')
+  } else if (ed.concepts.has('brackets') && depth < MAX_BOX_DEPTH && ed.concepts.has(other(parentOp))) {
+    joins.push(other(parentOp))
+  }
 
   return (
-    <span className={`q ${result === undefined ? '' : result ? 'yes' : 'no'}`}>
+    <span className={`q ${result === undefined ? '' : result ? 'yes' : 'no'} ${ed.fresh.has(c.id) ? 'fresh' : ''}`}>
       <Picker
         value={c.prop}
         options={propOptions(ed.concepts, false)}
@@ -145,26 +210,24 @@ function CmpView({ c, removable }: { c: Extract<Cond, { t: 'cmp' }>; removable: 
       />
       {trace && result !== undefined && (
         <>
-          <span className="actual">
-            (it is {String(trace.marble[c.prop])})
-          </span>
+          <span className="actual">{t('blocks.itIs', { value: word(trace.marble[c.prop]) })}</span>
           <Verdict ok={!!result} />
         </>
       )}
       {!ed.readOnly && (
         <span className="q-tools">
-          {ed.concepts.has('and') && (
-            <IconBtn className="join and" title="Add another question with AND" onClick={() => ed.addQuestion(c.id, 'and')}>
-              + and
+          {joins.map((op) => (
+            <IconBtn
+              key={op}
+              className={`join ${op}`}
+              title={parentOp ? t('blocks.newBoxTitle', { op: kw(op) }) : t('blocks.joinTitle', { op: kw(op) })}
+              onClick={() => ed.addQuestion(c.id, op)}
+            >
+              + {kw(op)}
             </IconBtn>
-          )}
-          {ed.concepts.has('or') && (
-            <IconBtn className="join or" title="Add another question with OR" onClick={() => ed.addQuestion(c.id, 'or')}>
-              + or
-            </IconBtn>
-          )}
+          ))}
           {removable && (
-            <IconBtn className="remove" title="Remove this question" onClick={() => ed.edit(c.id, () => null)}>
+            <IconBtn className="remove" title={t('blocks.removeQuestion')} onClick={() => ed.edit(c.id, () => null)}>
               ✕
             </IconBtn>
           )}
@@ -174,28 +237,42 @@ function CmpView({ c, removable }: { c: Extract<Cond, { t: 'cmp' }>; removable: 
   )
 }
 
-export function CondView({ c, removable = false }: { c: Cond; removable?: boolean }) {
+export function CondView({ c, depth = 0, parentOp, removable = false }: CondProps) {
   const ed = useEd()
   const trace = useContext(TraceCtx)
-  if (c.t === 'cmp') return <CmpView c={c} removable={removable} />
+  if (c.t === 'cmp') return <CmpView c={c} depth={depth} parentOp={parentOp} removable={removable} />
   const result = trace?.values.get(c.id)
+  const canSwitch = ed.concepts.has('and') && ed.concepts.has('or')
+  const last = c.items[c.items.length - 1]
   return (
-    <div className={`group ${c.op} ${result === undefined ? '' : result ? 'yes' : 'no'}`}>
+    <div className={`group ${c.op} ${result === undefined ? '' : result ? 'yes' : 'no'} ${ed.fresh.has(c.id) ? 'fresh' : ''}`}>
       <div className="group-head">
-        <span className="group-title">{c.op === 'and' ? 'ALL of these must be yes' : 'ONE yes is enough'}</span>
+        <Picker
+          value={c.op}
+          readOnly={ed.readOnly || !canSwitch}
+          className="group-title"
+          title={t('blocks.switchBox')}
+          options={(['and', 'or'] as const).map((op) => ({ value: op, label: t(`blocks.box.${op}`), className: `box-${op}` }))}
+          onPick={(op) => ed.edit(c.id, (g) => tidyCond({ ...g, op }))}
+        />
         {result !== undefined && <Verdict ok={!!result} />}
         {!ed.readOnly && removable && (
-          <IconBtn className="remove" title="Remove this box" onClick={() => ed.edit(c.id, () => null)}>
+          <IconBtn className="remove" title={t('blocks.removeBox')} onClick={() => ed.edit(c.id, () => null)}>
             ✕
           </IconBtn>
         )}
       </div>
       {c.items.map((item, i) => (
         <div key={item.id} className="group-item">
-          {i > 0 && <div className={`joint ${c.op}`}>{c.op}</div>}
-          <CondView c={item} removable />
+          {i > 0 && <div className={`joint ${c.op}`}>{kw(c.op)}</div>}
+          <CondView c={item} depth={depth + 1} parentOp={c.op} removable />
         </div>
       ))}
+      {!ed.readOnly && (
+        <IconBtn className={`join ${c.op} box-add`} title={t('blocks.addToBox')} onClick={() => ed.addQuestion(last.id, c.op)}>
+          + {kw(c.op)}
+        </IconBtn>
+      )}
     </div>
   )
 }
@@ -221,7 +298,7 @@ function NumView({ n, inFold, top = false }: { n: Num; inFold: boolean; top?: bo
         <NumView n={n.r} inFold={inFold} />
         {v !== undefined && <span className="eq">= {String(v)}</span>}
         {!ed.readOnly && top && (
-          <IconBtn className="remove" title="Remove the math" onClick={() => ed.edit(n.id, (x) => x.l)}>
+          <IconBtn className="remove" title={t('blocks.removeMath')} onClick={() => ed.edit(n.id, (x) => x.l)}>
             ✕
           </IconBtn>
         )}
@@ -230,8 +307,8 @@ function NumView({ n, inFold, top = false }: { n: Num; inFold: boolean; top?: bo
   } else {
     const key = n.t === 'lit' ? n.v : n.t
     const options: Option<string | number>[] = [
-      { value: 'prop', label: 'number', className: 'w-prop' },
-      ...(inFold ? [{ value: 'total', label: 'total', className: 'w-prop' }] : []),
+      { value: 'prop', label: word('number'), className: 'w-prop' },
+      ...(inFold ? [{ value: 'total', label: kw('total'), className: 'w-prop' }] : []),
       ...NUMBERS.map((x) => ({ value: x, label: String(x), className: 'w-num' })),
     ]
     body = (
@@ -251,8 +328,8 @@ function NumView({ n, inFold, top = false }: { n: Num; inFold: boolean; top?: bo
     <>
       {body}
       {top && !ed.readOnly && ed.concepts.has('math') && (
-        <IconBtn className="add-math" title="Add math (+ − × ÷)" onClick={() => ed.edit(n.id, (x) => bin('+', x, lit(1)))}>
-          ⊕ math
+        <IconBtn className="add-math" title={t('blocks.addMathTitle')} onClick={() => ed.edit(n.id, (x) => bin('+', x, lit(1)))}>
+          {t('blocks.addMath')}
         </IconBtn>
       )}
     </>
@@ -267,15 +344,22 @@ function ValView({ v, prop }: { v: Val; prop: PropName }) {
 
 // ---------------------------------------------------------------- blocks
 
-const KIND_ICON = { filter: '🚪', map: '🎨', reduce: '🧮' }
-
 function BlockBody({ b }: { b: Block }) {
   const ed = useEd()
   switch (b.kind) {
     case 'filter':
       return (
         <div className="block-body">
-          <span className="say">keep marbles where</span>
+          <Picker
+            value={b.negate ? 'drop' : 'keep'}
+            readOnly={ed.readOnly || (!ed.concepts.has('negate') && !b.negate)}
+            className={`filter-mode ${b.negate ? 'drop' : 'keep'}`}
+            options={[
+              { value: 'keep', label: t('blocks.keepWhere') },
+              { value: 'drop', label: t('blocks.dropWhere') },
+            ]}
+            onPick={(m) => ed.edit(b.id, (x) => ({ ...x, negate: m === 'drop' || undefined }))}
+          />
           <CondView c={b.cond} />
         </div>
       )
@@ -291,10 +375,10 @@ function BlockBody({ b }: { b: Block }) {
                   readOnly={ed.readOnly}
                   onPick={(prop) => ed.edit(a.id, (x) => ({ ...x, prop, value: defaultVal(prop) }))}
                 />
-                <span className="arrow-word">becomes</span>
+                <span className="arrow-word">{kw('becomes')}</span>
                 <ValView v={a.value} prop={a.prop} />
                 {!ed.readOnly && b.assigns.length > 1 && (
-                  <IconBtn className="remove" title="Remove this change" onClick={() => ed.edit(a.id, () => null)}>
+                  <IconBtn className="remove" title={t('blocks.removeChange')} onClick={() => ed.edit(a.id, () => null)}>
                     ✕
                   </IconBtn>
                 )}
@@ -304,22 +388,22 @@ function BlockBody({ b }: { b: Block }) {
           {!ed.readOnly && ed.concepts.has('mapmany') && (
             <IconBtn
               className="add"
-              title="Change something else too"
+              title={t('blocks.changeMoreTitle')}
               onClick={() => {
                 const used = new Set(b.assigns.map((a) => a.prop))
                 const prop = (['color', 'size', 'pattern', 'number'] as PropName[]).find((p) => !used.has(p)) ?? 'color'
                 ed.edit(b.id, (x) => ({ ...x, assigns: [...x.assigns, { id: nid(), prop, value: defaultVal(prop) }] }))
               }}
             >
-              + change more
+              {t('blocks.changeMore')}
             </IconBtn>
           )}
           {b.cond ? (
             <div className="only-if">
-              <span className="say">only if</span>
+              <span className="say">{kw('onlyIf')}</span>
               <CondView c={b.cond} />
               {!ed.readOnly && (
-                <IconBtn className="remove" title="Remove the 'only if'" onClick={() => ed.edit(b.id, (x) => ({ ...x, cond: undefined }))}>
+                <IconBtn className="remove" title={t('blocks.removeOnlyIf')} onClick={() => ed.edit(b.id, (x) => ({ ...x, cond: undefined }))}>
                   ✕
                 </IconBtn>
               )}
@@ -327,8 +411,8 @@ function BlockBody({ b }: { b: Block }) {
           ) : (
             !ed.readOnly &&
             ed.concepts.has('mapif') && (
-              <IconBtn className="add" title="Change only some marbles" onClick={() => ed.edit(b.id, (x) => ({ ...x, cond: cmp() }))}>
-                + only if...
+              <IconBtn className="add" title={t('blocks.onlyIfTitle')} onClick={() => ed.edit(b.id, (x) => ({ ...x, cond: cmp() }))}>
+                {t('blocks.addOnlyIf')}
               </IconBtn>
             )
           )}
@@ -339,13 +423,12 @@ function BlockBody({ b }: { b: Block }) {
       if (ed.concepts.has('sum')) modes.push('sum')
       if (ed.concepts.has('maxmin')) modes.push('max', 'min')
       if (ed.concepts.has('fold')) modes.push('from')
-      const label: Record<ReduceMode, string> = { count: 'count', sum: 'sum', max: 'max', min: 'min', from: 'from' }
       return (
         <div className="block-body">
           <Picker
             value={b.mode}
             readOnly={ed.readOnly}
-            options={modes.map((m) => ({ value: m, label: label[m], className: 'w-red' }))}
+            options={modes.map((m) => ({ value: m, label: kw(m), className: 'w-red' }))}
             onPick={(mode) =>
               ed.edit(b.id, (x) => ({
                 ...x,
@@ -354,17 +437,17 @@ function BlockBody({ b }: { b: Block }) {
               }))
             }
           />
-          {b.mode === 'count' && <span className="say">how many marbles are there?</span>}
+          {b.mode === 'count' && <span className="say">{t('blocks.howMany')}</span>}
           {(b.mode === 'sum' || b.mode === 'max' || b.mode === 'min') && (
             <>
-              <span className="say">{b.mode === 'sum' ? 'add up' : b.mode === 'max' ? 'biggest' : 'smallest'}</span>
+              <span className="say">{t(`blocks.say.${b.mode}`)}</span>
               <NumView n={b.expr} inFold={false} top />
             </>
           )}
           {b.mode === 'from' && (
             <div className="fold">
               <div>
-                <span className="say">total starts at</span>
+                <span className="say">{t('blocks.totalStarts')}</span>
                 <Picker
                   value={b.start}
                   grid
@@ -374,7 +457,7 @@ function BlockBody({ b }: { b: Block }) {
                 />
               </div>
               <div>
-                <span className="say">for each marble, total becomes</span>
+                <span className="say">{t('blocks.totalBecomes')}</span>
                 <NumView n={b.expr} inFold top />
               </div>
             </div>
@@ -408,9 +491,16 @@ export function BlockEditor({ program, concepts, readOnly = false, onChange, edi
     readOnly,
     edit: edit ?? (() => {}),
     addQuestion: addQuestion ?? (() => {}),
+    fresh: useFresh(program),
   }
   const reduceAt = program.findIndex((b) => b.kind === 'reduce')
   const conceptSet = ctx.concepts
+  const activeRef = useRef<HTMLDivElement>(null)
+
+  // keep the block that is running in view while stepping through
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [active?.index])
 
   const add = (kind: Block['kind']) => {
     const b = newBlock(kind)
@@ -428,29 +518,33 @@ export function BlockEditor({ program, concepts, readOnly = false, onChange, edi
   return (
     <Ctx.Provider value={ctx}>
       <div className={`blocks ${compact ? 'compact' : ''} ${readOnly ? 'read-only' : ''}`}>
-        {program.length === 0 && !compact && <div className="blocks-empty">Your machine is empty. Add a step below! 👇</div>}
+        {program.length === 0 && !compact && <div className="blocks-empty">{t('blocks.empty')}</div>}
         {program.map((b, i) => {
           const isActive = active?.index === i
           const canDown = i < program.length - 1 && program[i + 1].kind !== 'reduce'
           const canUp = i > 0 && b.kind !== 'reduce'
           return (
-            <div key={b.id} className={`block ${b.kind} ${isActive ? 'active' : ''} ${active && active.index > i ? 'done' : ''}`}>
+            <div
+              key={b.id}
+              ref={isActive ? activeRef : undefined}
+              className={`block ${b.kind} ${isActive ? 'active' : ''} ${active && active.index > i ? 'done' : ''}`}
+            >
               {!compact && <div className="block-num">{i + 1}</div>}
               <div className="block-main">
                 <div className="block-head">
                   <span className={`kind-chip ${b.kind}`}>
-                    {KIND_ICON[b.kind]} {b.kind}
+                    <KindIcon kind={b.kind} /> {kw(b.kind)}
                   </span>
                   {isActive && active?.status}
                   {!readOnly && (
                     <span className="block-tools">
-                      <IconBtn title="Move up" onClick={() => move(i, -1)} className={canUp ? '' : 'hidden'}>
+                      <IconBtn title={t('blocks.moveUp')} onClick={() => move(i, -1)} className={canUp ? '' : 'hidden'}>
                         ▲
                       </IconBtn>
-                      <IconBtn title="Move down" onClick={() => move(i, 1)} className={canDown ? '' : 'hidden'}>
+                      <IconBtn title={t('blocks.moveDown')} onClick={() => move(i, 1)} className={canDown ? '' : 'hidden'}>
                         ▼
                       </IconBtn>
-                      <IconBtn title="Delete this step" className="remove" onClick={() => onChange?.(program.filter((x) => x !== b))}>
+                      <IconBtn title={t('blocks.deleteStep')} className="remove" onClick={() => onChange?.(program.filter((x) => x !== b))}>
                         🗑
                       </IconBtn>
                     </span>
@@ -465,18 +559,18 @@ export function BlockEditor({ program, concepts, readOnly = false, onChange, edi
         })}
         {!readOnly && (
           <div className="palette">
-            <span className="say">Add a step:</span>
+            <span className="say">{t('blocks.addStep')}</span>
             <button type="button" className="add-block filter" onClick={() => add('filter')}>
-              + 🚪 filter
+              + <KindIcon kind="filter" /> {kw('filter')}
             </button>
             {conceptSet.has('map') && (
               <button type="button" className="add-block map" onClick={() => add('map')}>
-                + 🎨 map
+                + 🎨 {kw('map')}
               </button>
             )}
             {conceptSet.has('count') && (
               <button type="button" className="add-block reduce" disabled={reduceAt >= 0} onClick={() => add('reduce')}>
-                + 🧮 reduce
+                + 🧮 {kw('reduce')}
               </button>
             )}
           </div>
@@ -485,4 +579,3 @@ export function BlockEditor({ program, concepts, readOnly = false, onChange, edi
     </Ctx.Provider>
   )
 }
-

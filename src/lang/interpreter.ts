@@ -59,11 +59,11 @@ function evalNode(e: Expr, m: Marble, line: number, total: number, rec: Values):
           break
         case '/':
         case '%':
-          if (r === 0) throw new LangError('Oops - you cannot divide by zero!', line, e.col, e.end)
+          if (r === 0) throw new LangError('Oops - you cannot divide by zero!', line, e.col, e.end, 'divzero')
           v = e.op === '/' ? Math.trunc(l / r) : l % r
           break
       }
-      if (Math.abs(v) > MAX_ABS) throw new LangError('Whoa, this number got way too big!', line, e.col, e.end)
+      if (Math.abs(v) > MAX_ABS) throw new LangError('Whoa, this number got way too big!', line, e.col, e.end, 'toobig')
       return v
     }
     case 'cmp': {
@@ -147,7 +147,7 @@ function runStep(step: Step, input: Marble[]): { stage: Stage; out: Output } {
         label = 'total'
         next = (a, m, rec) => {
           const v = evaluate(fold.body, m, fold.line, a as number, rec) as number
-          if (Math.abs(v) > MAX_ABS) throw new LangError('Whoa, the total got way too big!', step.line)
+          if (Math.abs(v) > MAX_ABS) throw new LangError('Whoa, the total got way too big!', step.line, 0, 1, 'toobig')
           return v
         }
       }

@@ -1,10 +1,13 @@
-import type { CSSProperties, ReactNode } from 'react'
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import type { Stage } from '../lang/interpreter'
 import type { Marble as M, Output } from '../lang/marble'
 import type { LangError } from '../lang/parser'
 import type { Block } from '../blocks/model'
 import { Marble, OutputView } from './Marble'
 import { Explain } from './Explain'
+import { KindIcon } from './icons'
+import { t } from '../i18n'
+import { kw } from '../i18n/words'
 
 /** One position of the step-by-step debugger. stage -1 = before start, stage = stages.length = the end. */
 export interface Tick {
@@ -40,6 +43,7 @@ function Slot({ m, i, showNumber, cls = '', badge, tip, onClick }: SlotProps) {
       onClick={onClick}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.()}
+      data-current={cls.includes('current') || undefined}
     >
       <Marble marble={m} showNumber={showNumber} title={tip ? '' : undefined} />
       {cls.includes('dropped') && <span className="x-mark">✕</span>}
@@ -68,7 +72,7 @@ function StageRow({ stage, block, si, showNumber, done, current, onPick }: RowPr
   const pick = (i: number) => (onPick ? () => onPick(si, i) : undefined)
   const state = (i: number) => (i === current ? 'current' : i >= n ? 'pending' : '')
 
-  if (stage.input.length === 0) return <div className="marble-row"><span className="empty">no marbles reach this step</span></div>
+  if (stage.input.length === 0) return <div className="marble-row"><span className="empty">{t('machine.noMarblesHere')}</span></div>
 
   if (stage.kind === 'filter')
     return (
@@ -91,7 +95,7 @@ function StageRow({ stage, block, si, showNumber, done, current, onPick }: RowPr
   return (
     <div className="marble-row reduce-row">
       <div className="slot start" style={{ '--i': 0 } as CSSProperties}>
-        <span className="start-label">{stage.label} starts at</span>
+        <span className="start-label">{t('machine.startsAt', { label: t(`explain.label.${stage.label}`) })}</span>
         <span className="acc-badge big">{stage.start ?? '–'}</span>
       </div>
       {stage.input.map((m, i) => (
@@ -108,7 +112,6 @@ function StageRow({ stage, block, si, showNumber, done, current, onPick }: RowPr
   )
 }
 
-const KIND_LABEL = { filter: '🚪 filter', map: '🎨 map', reduce: '🧮 reduce' }
 
 interface Props {
   input: M[]
@@ -130,12 +133,23 @@ export function Machine({ input, stages, blocks, actual, expected, error, showNu
   const pass = actual !== undefined && !error && JSON.stringify(actual) === JSON.stringify(expected)
   // everything is shown at once - no animation
   const delay = (_k: number) => ({ '--d': '0s' }) as CSSProperties
+  const root = useRef<HTMLDivElement>(null)
+
+  // while stepping, keep the marble that is being looked at in view
+  useEffect(() => {
+    if (!tick) return
+    const el =
+      root.current?.querySelector('[data-current]') ??
+      root.current?.querySelector('.stage.focus') ??
+      (tick.stage >= stages.length ? root.current?.querySelector('.stage.final, .run-error') : null)
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [tick, stages.length])
 
   return (
-    <div className={`pipeline still ${stepping ? 'stepping' : ''}`}>
+    <div ref={root} className={`pipeline still ${stepping ? 'stepping' : ''}`}>
       <div className={`stage ${stepping && tick!.stage === -1 ? 'focus' : ''}`} style={delay(0)}>
         <div className="stage-label">
-          <span className="kind in">📥 in</span>
+          <span className="kind in">{t('machine.in')}</span>
         </div>
         <div className="marble-row">
           {input.map((m, i) => (
@@ -148,9 +162,11 @@ export function Machine({ input, stages, blocks, actual, expected, error, showNu
           <div key={si} className={`stage ${stepping && si === tick!.stage ? 'focus' : ''}`} style={delay(si + 1)}>
             <div className="pipe" />
             <div className="stage-label">
-              <span className={`kind ${s.kind}`}>{KIND_LABEL[s.kind]}</span>
-              <span className="step-ref">step {si + 1}</span>
-              {!stepping && <span className="tip-hint">hover or click a marble to see why</span>}
+              <span className={`kind ${s.kind}`}>
+                <KindIcon kind={s.kind} /> {kw(s.kind)}
+              </span>
+              <span className="step-ref">{t('machine.step', { n: si + 1 })}</span>
+              {!stepping && <span className="tip-hint">{t('machine.tipHint')}</span>}
             </div>
             <StageRow
               stage={s}
@@ -169,7 +185,7 @@ export function Machine({ input, stages, blocks, actual, expected, error, showNu
           <div className="stage" style={delay(stages.length + 1)}>
             <div className="pipe" />
             <div className="run-error">
-              💥 Step {error.line}: {error.message}
+              {t('machine.error', { line: error.line, message: error.code ? t(`errors.${error.code}`) : error.message })}
             </div>
           </div>
         ) : (
@@ -177,14 +193,14 @@ export function Machine({ input, stages, blocks, actual, expected, error, showNu
             <div className="pipe" />
             <div className="compare">
               <div className="io-box out">
-                <div className="io-label">Your machine made</div>
+                <div className="io-label">{t('machine.made')}</div>
                 {actual !== undefined && <OutputView output={actual} showNumber={showNumber} />}
               </div>
               <div className="io-box expected">
-                <div className="io-label">Expected</div>
+                <div className="io-label">{t('machine.expected')}</div>
                 <OutputView output={expected} showNumber={showNumber} />
               </div>
-              <div className="verdict">{pass ? '✅ Match!' : '❌ Not the same'}</div>
+              <div className="verdict">{pass ? t('machine.match') : t('machine.notSame')}</div>
             </div>
           </div>
         ))}

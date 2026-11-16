@@ -5,8 +5,11 @@ export class LangError extends Error {
   line: number
   col: number
   endCol: number
-  constructor(message: string, line: number, col = 0, endCol = col + 1) {
+  /** for errors shown to players: a translation key under "errors." */
+  code?: string
+  constructor(message: string, line: number, col = 0, endCol = col + 1, code?: string) {
     super(message)
+    this.code = code
     this.line = line
     this.col = col
     this.endCol = endCol

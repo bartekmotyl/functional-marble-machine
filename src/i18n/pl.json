@@ -1,0 +1,1576 @@
+{
+  "meta": {
+    "name": "Polski",
+    "flag": "🇵🇱"
+  },
+  "words": {
+    "red": "czerwony",
+    "blue": "niebieski",
+    "green": "zielony",
+    "yellow": "żółty",
+    "purple": "fioletowy",
+    "small": "mały",
+    "medium": "średni",
+    "big": "duży",
+    "plain": "gładki",
+    "striped": "w paski",
+    "dotted": "w kropki",
+    "color": "kolor",
+    "size": "rozmiar",
+    "pattern": "wzór",
+    "number": "liczba",
+    "even": "parzysta",
+    "odd": "nieparzysta"
+  },
+  "kw": {
+    "filter": "filtruj",
+    "map": "mapuj",
+    "reduce": "redukuj",
+    "is": "jest",
+    "isnot": "nie jest",
+    "and": "i",
+    "or": "lub",
+    "becomes": "zmienia się na",
+    "onlyIf": "tylko jeśli",
+    "total": "wynik",
+    "count": "policz",
+    "sum": "suma",
+    "max": "maks",
+    "min": "min",
+    "from": "od"
+  },
+  "code": {
+    "filter": "filtruj",
+    "map": "mapuj",
+    "reduce": "redukuj",
+    "is": "jest",
+    "isnot": "nie jest",
+    "not": "nie",
+    "and": "i",
+    "or": "lub",
+    "if": "jeśli",
+    "count": "policz",
+    "sum": "suma",
+    "max": "maks",
+    "min": "min",
+    "from": "od",
+    "total": "wynik",
+    "color": "kolor",
+    "size": "rozmiar",
+    "pattern": "wzór",
+    "number": "liczba",
+    "red": "czerwony",
+    "blue": "niebieski",
+    "green": "zielony",
+    "yellow": "żółty",
+    "purple": "fioletowy",
+    "small": "mały",
+    "medium": "średni",
+    "big": "duży",
+    "plain": "gładki",
+    "striped": "w paski",
+    "dotted": "w kropki",
+    "even": "parzysta",
+    "odd": "nieparzysta"
+  },
+  "blocks": {
+    "yes": "✓ tak",
+    "no": "✗ nie",
+    "itIs": "(jest: {value})",
+    "joinTitle": "Dodaj kolejne pytanie ze słowem „{op}”",
+    "newBoxTitle": "Zrób tu nowe pudełko „{op}”",
+    "addToBox": "Dodaj jeszcze jedno pytanie do tego pudełka",
+    "removeQuestion": "Usuń to pytanie",
+    "removeBox": "Usuń to pudełko",
+    "switchBox": "Kliknij, aby zmienić rodzaj pudełka",
+    "box": {
+      "and": "WSZYSTKIE muszą mówić TAK",
+      "or": "WYSTARCZY JEDNO TAK"
+    },
+    "removeMath": "Usuń działanie",
+    "addMath": "⊕ działanie",
+    "addMathTitle": "Dodaj działanie (+ − × ÷)",
+    "removeChange": "Usuń tę zmianę",
+    "changeMore": "+ zmień więcej",
+    "changeMoreTitle": "Zmień też coś innego",
+    "removeOnlyIf": "Usuń „tylko jeśli”",
+    "addOnlyIf": "+ tylko jeśli...",
+    "onlyIfTitle": "Zmień tylko niektóre kulki",
+    "howMany": "ile jest kulek?",
+    "say": {
+      "sum": "dodaj",
+      "max": "największa:",
+      "min": "najmniejsza:"
+    },
+    "totalStarts": "wynik zaczyna od",
+    "totalBecomes": "dla każdej kulki wynik zmienia się na",
+    "keepWhere": "zostaw kulki, dla których",
+    "dropWhere": "wyrzuć kulki, dla których",
+    "empty": "Twoja maszyna jest pusta. Dodaj krok poniżej! 👇",
+    "moveUp": "Przesuń w górę",
+    "moveDown": "Przesuń w dół",
+    "deleteStep": "Usuń ten krok",
+    "addStep": "Dodaj krok:"
+  },
+  "machine": {
+    "in": "📥 wejście",
+    "step": "krok {n}",
+    "tipHint": "najedź na kulkę lub kliknij, żeby zobaczyć dlaczego",
+    "noMarblesHere": "do tego kroku nie dotarła żadna kulka",
+    "noMarbles": "brak kulek",
+    "startsAt": "{label} zaczyna od",
+    "made": "Twoja maszyna dała",
+    "expected": "Oczekiwane",
+    "match": "✅ Zgadza się!",
+    "notSame": "❌ Nie to samo",
+    "error": "💥 Krok {line}: {message}"
+  },
+  "explain": {
+    "kept": "✓ Tak - kulka toczy się dalej.",
+    "dropped": "✗ Nie - kulka wypada.",
+    "keptNegated": "✗ Nie - więc tej kulki NIE wyrzucamy. Toczy się dalej.",
+    "droppedNegated": "✓ Tak - więc ta kulka zostaje wyrzucona.",
+    "onlyIf": "tylko jeśli",
+    "becomes": "{prop} zmienia się na",
+    "was": "(było: {value})",
+    "already": "(już tak było)",
+    "unchanged": "✗ Odpowiedź to nie, więc ta kulka się nie zmienia.",
+    "count": "było {before}, jeszcze jedna kulka → {after}",
+    "sum": "suma była {before}, dodaj",
+    "biggest": "największa do tej pory: {before}, ta kulka:",
+    "smallest": "najmniejsza do tej pory: {before}, ta kulka:",
+    "nothingYet": "jeszcze nic",
+    "totalWas": "wynik był {before}. Nowy wynik:",
+    "status": {
+      "keep": "✓ zostaje",
+      "drop": "✗ wypada",
+      "changed": "✨ zmieniona",
+      "unchanged": "bez zmian",
+      "none": "brak kulek"
+    },
+    "label": {
+      "count": "licznik",
+      "sum": "suma",
+      "max": "maks",
+      "min": "min",
+      "total": "wynik"
+    }
+  },
+  "errors": {
+    "divzero": "Ups - nie można dzielić przez zero!",
+    "toobig": "Ojej, ta liczba zrobiła się za duża!",
+    "generic": "Coś jest nie tak z programem."
+  },
+  "marble": {
+    "label": "kulka: kolor {color}, rozmiar {size}, wzór {pattern}",
+    "labelNumber": "kulka: kolor {color}, rozmiar {size}, wzór {pattern}, liczba {number}"
+  },
+  "map": {
+    "title": "Maszyna do Kulek",
+    "tagline": "Buduj maszyny, które sortują, malują i liczą kulki - za pomocą kodu!",
+    "start": "▶ Zacznij grać",
+    "continue": "▶ Graj dalej",
+    "cheatOn": "🕹️ Tryb oszusta: WŁĄCZONY - wszystkie poziomy otwarte",
+    "cheatOff": "🕹️ Tryb oszusta: wyłączony",
+    "cheatTitle": "Tryb oszusta otwiera wszystkie poziomy",
+    "reset": "Zacznij od nowa",
+    "resetConfirm": "Usunąć wszystkie gwiazdki i zapisane maszyny?",
+    "locked": "Zdaj egzamin z poprzedniego działu, aby otworzyć ten",
+    "levelLocked": "Najpierw rozwiąż poprzedni poziom",
+    "exam": "🎓 Egzamin",
+    "examLocked": "Rozwiąż {n} poziomów z tego działu, aby otworzyć egzamin",
+    "openSection": "Otwórz dział",
+    "language": "Język"
+  },
+  "chapter": {
+    "section": "Dział {n}",
+    "learn": "Czego się nauczysz",
+    "progress": "Rozwiązane poziomy: {done} z {all}",
+    "start": "▶ Zaczynamy",
+    "continue": "▶ Ćwicz dalej",
+    "takeExam": "🎓 Podejdź do egzaminu",
+    "examLocked": {
+      "one": "🔒 Rozwiąż jeszcze {n} poziom, aby otworzyć egzamin",
+      "few": "🔒 Rozwiąż jeszcze {n} poziomy, aby otworzyć egzamin",
+      "many": "🔒 Rozwiąż jeszcze {n} poziomów, aby otworzyć egzamin",
+      "other": "🔒 Rozwiąż jeszcze {n} poziomów, aby otworzyć egzamin"
+    },
+    "examInfo": "Egzamin to najtrudniejsza zagadka w tym dziale. Zdaj go, aby otworzyć następny dział!",
+    "passed": "🎉 Dział ukończony! Egzamin zdany.",
+    "nextSection": "Następny dział ➜",
+    "backToMap": "← Mapa",
+    "allDone": "🏆 Ukończyłeś/aś wszystkie działy. Jesteś mistrzem/mistrzynią kulek!",
+    "practice": "Poziomy do ćwiczeń"
+  },
+  "level": {
+    "name": "Poziom {n}",
+    "exam": "🎓 Egzamin",
+    "examIntro": "🎓 To jest egzamin z tego działu - najtrudniejsza zagadka. Zdaj go, aby otworzyć następny dział!",
+    "thisTry": "ta próba",
+    "best": "najlepiej",
+    "starsTitle": "Rozwiąż bez błędów, a dostaniesz 3 gwiazdki. Każde błędne sprawdzenie lub podpowiedź kosztuje gwiazdkę.",
+    "examLeave": "Na razie za trudne? Poćwicz jeszcze - egzamin na Ciebie poczeka.",
+    "backToPractice": "← Wróć do poziomów ćwiczeniowych"
+  },
+  "ui": {
+    "map": "← Mapa",
+    "puzzle": "🧩 Zagadka",
+    "findRule": "🔍 Znajdź regułę!",
+    "findRuleText": "Zobacz, co WCHODZI, a co WYCHODZI. Co ma robić maszyna?",
+    "examples": "Przykłady - kliknij, aby włożyć do maszyny",
+    "inMachine": "⚙️ w maszynie",
+    "example": "Przykład {n}",
+    "secretTest": "🕵️ Tajny test",
+    "in": "WEJŚCIE",
+    "out": "WYJŚCIE",
+    "inShort": "WE",
+    "outShort": "WY",
+    "ruleLabel": "Reguła:",
+    "solutionLabel": "Przykładowe rozwiązanie:",
+    "tellRule": "💡 Powiedz mi regułę",
+    "needHint": "💡 Potrzebujesz podpowiedzi?",
+    "anotherHint": "💡 Kolejna podpowiedź",
+    "showSolution": "💡 Pokaż rozwiązanie",
+    "costsStar": "(kosztuje ⭐)",
+    "mustUse": "📏 Musisz użyć „{what}”",
+    "maxSteps": {
+      "one": "📏 Użyj tylko {n} kroku",
+      "few": "📏 Użyj najwyżej {n} kroków",
+      "many": "📏 Użyj najwyżej {n} kroków",
+      "other": "📏 Użyj najwyżej {n} kroków"
+    },
+    "program": "🛠️ Twój program",
+    "undo": "↶ Cofnij",
+    "clear": "🧹 Wyczyść",
+    "clearConfirm": "Usunąć wszystkie kroki i zacząć od nowa?",
+    "code": "</> Kod",
+    "codeTitle": "Twoja maszyna zapisana jako kod:",
+    "codeEmpty": "(pusto)",
+    "spellbook": "📕 Księga zaklęć",
+    "howItWorks": "📖 Jak to działa",
+    "steppingLocked": "🐞 Krok po kroku - naciśnij ⏹ Zakończ śledzenie, aby zmieniać program.",
+    "machine": "⚙️ Maszyna",
+    "checkAll": "✔ Sprawdź wszystko",
+    "checkAllTitle": "Twoja odpowiedź: sprawdza wszystkie przykłady i tajne testy. Błędna odpowiedź kosztuje gwiazdkę.",
+    "stopDebug": "⏹ Zakończ śledzenie",
+    "allExamples": "📋 Wszystkie przykłady",
+    "runThis": "▶ Uruchom",
+    "runExample": "▶ Uruchom: {label}",
+    "runTitle": "Uruchom: {label} - od razu i za darmo",
+    "stepByStep": "🐞 Krok po kroku",
+    "stepTitle": "Śledź kulki jedna po drugiej - za darmo",
+    "next": "▶ Dalej",
+    "play": "⏵ Odtwarzaj",
+    "pause": "⏸",
+    "toStart": "Wróć na początek",
+    "back": "Krok wstecz (←)",
+    "nextTitle": "Następny krok (→)",
+    "playTitle": "Odtwarzaj automatycznie",
+    "toEnd": "Skocz na koniec",
+    "yours": "TWOJE",
+    "wanted": "MIAŁO BYĆ",
+    "showInMachine": "Pokaż {label} w maszynie",
+    "secretResult": "Tajne testy: {ok} z {all}",
+    "secretWait": "Tajne testy: najpierw niech zadziałają wszystkie przykłady.",
+    "idleRun": "zobacz, co twoja maszyna robi z: {label}",
+    "idleStep": "śledź te kulki jedna po drugiej",
+    "idleCheck": "twoja odpowiedź: sprawdza wszystkie przykłady",
+    "expectedOut": "Oczekiwane wyjście",
+    "narration": {
+      "start": "Te kulki zaraz wtoczą się do twojej maszyny. Naciśnij ▶ Dalej, żeby wpuścić pierwszą!",
+      "error": "Maszyna zatrzymała się z błędem.",
+      "end": "Wszystkie kulki przeszły. Porównaj z tym, co miało wyjść!",
+      "none": "Do tego kroku nie dotarła żadna kulka.",
+      "marble": "Kulka {i} w kroku {s}:"
+    },
+    "msg": {
+      "empty": "Twoja maszyna jest pusta, więc kulki po prostu przelatują. Najpierw dodaj krok!",
+      "addStep": "Najpierw dodaj krok do maszyny!",
+      "someWork": "Działa {ok} z {all} przykładów. Kliknij przykład z ❌, żeby zobaczyć, co jest nie tak.",
+      "secretFail": "Wszystkie przykłady działają... ale tajny test znalazł problem! Jest teraz na liście z przykładami.",
+      "stillWin": "(wciąż możesz zdobyć {stars})",
+      "mustUse": "Działa! Ale w tym poziomie musisz użyć „{what}”. Spróbuj jeszcze raz!",
+      "tooLong": {
+        "one": "Działa! Ale w tym poziomie maszyna może mieć tylko {n} krok. Zmieścisz to w mniejszej liczbie kroków?",
+        "few": "Działa! Ale w tym poziomie maszyna może mieć najwyżej {n} kroki. Zmieścisz to w mniejszej liczbie kroków?",
+        "many": "Działa! Ale w tym poziomie maszyna może mieć najwyżej {n} kroków. Zmieścisz to w mniejszej liczbie kroków?",
+        "other": "Działa! Ale w tym poziomie maszyna może mieć najwyżej {n} kroków. Zmieścisz to w mniejszej liczbie kroków?"
+      },
+      "allWork": "Wszystko działa! 🎉"
+    },
+    "modal": {
+      "complete": "Poziom ukończony!",
+      "examPassed": "Egzamin zdany! 🎓",
+      "perfect": "Perfekcyjnie - bez żadnego błędu!",
+      "solved": "Rozwiązane! Zagraj jeszcze raz bez błędów i podpowiedzi, aby zdobyć 3 gwiazdki.",
+      "stay": "Zostań tutaj",
+      "next": "Następny poziom ➜",
+      "toExam": "🎓 Idź na egzamin",
+      "nextSection": "Następny dział ➜",
+      "finished": "🏆 Ukończyłeś/aś wszystko!"
+    },
+    "spellbookTitle": "📕 Księga zaklęć",
+    "spellbookText": "Wszystko, czego się do tej pory nauczyłeś/aś:",
+    "close": "Zamknij"
+  },
+  "steps": {
+    "fold": "redukuj od",
+    "count": "redukuj policz",
+    "sum": "redukuj suma",
+    "max": "redukuj maks",
+    "min": "redukuj min",
+    "filter": "filtruj",
+    "map": "mapuj"
+  },
+  "chapters": {
+    "filter": {
+      "title": "Sortownia",
+      "blurb": "Wybieraj dokładnie te kulki, których potrzebujesz - za pomocą filtrowania."
+    },
+    "boxes": {
+      "title": "Pudełka z pytaniami",
+      "blurb": "Zadawaj wiele pytań naraz ze słowami „i” / „lub” - i wkładaj pudełko do pudełka."
+    },
+    "numbers": {
+      "title": "Dolina Liczb",
+      "blurb": "Kulki z liczbami! Porównuj je znakami > i <."
+    },
+    "map": {
+      "title": "Malarnia",
+      "blurb": "Zmieniaj kulki mapowaniem: maluj je, powiększaj i ozdabiaj."
+    },
+    "math": {
+      "title": "Fabryka Liczb",
+      "blurb": "Wykonuj działania na liczbach w kulkach."
+    },
+    "reduce": {
+      "title": "Wieża Liczenia",
+      "blurb": "Zgnieć cały strumień kulek w jedną liczbę - za pomocą redukcji."
+    },
+    "fold": {
+      "title": "Mistrzowie Redukcji",
+      "blurb": "Zbuduj własną redukcję, krok po kroku."
+    }
+  },
+  "concepts": {
+    "filter": {
+      "title": "filtruj",
+      "text": "Bramka: zostawia tylko kulki, które odpowiedzą TAK."
+    },
+    "isnot": {
+      "title": "nie jest",
+      "text": "Zostawia każdą kulkę, która NIE jest czerwona."
+    },
+    "size": {
+      "title": "rozmiar",
+      "text": "Rozmiary: mały, średni, duży."
+    },
+    "pattern": {
+      "title": "wzór",
+      "text": "Wzory: gładki, w paski, w kropki."
+    },
+    "chain": {
+      "title": "wiele kroków",
+      "text": "Kulki przechodzą przez kroki od góry do dołu."
+    },
+    "and": {
+      "title": "i",
+      "text": "Pudełko WSZYSTKIE: każde pytanie w nim musi mówić TAK."
+    },
+    "or": {
+      "title": "lub",
+      "text": "Pudełko JEDNO TAK: wystarczy jedno TAK."
+    },
+    "brackets": {
+      "title": "pudełko w pudełku",
+      "text": "Najpierw odpowiada wewnętrzne pudełko. W kodzie pudełko w pudełku zapisuje się w ( nawiasach )."
+    },
+    "negate": {
+      "title": "wyrzuć",
+      "text": "Kliknij „zostaw kulki, dla których”, aby odwrócić bramkę: wtedy wyrzuca kulki, które odpowiedzą TAK."
+    },
+    "compare": {
+      "title": "> < >= <=",
+      "text": "> większa niż, < mniejsza niż, >= większa lub równa, <= mniejsza lub równa."
+    },
+    "evenodd": {
+      "title": "parzysta / nieparzysta",
+      "text": "Parzyste: 0, 2, 4, 6...   Nieparzyste: 1, 3, 5, 7..."
+    },
+    "map": {
+      "title": "mapuj",
+      "text": "Maszyna, która zmienia każdą kulkę."
+    },
+    "mapmany": {
+      "title": "zmień więcej",
+      "text": "Zmień kilka rzeczy naraz."
+    },
+    "mapif": {
+      "title": "mapuj ... tylko jeśli",
+      "text": "Zmień tylko niektóre kulki; pozostałe przechodzą bez zmian."
+    },
+    "math": {
+      "title": "+ − × ÷",
+      "text": "Działania na liczbach. „liczba” oznacza liczbę, którą kulka miała wcześniej."
+    },
+    "count": {
+      "title": "redukuj: policz",
+      "text": "Ile jest kulek? Zawsze ostatni krok."
+    },
+    "sum": {
+      "title": "redukuj: suma",
+      "text": "Dodaje liczby ze wszystkich kulek."
+    },
+    "maxmin": {
+      "title": "redukuj: maks / min",
+      "text": "maks znajduje największą wartość, min najmniejszą."
+    },
+    "fold": {
+      "title": "redukuj od",
+      "text": "Wynik zaczyna od 0. Dla każdej kulki wynik zmienia się na wynik + liczba. Ostatni wynik to odpowiedź."
+    }
+  },
+  "levels": {
+    "f1": {
+      "goal": "Zostaw tylko czerwone kulki.",
+      "intro": "Witaj w Maszynie do Kulek! Budujesz maszynę, a kulki się przez nią toczą.\n\nSpójrz na przykłady po lewej: **WEJŚCIE** to to, co wpada do maszyny, **WYJŚCIE** to to, co powinno z niej wyjść. Potrafisz znaleźć regułę? Kliknij przykład, aby włożyć go do maszyny.\n\n**filtruj** to bramka. Zadaje każdej kulce pytanie. Kulki, które odpowiedzą *tak*, toczą się dalej, a pozostałe wypadają. Ta maszyna zostawia niebieskie kulki:\n\n```\nfilter color is blue\n```\n\nKliknij słowo **niebieski** w swojej maszynie, wybierz inny kolor i naciśnij **▶ Uruchom**, żeby to sprawdzić.",
+      "hints": [
+        "Wystarczy zmienić jedno słowo.",
+        "Jaki kolor jest w każdym WYJŚCIU?"
+      ]
+    },
+    "f2": {
+      "goal": "Zostaw tylko zielone kulki.",
+      "intro": "Teraz zbuduj maszynę samodzielnie! Naciśnij **+ filtruj**, żeby dodać bramkę, a potem klikaj słowa, żeby je zmieniać.\n\nNie wiesz, co się dzieje? Naciśnij **🐞 Krok po kroku** i śledź kulki jedna po drugiej. To nic nie kosztuje!",
+      "hints": [
+        "Dodaj krok filtruj.",
+        "Który kolor przetrwał?"
+      ]
+    },
+    "fb1": {
+      "goal": "Zostaw tylko niebieskie kulki.",
+      "hints": [
+        "Spójrz na kolory w WYJŚCIU."
+      ]
+    },
+    "f3": {
+      "goal": "Usuń wszystkie żółte kulki. Resztę zostaw.",
+      "intro": "Czasem łatwiej powiedzieć, czego **nie** chcesz. Kliknij **jest** i wybierz **nie jest**:\n\n```\nfilter color is not red\n```\n\nTo zostawia każdą kulkę, która nie jest czerwona.",
+      "hints": [
+        "Jaki kolor nigdy nie wychodzi?",
+        "Użyj „nie jest”."
+      ]
+    },
+    "fb2": {
+      "goal": "Usuń wszystkie fioletowe kulki.",
+      "hints": [
+        "Którego koloru brakuje w WYJŚCIU?"
+      ]
+    },
+    "f4": {
+      "goal": "Zostaw tylko duże kulki.",
+      "intro": "Kulki mają trzy rozmiary: **mały**, **średni** i **duży**.\n\nKliknij **kolor**, żeby zamiast tego zapytać o **rozmiar**:\n\n```\nfilter size is small\n```",
+      "hints": [
+        "Kolory nie mają tu znaczenia. Spójrz na rozmiary."
+      ]
+    },
+    "fb3": {
+      "goal": "Zostaw kulki, które nie są duże.",
+      "hints": [
+        "Spójrz na rozmiary.",
+        "Który rozmiar nigdy nie wychodzi?"
+      ]
+    },
+    "f5": {
+      "goal": "Zostaw tylko kulki w paski.",
+      "intro": "Niektóre kulki mają wzór: **gładki**, **w paski** albo **w kropki**.\n\n```\nfilter pattern is dotted\n```",
+      "hints": [
+        "Spójrz na wzory."
+      ]
+    },
+    "fb4": {
+      "goal": "Zostaw kulki, które mają wzór (nie są gładkie).",
+      "hints": [
+        "Spójrz na wzory.",
+        "Który wzór nigdy nie wychodzi?"
+      ]
+    },
+    "f6": {
+      "goal": "Zostaw tylko kulki czerwone I duże.",
+      "intro": "Maszyna może mieć wiele kroków. Kulki przechodzą przez nie od góry do dołu, jak taśmociąg z kilkoma bramkami.\n\n```\nfilter color is blue\nfilter size is small\n```\n\nPierwsza bramka przepuszcza tylko niebieskie kulki. Druga sprawdza te niebieskie i zostawia małe.",
+      "hints": [
+        "Liczą się dwie rzeczy: kolor i rozmiar.",
+        "Użyj dwóch kroków filtruj."
+      ]
+    },
+    "f7": {
+      "goal": "Zostaw małe kulki, które nie są niebieskie.",
+      "hints": [
+        "Znowu dwie bramki.",
+        "Jedna bramka na rozmiar, druga na kolor."
+      ]
+    },
+    "fb5": {
+      "goal": "Zostaw kulki w paski, które nie są zielone.",
+      "hints": [
+        "Dwie bramki: jedna na wzór, druga na kolor."
+      ]
+    },
+    "fx": {
+      "goal": "Zostaw duże kulki w kropki, które nie są czerwone.",
+      "hints": [
+        "Liczą się trzy rzeczy: rozmiar, kolor i wzór.",
+        "Po jednej bramce na każdą."
+      ]
+    },
+    "f8": {
+      "goal": "Zostaw kulki, które są zielone I w paski.",
+      "intro": "Jedna bramka może zadać kilka pytań. Naciśnij **+ i** obok pytania. Twoje pytania trafią do **niebieskiego pudełka WSZYSTKIE**:\n\n```\nfilter color is red and size is big\n```\n\nPudełko WSZYSTKIE mówi *tak* tylko wtedy, gdy **każde** pytanie w środku mówi *tak*. Duża niebieska kulka? „kolor jest czerwony” mówi nie, więc całe pudełko mówi nie.",
+      "hints": [
+        "Liczą się dwie rzeczy: kolor i wzór.",
+        "Naciśnij „+ i” obok pierwszego pytania."
+      ]
+    },
+    "fc1": {
+      "goal": "Zostaw kulki, które są czerwone I małe.",
+      "hints": [
+        "Kolor i rozmiar w jednym pudełku WSZYSTKIE."
+      ]
+    },
+    "fa2": {
+      "goal": "Zostaw kulki, które są niebieskie I małe I w kropki.",
+      "intro": "Pudełko WSZYSTKIE może mieć tyle pytań, ile chcesz. Naciśnij **+ i** na dole pudełka, żeby dodać kolejne. Każde z nich musi mówić *tak*.",
+      "hints": [
+        "Trzy pytania w jednym pudełku WSZYSTKIE."
+      ]
+    },
+    "f9": {
+      "goal": "Zostaw kulki, które są czerwone LUB żółte.",
+      "intro": "Naciśnij **+ lub**, a dostaniesz **pomarańczowe pudełko JEDNO TAK**. Mówi *tak*, gdy **przynajmniej jedno** pytanie w środku mówi *tak*:\n\n```\nfilter color is blue or color is green\n```\n\nUwaga: dwie osobne bramki tego nie zrobią! Pierwsza bramka wyrzuciłaby już kulki, których chce druga.\n\nWskazówka: kliknij tytuł pudełka, żeby przełączyć je między WSZYSTKIE i JEDNO TAK.",
+      "hints": [
+        "Wychodzą dwa kolory.",
+        "Naciśnij „+ lub” obok pierwszego pytania."
+      ]
+    },
+    "fc2": {
+      "goal": "Zostaw kulki, które są duże LUB w paski.",
+      "hints": [
+        "Kulce wystarczy jedna z dwóch rzeczy, żeby wyjść."
+      ]
+    },
+    "fo2": {
+      "goal": "Zostaw kulki czerwone, żółte i fioletowe.",
+      "hints": [
+        "Jedno pudełko JEDNO TAK z trzema pytaniami."
+      ]
+    },
+    "fc3": {
+      "goal": "Zostaw duże kulki, które nie są niebieskie.",
+      "hints": [
+        "„nie jest” działa też w pudełku."
+      ]
+    },
+    "fg1": {
+      "goal": "Zostaw czerwone kulki, które są duże LUB w paski.",
+      "intro": "Teraz włóż pudełko do pudełka! Zbuduj **kolor jest czerwony** i naciśnij **+ i**. Potem przy *drugim* pytaniu naciśnij **+ lub**:\n\n```\nfilter color is blue and (size is small or pattern is dotted)\n```\n\nMaszyna najpierw odpowiada na **wewnętrzne** pudełko: „czy jest mała lub w kropki?”. Potem zewnętrzne pudełko WSZYSTKIE sprawdza: „czy jest niebieska I czy wewnętrzne pudełko powiedziało tak?”\n\nUżyj **🐞 Krok po kroku**, żeby zobaczyć, jak każde pudełko świeci na zielono ✓ albo na czerwono ✗.",
+      "hints": [
+        "Kolor zawsze musi się zgadzać. Z pozostałych dwóch rzeczy wystarczy jedna.",
+        "Pudełko JEDNO TAK idzie do środka pudełka WSZYSTKIE."
+      ]
+    },
+    "fc4": {
+      "goal": "Zostaw kulki w kropki, które są czerwone lub niebieskie.",
+      "hints": [
+        "Dwa kolory są dobre, ale wzór musi się zgadzać.",
+        "Zacznij od kolorów w pudełku JEDNO TAK... albo od wzoru."
+      ]
+    },
+    "fg2": {
+      "goal": "Drużyna 1: duże czerwone kulki. Drużyna 2: małe niebieskie kulki. Zostaw obie drużyny!",
+      "intro": "Tym razem zewnętrzne pudełko to JEDNO TAK, a w nim dwa pudełka WSZYSTKIE - po jednym dla każdej drużyny:\n\n```\nfilter (color is green and size is small) or (color is yellow and size is big)\n```",
+      "hints": [
+        "Zacznij od: kolor jest czerwony LUB kolor jest niebieski. Potem naciśnij „+ i” obok każdego koloru i dodaj rozmiar."
+      ]
+    },
+    "fn1": {
+      "goal": "Wyrzuć kulki, które są czerwone I duże. Wszystkie inne zostaw.",
+      "intro": "Bramka może też **wyrzucać** kulki. Kliknij **zostaw kulki, dla których** i wybierz **wyrzuć kulki, dla których**:\n\n```\nfilter not (color is green and size is small)\n```\n\nTo wyrzuca małe zielone kulki. Wszystko inne toczy się dalej.",
+      "hints": [
+        "Których kulek brakuje w WYJŚCIU?",
+        "Przełącz bramkę na „wyrzuć”."
+      ]
+    },
+    "f10": {
+      "goal": "Zostaw kulki duże lub w kropki - ale nigdy fioletowe.",
+      "hints": [
+        "Duże lub w kropki: pudełko JEDNO TAK.",
+        "Kolor sprawdź w pudełku WSZYSTKIE dookoła."
+      ]
+    },
+    "n1": {
+      "goal": "Zostaw kulki z liczbą większą niż 5.",
+      "intro": "Te kulki mają na sobie liczby! Kliknij **kolor** i wybierz **liczba**. Potem możesz porównywać: **>** znaczy *większa niż*, **<** znaczy *mniejsza niż*.\n\n```\nfilter number > 3\n```\n\nTo zostawia 4, 5, 6 ... ale nie samą trójkę.",
+      "hints": [
+        "Spójrz na liczby, które wychodzą. Jaka jest najmniejsza?"
+      ]
+    },
+    "n2": {
+      "goal": "Zostaw kulki z liczbami 3 lub mniejszymi.",
+      "intro": "**<=** znaczy „mniejsza lub równa”, a **>=** znaczy „większa lub równa”. To zostawia 4, 5, 6 ...:\n\n```\nfilter number >= 4\n```",
+      "hints": [
+        "Jaka jest największa liczba, która wychodzi?"
+      ]
+    },
+    "nb0": {
+      "goal": "Zostaw kulki z liczbami 7 lub większymi.",
+      "hints": [
+        "Jaka jest najmniejsza liczba, która wychodzi?"
+      ]
+    },
+    "n3": {
+      "goal": "Zostaw kulki z liczbami parzystymi.",
+      "intro": "Liczby parzyste to 0, 2, 4, 6, 8 ..., a nieparzyste to 1, 3, 5, 7 ...\n\n```\nfilter number is odd\n```",
+      "hints": [
+        "Spójrz na liczby, które wychodzą. Co mają wspólnego?"
+      ]
+    },
+    "nb1": {
+      "goal": "Zostaw liczby nieparzyste większe niż 4.",
+      "hints": [
+        "Dwie rzeczy dotyczące liczby.",
+        "Nieparzyste, ale nie te małe."
+      ]
+    },
+    "n4": {
+      "goal": "Zostaw czerwone kulki z liczbami nieparzystymi.",
+      "hints": [
+        "Jedno pytanie o kolor, drugie o liczbę."
+      ]
+    },
+    "n5": {
+      "goal": "Zostaw kulki z liczbami od 3 do 7.",
+      "hints": [
+        "Liczba jest „pomiędzy”, gdy jest wystarczająco duża I wystarczająco mała."
+      ]
+    },
+    "nb2": {
+      "goal": "Zostaw liczby mniejsze niż 3 lub większe niż 7.",
+      "hints": [
+        "Środkowe liczby są wyrzucane.",
+        "Pudełko JEDNO TAK z dwoma pytaniami."
+      ]
+    },
+    "n6": {
+      "goal": "Zostaw kulki większe niż małe.",
+      "intro": "Rozmiary też można porównywać: mały < średni < duży.",
+      "hints": [
+        "Wychodzą dwa rozmiary. Spróbuj > z rozmiarami!"
+      ]
+    },
+    "nb3": {
+      "goal": "Zostaw parzyste kulki, które są średnie lub duże.",
+      "hints": [
+        "Jedno pytanie o rozmiar, drugie o liczbę."
+      ]
+    },
+    "nx": {
+      "goal": "Zostaw czerwone kulki z liczbami parzystymi - i każdą kulkę z liczbą większą niż 8.",
+      "hints": [
+        "Duże liczby zawsze wychodzą, bez względu na kolor.",
+        "Dwie drużyny: (czerwona i parzysta) lub (większa niż 8)."
+      ]
+    },
+    "m1": {
+      "goal": "Pomaluj każdą kulkę na niebiesko.",
+      "intro": "**mapuj** to maszyna, która zmienia *każdą* przechodzącą przez nią kulkę. Naciśnij **+ mapuj**:\n\n```\nmap color -> green\n```\n\nKolor każdej kulki zmienia się na zielony. Nic nie jest wyrzucane - mapowanie nigdy nie usuwa kulek.\n\n(Naciśnij **</> Kod**, żeby zobaczyć maszynę jako kod. W kodzie „zmienia się na” zapisuje się strzałką: ->)",
+      "hints": [
+        "Porównaj kolory na WEJŚCIU i WYJŚCIU."
+      ]
+    },
+    "m2": {
+      "goal": "Zrób każdą kulkę dużą.",
+      "hints": [
+        "Kolory się nie zmieniają. Co się zmienia?"
+      ]
+    },
+    "mb1": {
+      "goal": "Daj każdej kulce paski.",
+      "hints": [
+        "Spójrz na wzory."
+      ]
+    },
+    "m3": {
+      "goal": "Zrób każdą kulkę fioletową I w kropki.",
+      "intro": "Jedno mapowanie może zmienić kilka rzeczy. Naciśnij **+ zmień więcej**:\n\n```\nmap color -> red, size -> small\n```",
+      "hints": [
+        "Zmieniają się dwie rzeczy.",
+        "Użyj „+ zmień więcej”."
+      ]
+    },
+    "m4": {
+      "goal": "Zostaw tylko czerwone kulki i pomaluj je na żółto.",
+      "intro": "Teraz połącz bramkę z malarką! Najpierw **filtruj**, potem **mapuj**.",
+      "hints": [
+        "Niektóre kulki znikają, a te, które zostają, zmieniają kolor.",
+        "Dwa kroki: najpierw filtruj, potem mapuj."
+      ]
+    },
+    "m5": {
+      "goal": "Zostaw małe kulki i daj im paski.",
+      "hints": [
+        "Niektóre kulki znikają. Które?",
+        "Najpierw filtruj, potem mapuj."
+      ]
+    },
+    "m6": {
+      "goal": "Pomaluj duże kulki na czerwono. Pozostałe zostaw takie, jakie są.",
+      "intro": "Naciśnij **+ tylko jeśli...**, żeby zmienić tylko niektóre kulki. Pozostałe przechodzą bez zmian - nikt nie jest wyrzucany!\n\n```\nmap color -> green if pattern is dotted\n```",
+      "hints": [
+        "Nie każda kulka się zmienia. Które się zmieniają?",
+        "Użyj „+ tylko jeśli...”."
+      ]
+    },
+    "mb2": {
+      "goal": "Gładkie kulki dostają kropki. Pozostałe zostają takie, jakie są.",
+      "hints": [
+        "Zmieniają się tylko niektóre kulki. Które?"
+      ]
+    },
+    "m8": {
+      "goal": "Każda zielona kulka staje się duża. Potem zostaw tylko duże kulki.",
+      "hints": [
+        "Najpierw mapuj (z „tylko jeśli”), potem filtruj.",
+        "Prześledź małą zieloną kulkę Krok po kroku."
+      ]
+    },
+    "mb3": {
+      "goal": "Kulki duże lub w paski malujemy na żółto.",
+      "hints": [
+        "Zmieniają się tylko niektóre kulki.",
+        "„tylko jeśli” może mieć pudełko z dwoma pytaniami."
+      ]
+    },
+    "m7": {
+      "goal": "Zamień czerwone kulki na niebieskie, a niebieskie na czerwone.",
+      "hints": [
+        "Uwaga - jeśli najpierw pomalujesz czerwone na niebiesko, nie odróżnisz ich już od niebieskich...",
+        "Użyj trzeciego koloru jako tymczasowego parkingu: czerwony → zielony, potem niebieski → czerwony, potem zielony → niebieski."
+      ]
+    },
+    "x1": {
+      "goal": "Podwój liczbę na każdej kulce.",
+      "intro": "Mapowanie może zmieniać liczby działaniami. Wybierz **liczba zmienia się na**, a potem naciśnij **⊕ działanie**. Tutaj **liczba** oznacza „liczbę, którą ta kulka miała wcześniej”:\n\n```\nmap number -> number + 1\n```\n\nKulka z 4 zmienia się w 5, kulka z 7 w 8.\n\nKliknij **+**, żeby wybrać inny znak: **+ − × ÷**.",
+      "hints": [
+        "Porównaj każdą liczbę na WEJŚCIU z tą na WYJŚCIU: 2 → 4, 3 → 6..."
+      ]
+    },
+    "x2": {
+      "goal": "Dodaj 3 do każdej liczby.",
+      "hints": [
+        "O ile większa jest każda liczba?"
+      ]
+    },
+    "xb1": {
+      "goal": "Odejmij 1 od każdej liczby.",
+      "hints": [
+        "Porównaj każdą liczbę na WEJŚCIU z tą na WYJŚCIU."
+      ]
+    },
+    "x3": {
+      "goal": "Każda liczba zmienia się na 10 minus ta liczba.",
+      "hints": [
+        "1 zmienia się w 9, 2 w 8, 3 w 7... Ile dają razem te dwie liczby?",
+        "Kliknij pierwszą „liczbę” i wybierz 10."
+      ]
+    },
+    "x4": {
+      "goal": "Każda liczba zmienia się na podwojoną liczbę plus 1.",
+      "hints": [
+        "Są dwa działania: razy coś, potem plus coś.",
+        "Naciśnij ⊕ działanie dwa razy."
+      ]
+    },
+    "xb2": {
+      "goal": "Każda liczba zmienia się na potrojoną liczbę minus 1.",
+      "hints": [
+        "Dwa działania: razy coś, potem minus coś."
+      ]
+    },
+    "x5": {
+      "goal": "Każda liczba jest mnożona przez samą siebie.",
+      "hints": [
+        "3 zmienia się w 9, 4 w 16..."
+      ]
+    },
+    "x6": {
+      "goal": "Zostaw liczby parzyste i podziel je na pół.",
+      "hints": [
+        "Niektóre kulki znikają. Które?",
+        "Najpierw filtruj, potem mapuj z ÷."
+      ]
+    },
+    "x7": {
+      "goal": "Czerwone kulki dostają 10 punktów więcej. Pozostałe się nie zmieniają.",
+      "hints": [
+        "Zmieniają się tylko niektóre liczby. Na jakich kulkach?"
+      ]
+    },
+    "xb3": {
+      "goal": "Liczby mniejsze niż 5 są podwajane. Pozostałe się nie zmieniają.",
+      "hints": [
+        "Zmieniają się tylko małe liczby."
+      ]
+    },
+    "x8": {
+      "goal": "Wyrzuć zielone kulki, a pozostałe pomnóż przez 3.",
+      "hints": [
+        "Niektóre kulki znikają. Które?",
+        "Potem spójrz na liczby."
+      ]
+    },
+    "xx": {
+      "goal": "Zostaw liczby nieparzyste. Każda zmienia się na (liczba + 1) × 2.",
+      "hints": [
+        "Niektóre kulki znikają. Które?",
+        "Dwa działania: najpierw plus, potem razy."
+      ]
+    },
+    "r1": {
+      "goal": "Policz kulki.",
+      "intro": "**redukuj** zgniata wszystkie kulki w **jedną liczbę**. Naciśnij **+ redukuj**. Najprostsza redukcja je liczy:\n\n```\nreduce count\n```\n\nPo redukcji nie ma już kulek - jest tylko liczba. Dlatego redukcja to zawsze ostatni krok.",
+      "hints": [
+        "Policz kulki na WEJŚCIU. Porównaj z WYJŚCIEM."
+      ]
+    },
+    "r2": {
+      "goal": "Policz tylko czerwone kulki.",
+      "hints": [
+        "Liczone są tylko niektóre kulki.",
+        "Najpierw filtruj, potem policz."
+      ]
+    },
+    "rb1": {
+      "goal": "Policz kulki z liczbą większą niż 5.",
+      "hints": [
+        "Liczone są tylko niektóre kulki."
+      ]
+    },
+    "r3": {
+      "goal": "Dodaj wszystkie liczby.",
+      "intro": "**redukuj: suma** dodaje coś z każdej kulki:\n\n```\nreduce sum number\n```",
+      "hints": [
+        "Dodaj samodzielnie liczby z WEJŚCIA."
+      ]
+    },
+    "r6": {
+      "goal": "Dodaj liczby tylko z dużych kulek.",
+      "hints": [
+        "Dodawane są tylko niektóre liczby.",
+        "Filtruj, potem redukuj: suma."
+      ]
+    },
+    "r4": {
+      "goal": "Znajdź największą liczbę.",
+      "intro": "**redukuj: maks** znajduje największą wartość, a **redukuj: min** najmniejszą:\n\n```\nreduce min number\n```",
+      "hints": [
+        "Gdzie wśród kulek znajdziesz liczbę z WYJŚCIA?"
+      ]
+    },
+    "rb2": {
+      "goal": "Znajdź najmniejszą liczbę.",
+      "hints": [
+        "Gdzie wśród kulek znajdziesz liczbę z WYJŚCIA?"
+      ]
+    },
+    "r5": {
+      "goal": "Znajdź najmniejszą liczbę na niebieskiej kulce.",
+      "hints": [
+        "Biorą w tym udział tylko niektóre kulki.",
+        "Najpierw filtruj."
+      ]
+    },
+    "r7": {
+      "goal": "Dodaj liczby, ale podwojone.",
+      "hints": [
+        "Dodaj samodzielnie liczby i porównaj z WYJŚCIEM.",
+        "Odpowiedź to zawsze dwa razy suma."
+      ]
+    },
+    "r8": {
+      "goal": "Policz kulki, które mają wzór (w paski lub w kropki).",
+      "hints": [
+        "Liczone są tylko niektóre kulki.",
+        "„Ma wzór” znaczy, że nie jest gładka."
+      ]
+    },
+    "rb3": {
+      "goal": "Dodaj liczby parzyste.",
+      "hints": [
+        "Dodawane są tylko niektóre liczby."
+      ]
+    },
+    "rx": {
+      "goal": "Spośród kulek czerwonych lub dużych znajdź największą liczbę pomnożoną przez samą siebie.",
+      "hints": [
+        "Trzy kroki: filtruj, mapuj, redukuj.",
+        "Które kulki biorą udział? Co dzieje się z ich liczbami?"
+      ]
+    },
+    "d1": {
+      "goal": "Dodaj wszystkie liczby - używając „redukuj od”.",
+      "intro": "Czas zobaczyć, jak redukcja *naprawdę* działa! Masz **wynik**. Zaczyna od jakiejś liczby, a potem każda kulka go zmienia:\n\n```\nreduce from 0 : total + number\n```\n\nNa początku wynik = 0. Dla każdej kulki: wynik zmienia się na wynik + liczba. Ostatni wynik to odpowiedź.\n\nUżyj **🐞 Krok po kroku**, żeby zobaczyć, jak wynik rośnie pod każdą kulką!",
+      "hints": [
+        "Wybierz „od” w kroku redukuj."
+      ]
+    },
+    "d2": {
+      "goal": "Policz kulki - używając „redukuj od”.",
+      "hints": [
+        "Każda kulka powinna dodać 1 do wyniku."
+      ]
+    },
+    "db1": {
+      "goal": "Dodaj podwojone liczby - używając „redukuj od”.",
+      "hints": [
+        "Każda kulka dodaje dwa razy swoją liczbę."
+      ]
+    },
+    "d3": {
+      "goal": "Masz 50 monet. Każda kulka kosztuje tyle monet, ile wynosi jej liczba. Ile monet zostanie?",
+      "hints": [
+        "Zacznij od 50, nie od 0!",
+        "Każda kulka zabiera trochę monet."
+      ]
+    },
+    "db2": {
+      "goal": "Policz czerwone kulki - używając „redukuj od”.",
+      "hints": [
+        "Najpierw filtruj, potem policz ręcznie."
+      ]
+    },
+    "d4": {
+      "goal": "Pomnóż wszystkie liczby przez siebie.",
+      "hints": [
+        "Od czego trzeba zacząć? (Podpowiedź: 0 razy cokolwiek to 0...)"
+      ]
+    },
+    "db3": {
+      "goal": "Zacznij od 100. Każda kulka zabiera 10.",
+      "hints": [
+        "1 kulka → 90, 2 kulki → 80 ..."
+      ]
+    },
+    "d5": {
+      "goal": "Zacznij od 1 i podwajaj wynik przy każdej kulce.",
+      "hints": [
+        "1 kulka → 2, 2 kulki → 4, 3 kulki → 8 ..."
+      ]
+    },
+    "d6": {
+      "goal": "Liczą się tylko duże kulki. Każda jest warta dziesięć razy więcej niż jej liczba. Dodaj je - używając „redukuj od”.",
+      "hints": [
+        "Które kulki się liczą?",
+        "Ile jest warta każda z nich?"
+      ]
+    },
+    "fd1": {
+      "goal": "Zostaw tylko żółte kulki.",
+      "hints": [
+        "Jaki kolor jest w każdym WYJŚCIU?"
+      ]
+    },
+    "fd2": {
+      "goal": "Zostaw tylko fioletowe kulki.",
+      "hints": [
+        "Jaki kolor jest w każdym WYJŚCIU?"
+      ]
+    },
+    "fd3": {
+      "goal": "Usuń czerwone kulki.",
+      "hints": [
+        "Jaki kolor nigdy nie wychodzi?"
+      ]
+    },
+    "fd4": {
+      "goal": "Zostaw tylko małe kulki.",
+      "hints": [
+        "Patrz na rozmiary, nie na kolory."
+      ]
+    },
+    "fd5": {
+      "goal": "Zostaw tylko średnie kulki.",
+      "hints": [
+        "Nie największe, nie najmniejsze..."
+      ]
+    },
+    "fd6": {
+      "goal": "Zostaw kulki, które nie są małe.",
+      "hints": [
+        "Który rozmiar nigdy nie wychodzi?"
+      ]
+    },
+    "fd7": {
+      "goal": "Zostaw tylko kulki w kropki.",
+      "hints": [
+        "Spójrz na wzory."
+      ]
+    },
+    "fd8": {
+      "goal": "Zostaw tylko gładkie kulki.",
+      "hints": [
+        "Spójrz na wzory."
+      ]
+    },
+    "fd9": {
+      "goal": "Zostaw kulki, które nie są w paski.",
+      "hints": [
+        "Który wzór nigdy nie wychodzi?"
+      ]
+    },
+    "fd10": {
+      "goal": "Zostaw niebieskie kulki w kropki.",
+      "hints": [
+        "Dwie bramki: jedna na kolor, druga na wzór."
+      ]
+    },
+    "fd11": {
+      "goal": "Zostaw kulki w paski, które nie są małe.",
+      "hints": [
+        "Dwie bramki: rozmiar i wzór."
+      ]
+    },
+    "fd12": {
+      "goal": "Usuń czerwone i niebieskie kulki.",
+      "hints": [
+        "Dwie bramki, każda wyrzuca jeden kolor."
+      ]
+    },
+    "fd13": {
+      "goal": "Zostaw duże, gładkie, zielone kulki.",
+      "hints": [
+        "Liczą się trzy rzeczy. Po jednej bramce na każdą."
+      ]
+    },
+    "fe1": {
+      "goal": "Zostaw kulki, które są duże I w kropki.",
+      "hints": [
+        "Rozmiar i wzór w jednym pudełku WSZYSTKIE."
+      ]
+    },
+    "fe2": {
+      "goal": "Zostaw żółte kulki, które nie są małe.",
+      "hints": [
+        "„nie jest” działa też w pudełku."
+      ]
+    },
+    "fe3": {
+      "goal": "Zostaw kulki, które nie są czerwone I mają wzór.",
+      "hints": [
+        "Dwa pytania z „nie jest” w jednym pudełku WSZYSTKIE."
+      ]
+    },
+    "fe4": {
+      "goal": "Zostaw niebieskie lub zielone kulki.",
+      "hints": [
+        "Wychodzą dwa kolory."
+      ]
+    },
+    "fe5": {
+      "goal": "Zostaw kulki, które są małe LUB w kropki.",
+      "hints": [
+        "Kulce wystarczy jedna z dwóch rzeczy."
+      ]
+    },
+    "fe6": {
+      "goal": "Zostaw małe i duże kulki.",
+      "hints": [
+        "Który rozmiar nigdy nie wychodzi? Da się to zrobić na dwa sposoby."
+      ]
+    },
+    "fe7": {
+      "goal": "Zostaw kulki, które są czerwone LUB w paski.",
+      "hints": [
+        "Jedno pytanie o kolor, drugie o wzór."
+      ]
+    },
+    "fe8": {
+      "goal": "Zostaw gładkie kulki, które są czerwone lub zielone.",
+      "hints": [
+        "Wzór zawsze musi się zgadzać. Z kolorów wystarczy jeden."
+      ]
+    },
+    "fe9": {
+      "goal": "Zostaw duże kulki, które mają wzór (w paski lub w kropki).",
+      "hints": [
+        "Pudełko JEDNO TAK w środku pudełka WSZYSTKIE."
+      ]
+    },
+    "fe10": {
+      "goal": "Zostaw duże kulki - a do tego zielone w kropki.",
+      "hints": [
+        "Dwie drużyny: (zielona i w kropki) lub duża."
+      ]
+    },
+    "fe11": {
+      "goal": "Drużyna 1: małe niebieskie kulki. Drużyna 2: czerwone w paski. Zostaw obie drużyny!",
+      "hints": [
+        "Jedno pudełko JEDNO TAK, a w nim dwa pudełka WSZYSTKIE."
+      ]
+    },
+    "fe12": {
+      "goal": "Wyrzuć kulki, które są niebieskie LUB małe.",
+      "hints": [
+        "Przełącz bramkę na „wyrzuć”."
+      ]
+    },
+    "fe13": {
+      "goal": "Wyrzuć duże gładkie kulki. Resztę zostaw.",
+      "hints": [
+        "Których kulek brakuje w WYJŚCIU?"
+      ]
+    },
+    "fe14": {
+      "goal": "Wyrzuć czerwone i zielone kulki.",
+      "hints": [
+        "Jedna bramka, która wyrzuca dwa kolory."
+      ]
+    },
+    "ng1": {
+      "goal": "Zostaw kulki z liczbą mniejszą niż 4.",
+      "hints": [
+        "Jaka jest największa liczba, która wychodzi?"
+      ]
+    },
+    "ng2": {
+      "goal": "Zostaw kulki z liczbą większą niż 10.",
+      "hints": [
+        "Jaka jest najmniejsza liczba, która wychodzi?"
+      ]
+    },
+    "ng3": {
+      "goal": "Zostaw tylko kulki z liczbą 5.",
+      "hints": [
+        "Wychodzi zawsze tylko jedna liczba."
+      ]
+    },
+    "ng4": {
+      "goal": "Usuń kulki z liczbą 1.",
+      "hints": [
+        "Która liczba nigdy nie wychodzi?"
+      ]
+    },
+    "ng5": {
+      "goal": "Zostaw kulki z liczbami nieparzystymi.",
+      "hints": [
+        "1, 3, 5, 7 ..."
+      ]
+    },
+    "ng6": {
+      "goal": "Zostaw liczby parzyste mniejsze niż 6.",
+      "hints": [
+        "Dwie rzeczy dotyczące liczby."
+      ]
+    },
+    "ng7": {
+      "goal": "Zostaw niebieskie kulki - i każdą kulkę z liczbą większą niż 7.",
+      "hints": [
+        "Duże liczby wychodzą bez względu na kolor."
+      ]
+    },
+    "ng8": {
+      "goal": "Zostaw liczby 3, 4 i 5.",
+      "hints": [
+        "Wystarczająco duże I wystarczająco małe."
+      ]
+    },
+    "ng9": {
+      "goal": "Zostaw liczby nieparzyste, ale nie 5.",
+      "hints": [
+        "Nieparzyste... oprócz jednej."
+      ]
+    },
+    "ng10": {
+      "goal": "Zostaw kulki mniejsze niż duże.",
+      "hints": [
+        "Spróbuj < z rozmiarami."
+      ]
+    },
+    "ng11": {
+      "goal": "Zostaw czerwone kulki, które są średnie lub duże.",
+      "hints": [
+        "Jedno pytanie o kolor, drugie o rozmiar."
+      ]
+    },
+    "ng12": {
+      "goal": "Zostaw duże kulki z liczbą parzystą lub większą niż 6.",
+      "hints": [
+        "Rozmiar musi się zgadzać. Z liczbą wystarczy jedna z dwóch rzeczy."
+      ]
+    },
+    "ng13": {
+      "goal": "Wyrzuć liczby 4, 5 i 6.",
+      "hints": [
+        "Brakuje środkowych liczb."
+      ]
+    },
+    "ng14": {
+      "goal": "Zostaw liczby parzyste większe niż 4 - za pomocą dwóch bramek.",
+      "hints": [
+        "Jedna bramka na parzystość, druga na „większa niż 4”."
+      ]
+    },
+    "ng15": {
+      "goal": "Drużyna 1: czerwone kulki z liczbami poniżej 5. Drużyna 2: niebieskie z liczbami powyżej 5.",
+      "hints": [
+        "Dwa pudełka WSZYSTKIE w pudełku JEDNO TAK."
+      ]
+    },
+    "mh1": {
+      "goal": "Pomaluj każdą kulkę na czerwono.",
+      "hints": [
+        "Porównaj kolory na WEJŚCIU i WYJŚCIU."
+      ]
+    },
+    "mh2": {
+      "goal": "Zrób każdą kulkę małą.",
+      "hints": [
+        "Kolory się nie zmieniają. Co się zmienia?"
+      ]
+    },
+    "mh3": {
+      "goal": "Zrób każdą kulkę gładką.",
+      "hints": [
+        "Spójrz na wzory."
+      ]
+    },
+    "mh4": {
+      "goal": "Zrób każdą kulkę dużą I w paski.",
+      "hints": [
+        "Zmieniają się dwie rzeczy."
+      ]
+    },
+    "mh5": {
+      "goal": "Każda kulka staje się mała, gładka i zielona.",
+      "hints": [
+        "Zmieniają się trzy rzeczy."
+      ]
+    },
+    "mh6": {
+      "goal": "Zostaw kulki ze wzorem i pomaluj je na czerwono.",
+      "hints": [
+        "Niektóre kulki znikają, pozostałe zmieniają kolor."
+      ]
+    },
+    "mh7": {
+      "goal": "Pomaluj każdą kulkę na żółto, potem zostaw tylko duże.",
+      "hints": [
+        "Najpierw maluj, potem filtruj (a może odwrotnie?)."
+      ]
+    },
+    "mh8": {
+      "goal": "Niebieskie kulki stają się duże. Pozostałe bez zmian.",
+      "hints": [
+        "Zmieniają się tylko niektóre kulki. Które?"
+      ]
+    },
+    "mh9": {
+      "goal": "Kulki w paski malujemy na fioletowo.",
+      "hints": [
+        "Zmieniają się tylko niektóre kulki."
+      ]
+    },
+    "mh10": {
+      "goal": "Kulki w kropki stają się duże i zielone. Pozostałe bez zmian.",
+      "hints": [
+        "Dwie zmiany, ale tylko dla niektórych kulek."
+      ]
+    },
+    "mh11": {
+      "goal": "Niebieskie kulki stają się czerwone, a zielone - niebieskie.",
+      "hints": [
+        "Uważaj na kolejność dwóch mapowań!"
+      ]
+    },
+    "mh12": {
+      "goal": "Duże kulki stają się małe. Potem wyrzuć czerwone.",
+      "hints": [
+        "Najpierw mapuj („tylko jeśli”), potem filtruj."
+      ]
+    },
+    "mh13": {
+      "goal": "Duże czerwone kulki dostają kropki. Pozostałe bez zmian.",
+      "hints": [
+        "„tylko jeśli” z pudełkiem WSZYSTKIE."
+      ]
+    },
+    "mh14": {
+      "goal": "Wyrzuć gładkie kulki. Czerwone z tych, które zostały, stają się duże.",
+      "hints": [
+        "Najpierw filtruj, potem mapuj z „tylko jeśli”."
+      ]
+    },
+    "xi1": {
+      "goal": "Dodaj 1 do każdej liczby.",
+      "hints": [
+        "O ile większa jest każda liczba?"
+      ]
+    },
+    "xi2": {
+      "goal": "Pomnóż każdą liczbę przez 3.",
+      "hints": [
+        "2 → 6, 3 → 9 ..."
+      ]
+    },
+    "xi3": {
+      "goal": "Dodaj 10 do każdej liczby.",
+      "hints": [
+        "O ile większa jest każda liczba?"
+      ]
+    },
+    "xi4": {
+      "goal": "Pomnóż każdą liczbę przez 10.",
+      "hints": [
+        "3 → 30, 7 → 70 ..."
+      ]
+    },
+    "xi5": {
+      "goal": "Odejmij 2 od każdej liczby.",
+      "hints": [
+        "O ile mniejsza jest każda liczba?"
+      ]
+    },
+    "xi6": {
+      "goal": "Każda liczba zmienia się na 20 minus ta liczba.",
+      "hints": [
+        "Ile dają razem liczby z WEJŚCIA i WYJŚCIA?"
+      ]
+    },
+    "xi7": {
+      "goal": "Pomnóż każdą liczbę przez 5.",
+      "hints": [
+        "2 → 10, 3 → 15 ..."
+      ]
+    },
+    "xi8": {
+      "goal": "Każda liczba zmienia się na (liczba + 2) × 2.",
+      "hints": [
+        "Dwa działania: najpierw plus, potem razy."
+      ]
+    },
+    "xi9": {
+      "goal": "Każda liczba zmienia się na podwojoną liczbę minus 3.",
+      "hints": [
+        "Dwa działania: razy, potem minus."
+      ]
+    },
+    "xi10": {
+      "goal": "Każda liczba zmienia się na liczba × liczba + 1.",
+      "hints": [
+        "3 → 10, 4 → 17 ..."
+      ]
+    },
+    "xi11": {
+      "goal": "Zostaw liczby większe niż 4 i odejmij od nich 4.",
+      "hints": [
+        "Niektóre kulki znikają. Które?"
+      ]
+    },
+    "xi12": {
+      "goal": "Liczby nieparzyste zmieniają się na 0. Parzyste bez zmian.",
+      "hints": [
+        "Zmieniają się tylko niektóre liczby."
+      ]
+    },
+    "xi13": {
+      "goal": "Duże kulki dostają 5 punktów więcej. Małe bez zmian.",
+      "hints": [
+        "Zmieniają się tylko niektóre liczby. Spójrz na rozmiary."
+      ]
+    },
+    "xi14": {
+      "goal": "Podwój każdą liczbę, potem zostaw te większe niż 10.",
+      "hints": [
+        "Najpierw mapuj, potem filtruj."
+      ]
+    },
+    "rc1": {
+      "goal": "Policz duże kulki.",
+      "hints": [
+        "Liczone są tylko niektóre kulki."
+      ]
+    },
+    "rc2": {
+      "goal": "Policz kulki, które nie są zielone.",
+      "hints": [
+        "Liczone są tylko niektóre kulki."
+      ]
+    },
+    "rc3": {
+      "goal": "Policz kulki z liczbami nieparzystymi.",
+      "hints": [
+        "Liczone są tylko niektóre kulki."
+      ]
+    },
+    "rc4": {
+      "goal": "Policz czerwone i niebieskie kulki.",
+      "hints": [
+        "Liczone są tylko dwa kolory."
+      ]
+    },
+    "rc5": {
+      "goal": "Dodaj liczby z czerwonych kulek.",
+      "hints": [
+        "Dodawane są tylko niektóre liczby."
+      ]
+    },
+    "rc6": {
+      "goal": "Dodaj liczby większe niż 4.",
+      "hints": [
+        "Dodawane są tylko niektóre liczby."
+      ]
+    },
+    "rc7": {
+      "goal": "Znajdź największą liczbę na małej kulce.",
+      "hints": [
+        "Najpierw filtruj."
+      ]
+    },
+    "rc8": {
+      "goal": "Dodaj liczby, każdą powiększoną o 1.",
+      "hints": [
+        "Dodaj liczby samodzielnie. O ile różni się WYJŚCIE?"
+      ]
+    },
+    "rc9": {
+      "goal": "Dodaj liczby, każdą razy 10.",
+      "hints": [
+        "Spróbuj „⊕ działanie” w samej sumie."
+      ]
+    },
+    "rc10": {
+      "goal": "Pomnóż każdą liczbę przez samą siebie, potem znajdź największą.",
+      "hints": [
+        "Najpierw mapuj, potem redukuj."
+      ]
+    },
+    "rc11": {
+      "goal": "Dodaj podwojone liczby z niebieskich kulek.",
+      "hints": [
+        "Trzy kroki: filtruj, mapuj, redukuj."
+      ]
+    },
+    "rc12": {
+      "goal": "Znajdź najmniejszą liczbę parzystą.",
+      "hints": [
+        "Najpierw filtruj."
+      ]
+    },
+    "rc13": {
+      "goal": "Dodaj liczby z kulek w paski lub dużych.",
+      "hints": [
+        "Które kulki biorą udział?"
+      ]
+    },
+    "dk1": {
+      "goal": "Zacznij od 10 i dodaj każdą liczbę - używając „redukuj od”.",
+      "hints": [
+        "Od czego zaczyna wynik?"
+      ]
+    },
+    "dk2": {
+      "goal": "Dodaj każdą liczbę powiększoną o 1 - używając „redukuj od”.",
+      "hints": [
+        "Każda kulka dodaje swoją liczbę i jeszcze 1."
+      ]
+    },
+    "dk3": {
+      "goal": "Każda kulka jest warta 10 punktów. Ile punktów razem?",
+      "hints": [
+        "Każda kulka dodaje 10."
+      ]
+    },
+    "dk4": {
+      "goal": "Zacznij od 20 i odejmij każdą liczbę.",
+      "hints": [
+        "Zacznij od 20, nie od 0."
+      ]
+    },
+    "dk5": {
+      "goal": "Dodaj liczby z dużych kulek - używając „redukuj od”.",
+      "hints": [
+        "Najpierw filtruj, potem dodawaj ręcznie."
+      ]
+    },
+    "dk6": {
+      "goal": "Policz kulki z liczbami parzystymi - używając „redukuj od”.",
+      "hints": [
+        "Najpierw filtruj, potem licz ręcznie."
+      ]
+    },
+    "dk7": {
+      "goal": "Pomnóż każdą liczbę przez 3, potem je dodaj - używając „redukuj od”.",
+      "hints": [
+        "Najpierw mapuj, potem redukuj."
+      ]
+    },
+    "dk8": {
+      "goal": "Zacznij od 2 i mnóż przez każdą liczbę.",
+      "hints": [
+        "Jak mnożenie wszystkich, ale zaczynając od 2."
+      ]
+    },
+    "dk9": {
+      "goal": "Zacznij od 1 i potrajaj wynik przy każdej kulce.",
+      "hints": [
+        "1 kulka → 3, 2 kulki → 9 ..."
+      ]
+    },
+    "dk10": {
+      "goal": "Dla każdej kulki: wynik zmienia się na wynik × 2 + liczba.",
+      "hints": [
+        "Prześledź to Krok po kroku."
+      ]
+    },
+    "dk11": {
+      "goal": "Dodaj każdą liczbę pomnożoną przez samą siebie.",
+      "hints": [
+        "Każda kulka dodaje liczba × liczba."
+      ]
+    },
+    "dk12": {
+      "goal": "Odpowiedź to liczba ostatniej kulki.",
+      "hints": [
+        "Nowy wynik nie musi używać starego wyniku!"
+      ]
+    },
+    "dk13": {
+      "goal": "Zacznij od 100. Każda kulka zabiera dwa razy swoją liczbę.",
+      "hints": [
+        "Zacznij od 100. Potem minus coś."
+      ]
+    },
+    "dk14": {
+      "goal": "Pomnóż liczby z czerwonych kulek.",
+      "hints": [
+        "Najpierw filtruj. Od czego zaczyna się mnożenie?"
+      ]
+    },
+    "dk15": {
+      "goal": "Dodaj każdą liczbę pomniejszoną o 1.",
+      "hints": [
+        "Każda kulka dodaje swoją liczbę, ale o 1 mniej."
+      ]
+    },
+    "dk16": {
+      "goal": "Dodaj 1 do każdej liczby, potem pomnóż je wszystkie.",
+      "hints": [
+        "Najpierw mapuj, potem redukuj od 1."
+      ]
+    }
+  },
+  "theme": {
+    "label": "Motyw",
+    "light": "☀️ Jasny",
+    "dark": "🌙 Ciemny"
+  }
+}

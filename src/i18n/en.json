@@ -1,0 +1,1539 @@
+{
+  "meta": {
+    "name": "English",
+    "flag": "🇬🇧"
+  },
+  "words": {
+    "red": "red",
+    "blue": "blue",
+    "green": "green",
+    "yellow": "yellow",
+    "purple": "purple",
+    "small": "small",
+    "medium": "medium",
+    "big": "big",
+    "plain": "plain",
+    "striped": "striped",
+    "dotted": "dotted",
+    "color": "color",
+    "size": "size",
+    "pattern": "pattern",
+    "number": "number",
+    "even": "even",
+    "odd": "odd"
+  },
+  "kw": {
+    "filter": "filter",
+    "map": "map",
+    "reduce": "reduce",
+    "is": "is",
+    "isnot": "is not",
+    "and": "and",
+    "or": "or",
+    "becomes": "becomes",
+    "onlyIf": "only if",
+    "total": "total",
+    "count": "count",
+    "sum": "sum",
+    "max": "max",
+    "min": "min",
+    "from": "from"
+  },
+  "code": {
+    "isnot": "is not"
+  },
+  "blocks": {
+    "yes": "✓ yes",
+    "no": "✗ no",
+    "itIs": "(it is {value})",
+    "joinTitle": "Add another question with \"{op}\"",
+    "newBoxTitle": "Make a new \"{op}\" box here",
+    "addToBox": "Add one more question to this box",
+    "removeQuestion": "Remove this question",
+    "removeBox": "Remove this box",
+    "switchBox": "Click to change the kind of box",
+    "box": {
+      "and": "ALL of these must be yes",
+      "or": "ONE yes is enough"
+    },
+    "removeMath": "Remove the math",
+    "addMath": "⊕ math",
+    "addMathTitle": "Add math (+ − × ÷)",
+    "removeChange": "Remove this change",
+    "changeMore": "+ change more",
+    "changeMoreTitle": "Change something else too",
+    "removeOnlyIf": "Remove the 'only if'",
+    "addOnlyIf": "+ only if...",
+    "onlyIfTitle": "Change only some marbles",
+    "howMany": "how many marbles are there?",
+    "say": {
+      "sum": "add up",
+      "max": "the biggest",
+      "min": "the smallest"
+    },
+    "totalStarts": "total starts at",
+    "totalBecomes": "for each marble, total becomes",
+    "keepWhere": "keep marbles where",
+    "dropWhere": "throw away marbles where",
+    "empty": "Your machine is empty. Add a step below! 👇",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "deleteStep": "Delete this step",
+    "addStep": "Add a step:"
+  },
+  "machine": {
+    "in": "📥 in",
+    "step": "step {n}",
+    "tipHint": "hover or click a marble to see why",
+    "noMarblesHere": "no marbles reach this step",
+    "noMarbles": "no marbles",
+    "startsAt": "{label} starts at",
+    "made": "Your machine made",
+    "expected": "Expected",
+    "match": "✅ Match!",
+    "notSame": "❌ Not the same",
+    "error": "💥 Step {line}: {message}"
+  },
+  "explain": {
+    "kept": "✓ Yes - the marble rolls on.",
+    "dropped": "✗ No - the marble drops out.",
+    "keptNegated": "✗ No - so this marble is NOT thrown away. It rolls on.",
+    "droppedNegated": "✓ Yes - so this marble is thrown away.",
+    "onlyIf": "only if",
+    "becomes": "{prop} becomes",
+    "was": "(was {value})",
+    "already": "(it already was)",
+    "unchanged": "✗ The answer is no, so this marble stays the same.",
+    "count": "count was {before}, one more marble → {after}",
+    "sum": "sum was {before}, add",
+    "biggest": "the biggest so far: {before}, this marble:",
+    "smallest": "the smallest so far: {before}, this marble:",
+    "nothingYet": "nothing yet",
+    "totalWas": "total was {before}. New total:",
+    "status": {
+      "keep": "✓ keep",
+      "drop": "✗ drop",
+      "changed": "✨ changed",
+      "unchanged": "unchanged",
+      "none": "no marbles here"
+    },
+    "label": {
+      "count": "count",
+      "sum": "sum",
+      "max": "max",
+      "min": "min",
+      "total": "total"
+    }
+  },
+  "errors": {
+    "divzero": "Oops - you cannot divide by zero!",
+    "toobig": "Whoa, this number got way too big!",
+    "generic": "Something is wrong with the program."
+  },
+  "marble": {
+    "label": "marble: color {color}, size {size}, pattern {pattern}",
+    "labelNumber": "marble: color {color}, size {size}, pattern {pattern}, number {number}"
+  },
+  "map": {
+    "title": "Marble Machine",
+    "tagline": "Build machines that sort, paint and count marbles - with code!",
+    "start": "▶ Start playing",
+    "continue": "▶ Continue",
+    "cheatOn": "🕹️ Cheat mode: ON - all levels open",
+    "cheatOff": "🕹️ Cheat mode: off",
+    "cheatTitle": "Cheat mode opens every level",
+    "reset": "Reset progress",
+    "resetConfirm": "Erase all stars and saved machines?",
+    "locked": "Pass the exam of the section before to open this one",
+    "levelLocked": "Solve the level before first",
+    "exam": "🎓 Exam",
+    "examLocked": "Solve {n} levels of this section to open the exam",
+    "openSection": "Open section",
+    "language": "Language"
+  },
+  "chapter": {
+    "section": "Section {n}",
+    "learn": "What you will learn",
+    "progress": "{done} of {all} levels solved",
+    "start": "▶ Start",
+    "continue": "▶ Continue practising",
+    "takeExam": "🎓 Take the exam",
+    "examLocked": {
+      "one": "🔒 Solve {n} more level to open the exam",
+      "other": "🔒 Solve {n} more levels to open the exam"
+    },
+    "examInfo": "The exam is the hardest puzzle of this section. Pass it to open the next section!",
+    "passed": "🎉 Section complete! You passed the exam.",
+    "nextSection": "Next section ➜",
+    "backToMap": "← Map",
+    "allDone": "🏆 You finished every section. You are a marble master!",
+    "practice": "Practice levels"
+  },
+  "level": {
+    "name": "Level {n}",
+    "exam": "🎓 Exam",
+    "examIntro": "🎓 This is the exam of this section - the hardest puzzle. Pass it to open the next section!",
+    "thisTry": "this try",
+    "best": "best",
+    "starsTitle": "Solve without mistakes for 3 stars. Each wrong check or hint costs a star.",
+    "examLeave": "Too hard for now? Practise more first - the exam will wait for you.",
+    "backToPractice": "← Back to practice levels"
+  },
+  "ui": {
+    "map": "← Map",
+    "puzzle": "🧩 Puzzle",
+    "findRule": "🔍 Find the rule!",
+    "findRuleText": "Look at what goes IN and what comes OUT. What does the machine have to do?",
+    "examples": "Examples - click one to put it in the machine",
+    "inMachine": "⚙️ in the machine",
+    "example": "Example {n}",
+    "secretTest": "🕵️ Secret test",
+    "in": "IN",
+    "out": "OUT",
+    "inShort": "IN",
+    "outShort": "OUT",
+    "ruleLabel": "The rule:",
+    "solutionLabel": "A solution:",
+    "tellRule": "💡 Tell me the rule",
+    "needHint": "💡 Need a hint?",
+    "anotherHint": "💡 Another hint",
+    "showSolution": "💡 Show a solution",
+    "costsStar": "(costs a ⭐)",
+    "mustUse": "📏 You must use \"{what}\"",
+    "maxSteps": {
+      "one": "📏 Use only {n} step",
+      "other": "📏 Use only {n} steps"
+    },
+    "program": "🛠️ Your program",
+    "undo": "↶ Undo",
+    "clear": "🧹 Clear",
+    "clearConfirm": "Remove all steps and start from scratch?",
+    "code": "</> Code",
+    "codeTitle": "Your machine written as code:",
+    "codeEmpty": "(empty)",
+    "spellbook": "📕 Spellbook",
+    "howItWorks": "📖 How it works",
+    "steppingLocked": "🐞 Stepping through - press ⏹ Stop debugging to change your program.",
+    "machine": "⚙️ Machine",
+    "checkAll": "✔ Check all",
+    "checkAllTitle": "Your answer: tests all examples and the secret tests. A wrong answer costs a star.",
+    "stopDebug": "⏹ Stop debugging",
+    "allExamples": "📋 All examples",
+    "runThis": "▶ Run this",
+    "runExample": "▶ Run {label}",
+    "runTitle": "Run {label} - instantly, for free",
+    "stepByStep": "🐞 Step by step",
+    "stepTitle": "Follow the marbles one by one - for free",
+    "next": "▶ Next",
+    "play": "⏵ Play",
+    "pause": "⏸",
+    "toStart": "Back to the start",
+    "back": "One step back (←)",
+    "nextTitle": "Next step (→)",
+    "playTitle": "Play automatically",
+    "toEnd": "Jump to the end",
+    "yours": "YOURS",
+    "wanted": "WANTED",
+    "showInMachine": "Show {label} in the machine",
+    "secretResult": "Secret tests: {ok} of {all}",
+    "secretWait": "Secret tests: make all examples work first.",
+    "idleRun": "see what your machine does with {label}",
+    "idleStep": "follow these marbles one at a time",
+    "idleCheck": "your answer: tests every example",
+    "expectedOut": "Expected out",
+    "narration": {
+      "start": "These marbles are about to roll into your machine. Press ▶ Next to send the first one!",
+      "error": "The machine stopped with an error.",
+      "end": "All marbles went through. Compare with what was expected!",
+      "none": "No marbles reached this step.",
+      "marble": "Marble {i} at step {s}:"
+    },
+    "msg": {
+      "empty": "Your machine is empty, so the marbles just roll straight through. Add a step first!",
+      "addStep": "Add a step to your machine first!",
+      "someWork": "{ok} of {all} examples work. Click a ❌ example to see what goes wrong.",
+      "secretFail": "All examples work... but a secret test found a problem! It is now in the list with the examples.",
+      "stillWin": "(you can still win {stars})",
+      "mustUse": "It works! But in this level you have to use \"{what}\". Try again!",
+      "tooLong": {
+        "one": "It works! But in this level your machine may have only {n} step. Can you squeeze it into fewer steps?",
+        "other": "It works! But in this level your machine may have only {n} steps. Can you squeeze it into fewer steps?"
+      },
+      "allWork": "Everything works! 🎉"
+    },
+    "modal": {
+      "complete": "Level complete!",
+      "examPassed": "Exam passed! 🎓",
+      "perfect": "Perfect - no mistakes!",
+      "solved": "Solved! Play it again without mistakes or hints to get all 3 stars.",
+      "stay": "Stay here",
+      "next": "Next level ➜",
+      "toExam": "🎓 Go to the exam",
+      "nextSection": "Next section ➜",
+      "finished": "🏆 You finished them all!"
+    },
+    "spellbookTitle": "📕 Spellbook",
+    "spellbookText": "Everything you have learned so far:",
+    "close": "Close"
+  },
+  "steps": {
+    "fold": "reduce from",
+    "count": "reduce count",
+    "sum": "reduce sum",
+    "max": "reduce max",
+    "min": "reduce min",
+    "filter": "filter",
+    "map": "map"
+  },
+  "chapters": {
+    "filter": {
+      "title": "The Sorting Room",
+      "blurb": "Pick out exactly the marbles you want with filter."
+    },
+    "boxes": {
+      "title": "Question Boxes",
+      "blurb": "Ask many questions at once with and / or - and put a box inside a box."
+    },
+    "numbers": {
+      "title": "Number Valley",
+      "blurb": "Marbles with numbers! Compare them with > and <."
+    },
+    "map": {
+      "title": "The Paint Shop",
+      "blurb": "Change marbles with map: paint, grow and decorate them."
+    },
+    "math": {
+      "title": "The Number Factory",
+      "blurb": "Do math on the numbers inside the marbles."
+    },
+    "reduce": {
+      "title": "The Counting Tower",
+      "blurb": "Squash a whole stream of marbles into one number with reduce."
+    },
+    "fold": {
+      "title": "Reduce Masters",
+      "blurb": "Build your own reduce, step by step."
+    }
+  },
+  "concepts": {
+    "filter": {
+      "title": "filter",
+      "text": "A gate: keeps only the marbles that answer yes."
+    },
+    "isnot": {
+      "title": "is not",
+      "text": "Keeps every marble that is NOT red."
+    },
+    "size": {
+      "title": "size",
+      "text": "Sizes: small, medium, big."
+    },
+    "pattern": {
+      "title": "pattern",
+      "text": "Patterns: plain, striped, dotted."
+    },
+    "chain": {
+      "title": "many steps",
+      "text": "Marbles go through the steps from top to bottom."
+    },
+    "and": {
+      "title": "and",
+      "text": "An ALL box: every question in it must be yes."
+    },
+    "or": {
+      "title": "or",
+      "text": "A ONE-yes box: one yes is enough."
+    },
+    "brackets": {
+      "title": "a box in a box",
+      "text": "The inner box is answered first. In code, a box inside a box is written with ( brackets )."
+    },
+    "negate": {
+      "title": "throw away",
+      "text": "Click \"keep marbles where\" to switch the gate around: it throws away the marbles that answer yes."
+    },
+    "compare": {
+      "title": "> < >= <=",
+      "text": "> bigger than, < smaller than, >= bigger or equal, <= smaller or equal."
+    },
+    "evenodd": {
+      "title": "even / odd",
+      "text": "Even: 0, 2, 4, 6...   Odd: 1, 3, 5, 7..."
+    },
+    "map": {
+      "title": "map",
+      "text": "A machine that changes every marble."
+    },
+    "mapmany": {
+      "title": "change more",
+      "text": "Change several things at once."
+    },
+    "mapif": {
+      "title": "map ... only if",
+      "text": "Change only some marbles; the rest pass unchanged."
+    },
+    "math": {
+      "title": "+ − × ÷",
+      "text": "Math with numbers. \"number\" means the number the marble had before."
+    },
+    "count": {
+      "title": "reduce count",
+      "text": "How many marbles are there? Always the last step."
+    },
+    "sum": {
+      "title": "reduce sum",
+      "text": "Adds up the numbers of all marbles."
+    },
+    "maxmin": {
+      "title": "reduce max / min",
+      "text": "max finds the biggest value, min the smallest."
+    },
+    "fold": {
+      "title": "reduce from",
+      "text": "Start total at 0. For every marble, total becomes total + number. The last total is the answer."
+    }
+  },
+  "levels": {
+    "f1": {
+      "goal": "Keep only the red marbles.",
+      "intro": "Welcome to the Marble Machine! You build a machine, and marbles roll through it.\n\nLook at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you find the rule? Click an example to put it in the machine.\n\n**filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This machine keeps blue marbles:\n\n```\nfilter color is blue\n```\n\nClick the word **blue** in your machine, pick another color, and press **▶ Run this** to try it.",
+      "hints": [
+        "You only need to change one word.",
+        "Which color is in every OUT?"
+      ]
+    },
+    "f2": {
+      "goal": "Keep only the green marbles.",
+      "intro": "Now build the machine yourself! Press **+ filter** to add a gate, then click the words to change them.\n\nNot sure what happens? Press **🐞 Step by step** and follow the marbles one by one. It's free!",
+      "hints": [
+        "Add a filter step.",
+        "Which color survives?"
+      ]
+    },
+    "fb1": {
+      "goal": "Keep only the blue marbles.",
+      "hints": [
+        "Look at the colors in OUT."
+      ]
+    },
+    "f3": {
+      "goal": "Remove all yellow marbles. Keep everything else.",
+      "intro": "Sometimes it is easier to say what you **don't** want. Click on **is** and choose **is not**:\n\n```\nfilter color is not red\n```\n\nThis keeps every marble that is not red.",
+      "hints": [
+        "Which color never comes out?",
+        "Use \"is not\"."
+      ]
+    },
+    "fb2": {
+      "goal": "Remove all purple marbles.",
+      "hints": [
+        "Which color is missing in OUT?"
+      ]
+    },
+    "f4": {
+      "goal": "Keep only the big marbles.",
+      "intro": "Marbles come in three sizes: **small**, **medium** and **big**.\n\nClick on **color** to ask about **size** instead:\n\n```\nfilter size is small\n```",
+      "hints": [
+        "Colors don't matter here. Look at the sizes."
+      ]
+    },
+    "fb3": {
+      "goal": "Keep the marbles that are not big.",
+      "hints": [
+        "Look at the sizes.",
+        "Which size never comes out?"
+      ]
+    },
+    "f5": {
+      "goal": "Keep only the striped marbles.",
+      "intro": "Some marbles have a pattern: **plain**, **striped** or **dotted**.\n\n```\nfilter pattern is dotted\n```",
+      "hints": [
+        "Look at the patterns."
+      ]
+    },
+    "fb4": {
+      "goal": "Keep the marbles that have a pattern (not plain).",
+      "hints": [
+        "Look at the patterns.",
+        "Which pattern never comes out?"
+      ]
+    },
+    "f6": {
+      "goal": "Keep only the marbles that are red AND big.",
+      "intro": "A machine can have many steps. Marbles go through them from top to bottom, like a conveyor belt with several gates.\n\n```\nfilter color is blue\nfilter size is small\n```\n\nThe first gate lets only blue marbles through. The second gate checks those blue marbles and keeps the small ones.",
+      "hints": [
+        "Two things matter: color and size.",
+        "Use two filter steps."
+      ]
+    },
+    "f7": {
+      "goal": "Keep the small marbles that are not blue.",
+      "hints": [
+        "Two gates again.",
+        "One gate for the size, one for the color."
+      ]
+    },
+    "fb5": {
+      "goal": "Keep the striped marbles that are not green.",
+      "hints": [
+        "Two gates: one for the pattern, one for the color."
+      ]
+    },
+    "fx": {
+      "goal": "Keep the big marbles that are not red and are dotted.",
+      "hints": [
+        "Three things matter: size, color and pattern.",
+        "One gate for each."
+      ]
+    },
+    "f8": {
+      "goal": "Keep the marbles that are green AND striped.",
+      "intro": "One gate can ask several questions. Press **+ and** next to a question. Your questions go into a **blue ALL box**:\n\n```\nfilter color is red and size is big\n```\n\nAn ALL box says *yes* only when **every** question inside says *yes*. A big blue marble? \"color is red\" says no, so the whole box says no.",
+      "hints": [
+        "Two things matter: color and pattern.",
+        "Press \"+ and\" next to the first question."
+      ]
+    },
+    "fc1": {
+      "goal": "Keep the marbles that are red AND small.",
+      "hints": [
+        "Color and size, in one ALL box."
+      ]
+    },
+    "fa2": {
+      "goal": "Keep the marbles that are blue AND small AND dotted.",
+      "intro": "An ALL box can hold as many questions as you like. Press **+ and** at the bottom of the box to add another one. Every single one must say *yes*.",
+      "hints": [
+        "Three questions in one ALL box."
+      ]
+    },
+    "f9": {
+      "goal": "Keep the marbles that are red OR yellow.",
+      "intro": "Press **+ or** to get an **orange ONE-YES box**. It says *yes* when **at least one** question inside says *yes*:\n\n```\nfilter color is blue or color is green\n```\n\nCareful: two separate gates can't do this! The first gate would already throw away the marbles the second one wants.\n\nTip: click the title of a box to switch it between ALL and ONE-YES.",
+      "hints": [
+        "Two colors come out.",
+        "Press \"+ or\" next to the first question."
+      ]
+    },
+    "fc2": {
+      "goal": "Keep the marbles that are big OR striped.",
+      "hints": [
+        "A marble needs only one of two things to come out."
+      ]
+    },
+    "fo2": {
+      "goal": "Keep the red, yellow and purple marbles.",
+      "hints": [
+        "One ONE-YES box with three questions."
+      ]
+    },
+    "fc3": {
+      "goal": "Keep the big marbles that are not blue.",
+      "hints": [
+        "\"is not\" works inside a box too."
+      ]
+    },
+    "fg1": {
+      "goal": "Keep the red marbles that are big OR striped.",
+      "intro": "Now put a box inside a box! Build **color is red** and press **+ and**. Then, on the *second* question, press **+ or**:\n\n```\nfilter color is blue and (size is small or pattern is dotted)\n```\n\nThe machine answers the **inner** box first: \"is it small or dotted?\". Then the outer ALL box checks: \"is it blue, AND did the inner box say yes?\"\n\nUse **🐞 Step by step** to see every box light up green ✓ or red ✗.",
+      "hints": [
+        "The color must always be right. The other two things: one is enough.",
+        "A ONE-YES box goes inside the ALL box."
+      ]
+    },
+    "fc4": {
+      "goal": "Keep the dotted marbles that are red or blue.",
+      "hints": [
+        "Two colors are fine, but the pattern must be right.",
+        "Start with the colors in a ONE-YES box... or start with the pattern."
+      ]
+    },
+    "fg2": {
+      "goal": "Team 1: big red marbles. Team 2: small blue marbles. Keep both teams!",
+      "intro": "This time the outer box is a ONE-YES box, with two ALL boxes inside - one for each team:\n\n```\nfilter (color is green and size is small) or (color is yellow and size is big)\n```",
+      "hints": [
+        "Start with: color is red OR color is blue. Then press \"+ and\" next to each color to add its size."
+      ]
+    },
+    "fn1": {
+      "goal": "Throw away the marbles that are red AND big. Keep all the others.",
+      "intro": "A gate can also **throw away** marbles. Click on **keep marbles where** and choose **throw away marbles where**:\n\n```\nfilter not (color is green and size is small)\n```\n\nThis throws away the small green marbles. Everything else rolls on.",
+      "hints": [
+        "Which marbles are missing in OUT?",
+        "Switch the gate to \"throw away\"."
+      ]
+    },
+    "f10": {
+      "goal": "Keep the marbles that are big or dotted - but never purple ones.",
+      "hints": [
+        "Big or dotted: a ONE-YES box.",
+        "The color is checked in an ALL box around it."
+      ]
+    },
+    "n1": {
+      "goal": "Keep the marbles with a number bigger than 5.",
+      "intro": "These marbles have numbers on them! Click on **color** and choose **number**. Then you can compare: **>** means *bigger than*, **<** means *smaller than*.\n\n```\nfilter number > 3\n```\n\nThis keeps 4, 5, 6 ... but not 3 itself.",
+      "hints": [
+        "Look at the numbers that come out. What is the smallest one?"
+      ]
+    },
+    "n2": {
+      "goal": "Keep the marbles with numbers 3 or smaller.",
+      "intro": "**<=** means \"smaller or equal\" and **>=** means \"bigger or equal\". This keeps 4, 5, 6 ...:\n\n```\nfilter number >= 4\n```",
+      "hints": [
+        "What is the biggest number that comes out?"
+      ]
+    },
+    "nb0": {
+      "goal": "Keep the marbles with numbers 7 or bigger.",
+      "hints": [
+        "What is the smallest number that comes out?"
+      ]
+    },
+    "n3": {
+      "goal": "Keep the marbles with even numbers.",
+      "intro": "Even numbers are 0, 2, 4, 6, 8 ... and odd numbers are 1, 3, 5, 7 ...\n\n```\nfilter number is odd\n```",
+      "hints": [
+        "Look at the numbers that come out. What do they have in common?"
+      ]
+    },
+    "nb1": {
+      "goal": "Keep the odd numbers bigger than 4.",
+      "hints": [
+        "Two things about the number.",
+        "Odd numbers, but not the small ones."
+      ]
+    },
+    "n4": {
+      "goal": "Keep the red marbles that have odd numbers.",
+      "hints": [
+        "One question about color, one about the number."
+      ]
+    },
+    "n5": {
+      "goal": "Keep the marbles with numbers from 3 to 7.",
+      "hints": [
+        "A number is \"between\" when it is big enough AND small enough."
+      ]
+    },
+    "nb2": {
+      "goal": "Keep the numbers smaller than 3 or bigger than 7.",
+      "hints": [
+        "The middle numbers are thrown away.",
+        "A ONE-YES box with two questions."
+      ]
+    },
+    "n6": {
+      "goal": "Keep the marbles that are bigger than small.",
+      "intro": "Sizes can be compared too: small < medium < big.",
+      "hints": [
+        "Two sizes come out. Try > with sizes!"
+      ]
+    },
+    "nb3": {
+      "goal": "Keep the even marbles that are medium or big.",
+      "hints": [
+        "One question about size, one about the number."
+      ]
+    },
+    "nx": {
+      "goal": "Keep the red marbles with even numbers - and every marble with a number bigger than 8.",
+      "hints": [
+        "Big numbers always come out, whatever their color.",
+        "Two teams: (red and even) or (bigger than 8)."
+      ]
+    },
+    "m1": {
+      "goal": "Paint every marble blue.",
+      "intro": "**map** is a machine that changes *every* marble that goes through it. Press **+ map**:\n\n```\nmap color -> green\n```\n\nEvery marble's color becomes green. Nothing gets thrown away - map never removes marbles.\n\n(Press **</> Code** to see your machine as code. In code, \"becomes\" is written as an arrow: ->)",
+      "hints": [
+        "Compare the colors IN and OUT."
+      ]
+    },
+    "m2": {
+      "goal": "Make every marble big.",
+      "hints": [
+        "The colors stay the same. What changes?"
+      ]
+    },
+    "mb1": {
+      "goal": "Give every marble stripes.",
+      "hints": [
+        "Look at the patterns."
+      ]
+    },
+    "m3": {
+      "goal": "Make every marble purple AND dotted.",
+      "intro": "One map can change several things. Press **+ change more**:\n\n```\nmap color -> red, size -> small\n```",
+      "hints": [
+        "Two things change.",
+        "Use \"+ change more\"."
+      ]
+    },
+    "m4": {
+      "goal": "Keep only the red marbles and paint them yellow.",
+      "intro": "Now combine the gate and the paint machine! First **filter**, then **map**.",
+      "hints": [
+        "Some marbles disappear, and the ones left change color.",
+        "Two steps: filter first, then map."
+      ]
+    },
+    "m5": {
+      "goal": "Keep the small marbles and give them stripes.",
+      "hints": [
+        "Some marbles disappear. Which ones?",
+        "filter first, then map."
+      ]
+    },
+    "m6": {
+      "goal": "Paint the big marbles red. Leave the others as they are.",
+      "intro": "Press **+ only if...** to change only some marbles. The others pass through unchanged - nobody is thrown away!\n\n```\nmap color -> green if pattern is dotted\n```",
+      "hints": [
+        "Not every marble changes. Which ones do?",
+        "Use \"+ only if...\"."
+      ]
+    },
+    "mb2": {
+      "goal": "Plain marbles get dots. The others stay as they are.",
+      "hints": [
+        "Only some marbles change. Which ones?"
+      ]
+    },
+    "m8": {
+      "goal": "Every green marble becomes big. Then keep only the big marbles.",
+      "hints": [
+        "First map (with only if), then filter.",
+        "Follow a small green marble with Step by step."
+      ]
+    },
+    "mb3": {
+      "goal": "Big or striped marbles are painted yellow.",
+      "hints": [
+        "Only some marbles change.",
+        "\"only if\" can have a box with two questions."
+      ]
+    },
+    "m7": {
+      "goal": "Turn red marbles blue and blue marbles red.",
+      "hints": [
+        "Careful - if you first paint red marbles blue, you can't tell them apart from the blue ones anymore...",
+        "Use a third color as a temporary parking spot: red → green, then blue → red, then green → blue."
+      ]
+    },
+    "x1": {
+      "goal": "Double the number on every marble.",
+      "intro": "map can change numbers with math. Choose **number becomes**, then press **⊕ math**. Here **number** means \"the number this marble had before\":\n\n```\nmap number -> number + 1\n```\n\nA marble with 4 becomes 5, a marble with 7 becomes 8.\n\nClick on **+** to choose another sign: **+ − × ÷**.",
+      "hints": [
+        "Compare each number IN with the one OUT: 2 → 4, 3 → 6..."
+      ]
+    },
+    "x2": {
+      "goal": "Add 3 to every number.",
+      "hints": [
+        "How much bigger is each number?"
+      ]
+    },
+    "xb1": {
+      "goal": "Take 1 away from every number.",
+      "hints": [
+        "Compare each number IN with the one OUT."
+      ]
+    },
+    "x3": {
+      "goal": "Every number becomes 10 minus the number.",
+      "hints": [
+        "1 becomes 9, 2 becomes 8, 3 becomes 7... What do the two numbers add up to?",
+        "Click on the first \"number\" and choose 10."
+      ]
+    },
+    "x4": {
+      "goal": "Every number becomes twice the number plus 1.",
+      "hints": [
+        "There are two math steps: times something, then plus something.",
+        "Press ⊕ math twice."
+      ]
+    },
+    "xb2": {
+      "goal": "Every number becomes three times the number minus 1.",
+      "hints": [
+        "Two math steps: times something, then minus something."
+      ]
+    },
+    "x5": {
+      "goal": "Every number is multiplied by itself.",
+      "hints": [
+        "3 becomes 9, 4 becomes 16..."
+      ]
+    },
+    "x6": {
+      "goal": "Keep the even numbers and cut them in half.",
+      "hints": [
+        "Some marbles disappear. Which ones?",
+        "filter first, then map with ÷."
+      ]
+    },
+    "x7": {
+      "goal": "Red marbles get 10 extra points. The others stay the same.",
+      "hints": [
+        "Only some numbers change. Which marbles are they?"
+      ]
+    },
+    "xb3": {
+      "goal": "Numbers smaller than 5 are doubled. The others stay the same.",
+      "hints": [
+        "Only small numbers change."
+      ]
+    },
+    "x8": {
+      "goal": "Throw away the green marbles and multiply the others by 3.",
+      "hints": [
+        "Some marbles disappear. Which ones?",
+        "Then look at the numbers."
+      ]
+    },
+    "xx": {
+      "goal": "Keep the odd numbers. Each becomes (number + 1) × 2.",
+      "hints": [
+        "Some marbles disappear. Which ones?",
+        "Two math steps: first plus, then times."
+      ]
+    },
+    "r1": {
+      "goal": "Count the marbles.",
+      "intro": "**reduce** squashes all the marbles into **one number**. Press **+ reduce**. The simplest one counts them:\n\n```\nreduce count\n```\n\nAfter reduce there are no more marbles - just a number. So reduce is always the last step.",
+      "hints": [
+        "Count the marbles IN. Compare with OUT."
+      ]
+    },
+    "r2": {
+      "goal": "Count only the red marbles.",
+      "hints": [
+        "Only some marbles are counted.",
+        "filter first, then count."
+      ]
+    },
+    "rb1": {
+      "goal": "Count the marbles with a number bigger than 5.",
+      "hints": [
+        "Only some marbles are counted."
+      ]
+    },
+    "r3": {
+      "goal": "Add up all the numbers.",
+      "intro": "**reduce sum** adds up something for every marble:\n\n```\nreduce sum number\n```",
+      "hints": [
+        "Add up the numbers IN yourself."
+      ]
+    },
+    "r6": {
+      "goal": "Add up the numbers of the big marbles only.",
+      "hints": [
+        "Only some numbers are added.",
+        "filter, then reduce sum."
+      ]
+    },
+    "r4": {
+      "goal": "Find the biggest number.",
+      "intro": "**reduce max** finds the biggest value, **reduce min** finds the smallest:\n\n```\nreduce min number\n```",
+      "hints": [
+        "Where can you find the OUT number among the marbles?"
+      ]
+    },
+    "rb2": {
+      "goal": "Find the smallest number.",
+      "hints": [
+        "Where can you find the OUT number among the marbles?"
+      ]
+    },
+    "r5": {
+      "goal": "Find the smallest number on a blue marble.",
+      "hints": [
+        "Only some marbles take part.",
+        "filter first."
+      ]
+    },
+    "r7": {
+      "goal": "Add up the numbers, doubled.",
+      "hints": [
+        "Add the numbers up yourself and compare with OUT.",
+        "The answer is always twice the sum."
+      ]
+    },
+    "r8": {
+      "goal": "Count the marbles that have a pattern (striped or dotted).",
+      "hints": [
+        "Only some marbles are counted.",
+        "\"Has a pattern\" means it is not plain."
+      ]
+    },
+    "rb3": {
+      "goal": "Add up the even numbers.",
+      "hints": [
+        "Only some numbers are added."
+      ]
+    },
+    "rx": {
+      "goal": "From the red or big marbles, find the biggest number multiplied by itself.",
+      "hints": [
+        "Three steps: filter, map, reduce.",
+        "Which marbles take part? What happens to their numbers?"
+      ]
+    },
+    "d1": {
+      "goal": "Add up all the numbers - using \"reduce from\".",
+      "intro": "Time to see how reduce *really* works! You keep a **total**. It starts at some number, then every marble updates it:\n\n```\nreduce from 0 : total + number\n```\n\nStart with total = 0. For each marble: total becomes total + number. The last total is the answer.\n\nUse **🐞 Step by step** to watch the total grow under each marble!",
+      "hints": [
+        "Choose \"from\" in the reduce step."
+      ]
+    },
+    "d2": {
+      "goal": "Count the marbles - using \"reduce from\".",
+      "hints": [
+        "Each marble should add 1 to the total."
+      ]
+    },
+    "db1": {
+      "goal": "Add up the doubled numbers - using \"reduce from\".",
+      "hints": [
+        "Each marble adds twice its number."
+      ]
+    },
+    "d3": {
+      "goal": "You have 50 coins. Every marble costs as many coins as its number. How many coins are left?",
+      "hints": [
+        "Start from 50, not 0!",
+        "Each marble takes some coins away."
+      ]
+    },
+    "db2": {
+      "goal": "Count the red marbles - using \"reduce from\".",
+      "hints": [
+        "filter first, then count by hand."
+      ]
+    },
+    "d4": {
+      "goal": "Multiply all the numbers together.",
+      "hints": [
+        "What should you start from? (Hint: 0 times anything is 0...)"
+      ]
+    },
+    "db3": {
+      "goal": "Start at 100. Every marble takes 10 away.",
+      "hints": [
+        "1 marble → 90, 2 marbles → 80 ..."
+      ]
+    },
+    "d5": {
+      "goal": "Start at 1 and double the total for every marble.",
+      "hints": [
+        "1 marble → 2, 2 marbles → 4, 3 marbles → 8 ..."
+      ]
+    },
+    "d6": {
+      "goal": "Only big marbles count. Each is worth ten times its number. Add them up - using \"reduce from\".",
+      "hints": [
+        "Which marbles count?",
+        "What is each one worth?"
+      ]
+    },
+    "fd1": {
+      "goal": "Keep only the yellow marbles.",
+      "hints": [
+        "Which color is in every OUT?"
+      ]
+    },
+    "fd2": {
+      "goal": "Keep only the purple marbles.",
+      "hints": [
+        "Which color is in every OUT?"
+      ]
+    },
+    "fd3": {
+      "goal": "Remove the red marbles.",
+      "hints": [
+        "Which color never comes out?"
+      ]
+    },
+    "fd4": {
+      "goal": "Keep only the small marbles.",
+      "hints": [
+        "Look at the sizes, not the colors."
+      ]
+    },
+    "fd5": {
+      "goal": "Keep only the medium marbles.",
+      "hints": [
+        "Not the biggest, not the smallest..."
+      ]
+    },
+    "fd6": {
+      "goal": "Keep the marbles that are not small.",
+      "hints": [
+        "Which size never comes out?"
+      ]
+    },
+    "fd7": {
+      "goal": "Keep only the dotted marbles.",
+      "hints": [
+        "Look at the patterns."
+      ]
+    },
+    "fd8": {
+      "goal": "Keep only the plain marbles.",
+      "hints": [
+        "Look at the patterns."
+      ]
+    },
+    "fd9": {
+      "goal": "Keep the marbles that are not striped.",
+      "hints": [
+        "Which pattern never comes out?"
+      ]
+    },
+    "fd10": {
+      "goal": "Keep the blue marbles that are dotted.",
+      "hints": [
+        "Two gates: one for the color, one for the pattern."
+      ]
+    },
+    "fd11": {
+      "goal": "Keep the striped marbles that are not small.",
+      "hints": [
+        "Two gates: size and pattern."
+      ]
+    },
+    "fd12": {
+      "goal": "Remove the red marbles and the blue marbles.",
+      "hints": [
+        "Two gates, each one throws away one color."
+      ]
+    },
+    "fd13": {
+      "goal": "Keep the big, plain, green marbles.",
+      "hints": [
+        "Three things matter. One gate for each."
+      ]
+    },
+    "fe1": {
+      "goal": "Keep the marbles that are big AND dotted.",
+      "hints": [
+        "Size and pattern in one ALL box."
+      ]
+    },
+    "fe2": {
+      "goal": "Keep the yellow marbles that are not small.",
+      "hints": [
+        "\"is not\" works inside a box too."
+      ]
+    },
+    "fe3": {
+      "goal": "Keep the marbles that are not red AND have a pattern.",
+      "hints": [
+        "Two \"is not\" questions in one ALL box."
+      ]
+    },
+    "fe4": {
+      "goal": "Keep the blue or green marbles.",
+      "hints": [
+        "Two colors come out."
+      ]
+    },
+    "fe5": {
+      "goal": "Keep the marbles that are small OR dotted.",
+      "hints": [
+        "A marble needs only one of the two things."
+      ]
+    },
+    "fe6": {
+      "goal": "Keep the small and the big marbles.",
+      "hints": [
+        "Which size never comes out? There are two ways to solve this."
+      ]
+    },
+    "fe7": {
+      "goal": "Keep the marbles that are red OR striped.",
+      "hints": [
+        "One question about color, one about the pattern."
+      ]
+    },
+    "fe8": {
+      "goal": "Keep the plain marbles that are red or green.",
+      "hints": [
+        "The pattern must always be right. The colors: one is enough."
+      ]
+    },
+    "fe9": {
+      "goal": "Keep the big marbles that have a pattern (striped or dotted).",
+      "hints": [
+        "A ONE-YES box inside an ALL box."
+      ]
+    },
+    "fe10": {
+      "goal": "Keep the big marbles - and also the green dotted ones.",
+      "hints": [
+        "Two teams: (green and dotted) or big."
+      ]
+    },
+    "fe11": {
+      "goal": "Team 1: small blue marbles. Team 2: striped red marbles. Keep both teams!",
+      "hints": [
+        "One ONE-YES box with two ALL boxes inside."
+      ]
+    },
+    "fe12": {
+      "goal": "Throw away the marbles that are blue OR small.",
+      "hints": [
+        "Switch the gate to \"throw away\"."
+      ]
+    },
+    "fe13": {
+      "goal": "Throw away the big plain marbles. Keep everything else.",
+      "hints": [
+        "Which marbles are missing in OUT?"
+      ]
+    },
+    "fe14": {
+      "goal": "Throw away the red and the green marbles.",
+      "hints": [
+        "One gate that throws away two colors."
+      ]
+    },
+    "ng1": {
+      "goal": "Keep the marbles with a number smaller than 4.",
+      "hints": [
+        "What is the biggest number that comes out?"
+      ]
+    },
+    "ng2": {
+      "goal": "Keep the marbles with a number bigger than 10.",
+      "hints": [
+        "What is the smallest number that comes out?"
+      ]
+    },
+    "ng3": {
+      "goal": "Keep only the marbles with the number 5.",
+      "hints": [
+        "Only one number ever comes out."
+      ]
+    },
+    "ng4": {
+      "goal": "Remove the marbles with the number 1.",
+      "hints": [
+        "Which number never comes out?"
+      ]
+    },
+    "ng5": {
+      "goal": "Keep the marbles with odd numbers.",
+      "hints": [
+        "1, 3, 5, 7 ..."
+      ]
+    },
+    "ng6": {
+      "goal": "Keep the even numbers smaller than 6.",
+      "hints": [
+        "Two things about the number."
+      ]
+    },
+    "ng7": {
+      "goal": "Keep the blue marbles - and every marble with a number bigger than 7.",
+      "hints": [
+        "Big numbers come out whatever their color."
+      ]
+    },
+    "ng8": {
+      "goal": "Keep the numbers 3, 4 and 5.",
+      "hints": [
+        "Big enough AND small enough."
+      ]
+    },
+    "ng9": {
+      "goal": "Keep the odd numbers, but not 5.",
+      "hints": [
+        "Odd numbers... except one."
+      ]
+    },
+    "ng10": {
+      "goal": "Keep the marbles that are smaller than big.",
+      "hints": [
+        "Try < with sizes."
+      ]
+    },
+    "ng11": {
+      "goal": "Keep the red marbles that are medium or big.",
+      "hints": [
+        "One question about color, one about size."
+      ]
+    },
+    "ng12": {
+      "goal": "Keep the big marbles with an even number or a number bigger than 6.",
+      "hints": [
+        "The size must be right. The number: one of two things is enough."
+      ]
+    },
+    "ng13": {
+      "goal": "Throw away the numbers 4, 5 and 6.",
+      "hints": [
+        "The middle numbers are missing."
+      ]
+    },
+    "ng14": {
+      "goal": "Keep the even numbers bigger than 4 - using two gates.",
+      "hints": [
+        "One gate for even, one for bigger than 4."
+      ]
+    },
+    "ng15": {
+      "goal": "Team 1: red marbles with numbers below 5. Team 2: blue marbles with numbers above 5.",
+      "hints": [
+        "Two ALL boxes inside a ONE-YES box."
+      ]
+    },
+    "mh1": {
+      "goal": "Paint every marble red.",
+      "hints": [
+        "Compare the colors IN and OUT."
+      ]
+    },
+    "mh2": {
+      "goal": "Make every marble small.",
+      "hints": [
+        "The colors stay the same. What changes?"
+      ]
+    },
+    "mh3": {
+      "goal": "Make every marble plain.",
+      "hints": [
+        "Look at the patterns."
+      ]
+    },
+    "mh4": {
+      "goal": "Make every marble big AND striped.",
+      "hints": [
+        "Two things change."
+      ]
+    },
+    "mh5": {
+      "goal": "Every marble becomes small, plain and green.",
+      "hints": [
+        "Three things change."
+      ]
+    },
+    "mh6": {
+      "goal": "Keep the marbles with a pattern and paint them red.",
+      "hints": [
+        "Some marbles disappear, the others change color."
+      ]
+    },
+    "mh7": {
+      "goal": "Paint every marble yellow, then keep only the big ones.",
+      "hints": [
+        "Paint first, then filter (or the other way round?)."
+      ]
+    },
+    "mh8": {
+      "goal": "Blue marbles become big. The others stay as they are.",
+      "hints": [
+        "Only some marbles change. Which ones?"
+      ]
+    },
+    "mh9": {
+      "goal": "Striped marbles are painted purple.",
+      "hints": [
+        "Only some marbles change."
+      ]
+    },
+    "mh10": {
+      "goal": "Dotted marbles become big and green. The others stay as they are.",
+      "hints": [
+        "Two changes, but only for some marbles."
+      ]
+    },
+    "mh11": {
+      "goal": "Blue marbles become red, and green marbles become blue.",
+      "hints": [
+        "Careful with the order of the two maps!"
+      ]
+    },
+    "mh12": {
+      "goal": "Big marbles become small. Then throw away the red ones.",
+      "hints": [
+        "First map (only if), then filter."
+      ]
+    },
+    "mh13": {
+      "goal": "Big red marbles get dots. The others stay as they are.",
+      "hints": [
+        "\"only if\" with an ALL box."
+      ]
+    },
+    "mh14": {
+      "goal": "Throw away the plain marbles. Red ones that are left become big.",
+      "hints": [
+        "Filter first, then map with \"only if\"."
+      ]
+    },
+    "xi1": {
+      "goal": "Add 1 to every number.",
+      "hints": [
+        "How much bigger is each number?"
+      ]
+    },
+    "xi2": {
+      "goal": "Triple every number.",
+      "hints": [
+        "2 → 6, 3 → 9 ..."
+      ]
+    },
+    "xi3": {
+      "goal": "Add 10 to every number.",
+      "hints": [
+        "How much bigger is each number?"
+      ]
+    },
+    "xi4": {
+      "goal": "Multiply every number by 10.",
+      "hints": [
+        "3 → 30, 7 → 70 ..."
+      ]
+    },
+    "xi5": {
+      "goal": "Take 2 away from every number.",
+      "hints": [
+        "How much smaller is each number?"
+      ]
+    },
+    "xi6": {
+      "goal": "Every number becomes 20 minus the number.",
+      "hints": [
+        "What do the numbers IN and OUT add up to?"
+      ]
+    },
+    "xi7": {
+      "goal": "Multiply every number by 5.",
+      "hints": [
+        "2 → 10, 3 → 15 ..."
+      ]
+    },
+    "xi8": {
+      "goal": "Every number becomes (number + 2) × 2.",
+      "hints": [
+        "Two math steps: first plus, then times."
+      ]
+    },
+    "xi9": {
+      "goal": "Every number becomes twice the number minus 3.",
+      "hints": [
+        "Two math steps: times, then minus."
+      ]
+    },
+    "xi10": {
+      "goal": "Every number becomes number × number + 1.",
+      "hints": [
+        "3 → 10, 4 → 17 ..."
+      ]
+    },
+    "xi11": {
+      "goal": "Keep the numbers bigger than 4 and take 4 away from them.",
+      "hints": [
+        "Some marbles disappear. Which ones?"
+      ]
+    },
+    "xi12": {
+      "goal": "Odd numbers become 0. Even numbers stay the same.",
+      "hints": [
+        "Only some numbers change."
+      ]
+    },
+    "xi13": {
+      "goal": "Big marbles get 5 extra points. Small ones stay the same.",
+      "hints": [
+        "Only some numbers change. Look at the sizes."
+      ]
+    },
+    "xi14": {
+      "goal": "Double every number, then keep the ones bigger than 10.",
+      "hints": [
+        "Map first, then filter."
+      ]
+    },
+    "rc1": {
+      "goal": "Count the big marbles.",
+      "hints": [
+        "Only some marbles are counted."
+      ]
+    },
+    "rc2": {
+      "goal": "Count the marbles that are not green.",
+      "hints": [
+        "Only some marbles are counted."
+      ]
+    },
+    "rc3": {
+      "goal": "Count the marbles with odd numbers.",
+      "hints": [
+        "Only some marbles are counted."
+      ]
+    },
+    "rc4": {
+      "goal": "Count the red and blue marbles.",
+      "hints": [
+        "Only two colors are counted."
+      ]
+    },
+    "rc5": {
+      "goal": "Add up the numbers of the red marbles.",
+      "hints": [
+        "Only some numbers are added."
+      ]
+    },
+    "rc6": {
+      "goal": "Add up the numbers bigger than 4.",
+      "hints": [
+        "Only some numbers are added."
+      ]
+    },
+    "rc7": {
+      "goal": "Find the biggest number on a small marble.",
+      "hints": [
+        "Filter first."
+      ]
+    },
+    "rc8": {
+      "goal": "Add up the numbers, each plus 1.",
+      "hints": [
+        "Add the numbers yourself. How far off is OUT?"
+      ]
+    },
+    "rc9": {
+      "goal": "Add up the numbers, each times 10.",
+      "hints": [
+        "Try \"⊕ math\" right inside the sum."
+      ]
+    },
+    "rc10": {
+      "goal": "Multiply every number by itself, then find the biggest.",
+      "hints": [
+        "Map first, then reduce."
+      ]
+    },
+    "rc11": {
+      "goal": "Add up the doubled numbers of the blue marbles.",
+      "hints": [
+        "Three steps: filter, map, reduce."
+      ]
+    },
+    "rc12": {
+      "goal": "Find the smallest even number.",
+      "hints": [
+        "Filter first."
+      ]
+    },
+    "rc13": {
+      "goal": "Add up the numbers of the striped or big marbles.",
+      "hints": [
+        "Which marbles take part?"
+      ]
+    },
+    "dk1": {
+      "goal": "Start at 10 and add every number - using \"reduce from\".",
+      "hints": [
+        "Where does total start?"
+      ]
+    },
+    "dk2": {
+      "goal": "Add up every number plus 1 - using \"reduce from\".",
+      "hints": [
+        "Each marble adds its number and 1 more."
+      ]
+    },
+    "dk3": {
+      "goal": "Every marble is worth 10 points. How many points in total?",
+      "hints": [
+        "Each marble adds 10."
+      ]
+    },
+    "dk4": {
+      "goal": "Start at 20 and take every number away.",
+      "hints": [
+        "Start from 20, not 0."
+      ]
+    },
+    "dk5": {
+      "goal": "Add up the numbers of the big marbles - using \"reduce from\".",
+      "hints": [
+        "Filter first, then add by hand."
+      ]
+    },
+    "dk6": {
+      "goal": "Count the marbles with even numbers - using \"reduce from\".",
+      "hints": [
+        "Filter first, then count by hand."
+      ]
+    },
+    "dk7": {
+      "goal": "Triple every number, then add them up - using \"reduce from\".",
+      "hints": [
+        "Map first, then reduce."
+      ]
+    },
+    "dk8": {
+      "goal": "Start at 2 and multiply by every number.",
+      "hints": [
+        "Like multiplying them all, but starting from 2."
+      ]
+    },
+    "dk9": {
+      "goal": "Start at 1 and triple the total for every marble.",
+      "hints": [
+        "1 marble → 3, 2 marbles → 9 ..."
+      ]
+    },
+    "dk10": {
+      "goal": "For every marble: total becomes total × 2 + number.",
+      "hints": [
+        "Follow it with Step by step."
+      ]
+    },
+    "dk11": {
+      "goal": "Add up every number multiplied by itself.",
+      "hints": [
+        "Each marble adds number × number."
+      ]
+    },
+    "dk12": {
+      "goal": "The answer is the number of the last marble.",
+      "hints": [
+        "total doesn't have to be used in the new total!"
+      ]
+    },
+    "dk13": {
+      "goal": "Start at 100. Every marble takes away twice its number.",
+      "hints": [
+        "Start from 100. Then minus something."
+      ]
+    },
+    "dk14": {
+      "goal": "Multiply the numbers of the red marbles.",
+      "hints": [
+        "Filter first. What do you start a product from?"
+      ]
+    },
+    "dk15": {
+      "goal": "Add up every number minus 1.",
+      "hints": [
+        "Each marble adds its number, but 1 less."
+      ]
+    },
+    "dk16": {
+      "goal": "Add 1 to every number, then multiply them all.",
+      "hints": [
+        "Map first, then reduce from 1."
+      ]
+    }
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "☀️ Light",
+    "dark": "🌙 Dark"
+  }
+}

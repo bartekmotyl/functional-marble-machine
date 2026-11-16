@@ -74,23 +74,6 @@ export function checkSolution(level: Level, source: string | Program): CheckResu
   }
 }
 
-/** Extra rules of a level, shown to the player, e.g. "Use only 1 step". */
-export function constraintsOf(level: Level): string[] {
-  const out: string[] = []
-  const names: Record<string, string> = {
-    fold: 'reduce from',
-    count: 'reduce count',
-    sum: 'reduce sum',
-    max: 'reduce max',
-    min: 'reduce min',
-    filter: 'filter',
-    map: 'map',
-  }
-  for (const k of level.mustUse ?? []) out.push(`You must use "${names[k]}"`)
-  if (level.maxSteps !== undefined) out.push(`Use only ${level.maxSteps} step${level.maxSteps === 1 ? '' : 's'}`)
-  return out
-}
-
 /** Stars for a solved level: start with 3, lose one per mistake (failed run or hint), never below 1. */
 export function starsFor(mistakes: number): number {
   return Math.max(1, 3 - mistakes)

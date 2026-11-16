@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react'
 import { COLORS, type Marble as M, type Output } from '../lang/marble'
+import { t } from '../i18n'
+import { word } from '../i18n/words'
 
 export const COLOR_HEX: Record<string, [string, string, string]> = {
   // light, base, dark
@@ -47,9 +49,12 @@ interface Props {
 export function Marble({ marble, showNumber, className, style, title }: Props) {
   const r = RADIUS[marble.size]
   const c = BOX / 2
-  const label = `${marble.size} ${marble.color} ${marble.pattern === 'plain' ? '' : marble.pattern + ' '}marble${
-    showNumber ? ` number ${marble.number}` : ''
-  }`
+  const label = t(showNumber ? 'marble.labelNumber' : 'marble.label', {
+    color: word(marble.color),
+    size: word(marble.size),
+    pattern: word(marble.pattern),
+    number: marble.number,
+  })
   return (
     <svg
       className={`marble ${className ?? ''}`}
@@ -82,8 +87,8 @@ export function Marble({ marble, showNumber, className, style, title }: Props) {
   )
 }
 
-export function MarbleRow({ marbles, showNumber, empty = 'no marbles' }: { marbles: M[]; showNumber?: boolean; empty?: string }) {
-  if (marbles.length === 0) return <div className="marble-row empty">{empty}</div>
+export function MarbleRow({ marbles, showNumber, empty }: { marbles: M[]; showNumber?: boolean; empty?: string }) {
+  if (marbles.length === 0) return <div className="marble-row empty">{empty ?? t('machine.noMarbles')}</div>
   return (
     <div className="marble-row">
       {marbles.map((m, i) => (

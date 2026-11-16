@@ -32,7 +32,8 @@ export interface Assign {
 export type ReduceMode = 'count' | 'sum' | 'max' | 'min' | 'from'
 
 export type Block =
-  | { id: string; kind: 'filter'; cond: Cond }
+  /** negate: throw away the marbles that answer yes (instead of keeping them) */
+  | { id: string; kind: 'filter'; cond: Cond; negate?: boolean }
   | { id: string; kind: 'map'; assigns: Assign[]; cond?: Cond }
   | { id: string; kind: 'reduce'; mode: ReduceMode; expr: Num; start: number }
 
@@ -115,7 +116,7 @@ function valText(v: Val): string {
 export function blockText(b: Block): string {
   switch (b.kind) {
     case 'filter':
-      return `filter ${condText(b.cond)}`
+      return b.negate ? `filter not (${condText(b.cond)})` : `filter ${condText(b.cond)}`
     case 'map':
       return `map ${b.assigns.map((a) => `${a.prop} -> ${valText(a.value)}`).join(', ')}${b.cond ? ` if ${condText(b.cond)}` : ''}`
     case 'reduce':
@@ -168,7 +169,11 @@ export function toProgram(p: BlockProgram): Program {
     const line = i + 1
     switch (b.kind) {
       case 'filter':
-        return { line, kind: 'filter', cond: condExpr(b.cond) }
+        return {
+          line,
+          kind: 'filter',
+          cond: b.negate ? { k: 'not', e: condExpr(b.cond), ...at } : condExpr(b.cond),
+        }
       case 'map':
         return {
           line,
@@ -229,6 +234,7 @@ export function fromProgram(program: Program): BlockProgram {
   return program.steps.map((s): Block => {
     switch (s.kind) {
       case 'filter':
+        if (s.cond.k === 'not') return { id: nid(), kind: 'filter', cond: exprCond(s.cond.e), negate: true }
         return { id: nid(), kind: 'filter', cond: exprCond(s.cond) }
       case 'map':
         return {
@@ -295,6 +301,17 @@ export function replaceNode(p: BlockProgram, id: string, fn: (node: any) => any)
     return x
   }
   return walk(p)
+}
+
+/** Tidy a whole question tree (after changing a box from and to or, for example). */
+export function tidyCond(c: Cond): Cond {
+  if (c.t !== 'group') return c
+  return tidy({ ...c, items: c.items.map(tidyCond) })
+}
+
+/** How deep boxes are nested inside each other. */
+export function boxDepth(c: Cond): number {
+  return c.t === 'group' ? 1 + Math.max(...c.items.map(boxDepth)) : 0
 }
 
 /** Flatten groups: a box with one question is just that question; and-in-and becomes one box. */

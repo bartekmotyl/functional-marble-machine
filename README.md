@@ -3,40 +3,65 @@
 A puzzle game that teaches **filter / map / reduce** to kids (10+). Each level shows a few
 examples: marbles going in → what should come out. The player finds the rule and builds a tiny
 program for it by clicking blocks (no typing). Inspired by the programming puzzles of the old
-Android game *Hacked*.
+Android game *Hacked*. Available in English and Polish.
 
 ```bash
 npm install
-npm run dev      # play at http://localhost:5173
-npm test         # language + level tests
+npm run dev               # play at http://localhost:5173
+npm test                  # language, level, progression and translation tests
+npm run i18n -- check     # report missing translations
 npm run build
 ```
 
 ## Playing
 
-- The rule is hidden: players work it out from the IN/OUT examples. "Tell me the rule" reveals it
-  as the first hint. Some levels add constraints, like "use only 1 step" or "you must use reduce from".
-- The screen has three columns that fit the window: **Puzzle** (the rule and the IN/OUT examples),
+- **Sections**: 7 sections with 24-25 practice levels each (179 levels in total), getting slowly
+  harder. After 5 solved practice levels the section's 🎓 **exam** (its hardest puzzle) opens. Passing the
+  exam opens the next section. Each section has its own page, shown when you enter it.
+- The rule is hidden: players work it out from 5 IN/OUT examples, picked so that every part of
+  the rule shows up. "Tell me the rule" reveals it as the first hint; the last hint shows a
+  solution. Some levels add constraints, like "use only 1 step" or "you must use reduce from".
+- The screen has three columns that fit the window: **Puzzle** (the rule and the examples),
   **Your program** (block editor) and the **Machine** that runs the selected example.
 - Programs are built from clickable blocks. "and"/"or" questions live in boxes (an ALL box and a
-  ONE-YES box), and boxes can be nested, so there are no hidden priority rules.
-- The Machine column has three actions:
-  - **▶ Run this**: instant result for the loaded example, with the whole path shown at once. It
-    updates live while you edit. Hover or click a marble to see why it was kept, dropped or changed.
-  - **🐞 Step by step**: follow the loaded example marble by marble. The block being run lights up
-    and every question shows ✓/✗ for the current marble.
+  ONE-YES box). Click a box title to switch it between and/or. A box can hold one more box
+  inside, but no deeper. A filter can be switched from "keep" to "throw away" marbles.
+- Machine actions:
+  - **▶ Run**: instant result for the loaded example (also under the program; the machine
+    lights up). Updates live while you edit. Hover or click a marble to see why.
+  - **🐞 Step by step**: follow the loaded example marble by marble; the view follows along.
   - **✔ Check all**: the answer. Tests every example and the secret tests and shows a ✅/❌ list.
-    Click a row to load that example into the machine.
-  Run and Step by step are free; only a wrong Check all costs a star.
-- Stars: 3 for a level solved without mistakes. Each failed Check all or hint costs a star (minimum 1).
+  Run and Step by step are free; only a wrong Check all (or a hint) costs a star.
 - Cheat mode (on the map screen) opens all levels.
+- Light and dark theme: it follows the system until the player picks one on the map screen.
+  Colors in the CSS are written as `light-dark(<light>, <dark>)`.
+
+## Translations
+
+Every visible text lives in `src/i18n/<lang>.json` (`en.json` is the reference): the interface,
+the words used in blocks (`words`, `kw`), section names, Spellbook pages and the rule, intro and
+hints of every level (`levels.<id>`). Polish texts address the player gender-neutrally
+("Ukończyłeś/aś"); a test guards this. Plural forms use `.one / .few / .many / .other` keys,
+chosen by the language's own plural rules.
+
+To add a language:
+
+```bash
+npm run i18n -- new de      # creates src/i18n/de.json with the English texts
+```
+
+Translate the texts, set `meta.name`, optionally add a `code` section (how the code view is shown,
+see `pl.json`), then run `npm run i18n -- check`. The game picks up new files automatically, and
+`npm test` fails if a language misses a text or a `{placeholder}`.
 
 ## The language
 
-Blocks are shown as code with the **</> Code** button. One step per line, top to bottom.
+The blocks are a front end for a small text language (the **</> Code** button shows it, with the
+keywords in the player's language). One step per line, top to bottom.
 
 ```
 filter color is red and size is big      # gate: keep marbles that answer "yes"
+filter not (color is red)                # gate that throws away marbles that answer "yes"
 map number -> number * 2 if color is red # machine: change marbles (-> means "becomes")
 reduce sum number                        # squash everything into one number (always last)
 ```
@@ -52,15 +77,17 @@ reduce sum number                        # squash everything into one number (al
 
 | Path | What it is |
 | --- | --- |
-| `src/lang/` | Tokenizer, parser with type checker, and an interpreter that records each stage and the value of every question, for animations and explanations |
+| `src/lang/` | Tokenizer, parser with type checker, and an interpreter that records each stage and the value of every question, for explanations |
 | `src/blocks/` | The block program model (blocks ⇄ code text ⇄ runnable AST) and the clickable block editor |
-| `src/game/levels.ts` | All chapters and levels. **To add a level**, write its reference `solution` and the marble `features`. Examples and secret tests are generated from the solution with a fixed seed |
-| `src/game/check.ts` | Picks 5 visible examples (chosen so every question of the rule shows both yes and no) and 5 secret tests, and runs the player's program on them |
-| `src/ui/` | React components: map, level screen, marble SVGs, the animated/step-by-step machine, explanations |
+| `src/game/levels.ts` | All sections and levels, as data. **To add a level**, write its reference `solution` and the marble `features`, then add its texts to the language files. Examples and secret tests are generated from the solution with a fixed seed |
+| `src/game/progression.ts` | Which levels, exams and sections are open |
+| `src/game/check.ts` | Picks 5 visible examples (so every question of the rule shows both yes and no) and 5 secret tests, and runs the player's program on them |
+| `src/i18n/` | Translation files and the tiny `t()` helper |
+| `src/ui/` | React components: map, section page, level screen, marble SVGs, the machine, explanations |
 
-`npm test` checks every level: the reference solution passes, the starter code doesn't, and
-every generated example is "interesting" (each filter keeps some marbles and drops others, each map
-changes something, and so on).
+`npm test` checks every level: the reference solution passes, the starter code doesn't, every
+generated example is "interesting" (each filter keeps some marbles and drops others, each map
+changes something...), and every question of the rule answers both yes and no in the examples.
 
 Levels, saved progress and code samples are stored as code text and turned into blocks when
 shown. Progress is saved in `localStorage`.
