@@ -74,7 +74,29 @@ export function checkSolution(level: Level, source: string | Program): CheckResu
   }
 }
 
-/** Stars for a solved level: start with 3, lose one per mistake (failed run or hint), never below 1. */
-export function starsFor(mistakes: number): number {
-  return Math.max(1, 3 - mistakes)
+/** The most stars a level gives. */
+export const MAX_STARS = 5
+
+/**
+ * What help costs, in stars. Trying your own marbles costs one star (once per try at a level);
+ * after that, telling the rule costs one more instead of two - so experimenting first never
+ * costs more, and pays off when you guess the rule yourself.
+ */
+export const COST = { mistake: 1, experiment: 1, rule: 2, ruleAfterExperiment: 1, tip: 1 } as const
+
+/** The cost of the next hint: the rule first, then tips, then a solution. */
+export function hintCost(index: number, experimented: boolean): number {
+  if (index > 0) return COST.tip
+  return experimented ? COST.ruleAfterExperiment : COST.rule
+}
+
+/** Stars for a solved level: start with MAX_STARS, minus the stars lost, never below 1. */
+export function starsFor(lost: number): number {
+  return Math.max(1, MAX_STARS - lost)
+}
+
+/** The expected output of the level's rule for any marbles (used by the marble lab). */
+export function expectedFor(level: Level, input: Marble[]): { output?: Output; error?: LangError } {
+  const res = runSafe(parseProgram(level.solution), input)
+  return { output: res.error ? undefined : res.output, error: res.error }
 }

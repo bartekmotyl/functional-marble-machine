@@ -3,14 +3,8 @@ import { COLORS, type Marble as M, type Output } from '../lang/marble'
 import { t } from '../i18n'
 import { word } from '../i18n/words'
 
-export const COLOR_HEX: Record<string, [string, string, string]> = {
-  // light, base, dark
-  red: ['#ff9a8f', '#ef4136', '#9c1c14'],
-  blue: ['#9fd3ff', '#2f8ff0', '#164f99'],
-  green: ['#a8f0a0', '#3cb54a', '#1d6b27'],
-  yellow: ['#fff3a3', '#ffc61a', '#b07d00'],
-  purple: ['#e2b3ff', '#9b45d6', '#561f80'],
-}
+/** Marble colors come from the skin: --marble-<color>-0 (light), -1 (base) and -2 (dark shade). */
+const shade = (color: string, i: 0 | 1 | 2) => `var(--marble-${color}-${i})`
 
 const RADIUS = { small: 13, medium: 18, big: 24 }
 const BOX = 54
@@ -22,9 +16,9 @@ export function MarbleDefs() {
       <defs>
         {COLORS.map((c) => (
           <radialGradient key={c} id={`grad-${c}`} cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stopColor={COLOR_HEX[c][0]} />
-            <stop offset="45%" stopColor={COLOR_HEX[c][1]} />
-            <stop offset="100%" stopColor={COLOR_HEX[c][2]} />
+            <stop offset="0%" style={{ stopColor: shade(c, 0) }} />
+            <stop offset="45%" style={{ stopColor: shade(c, 1) }} />
+            <stop offset="100%" style={{ stopColor: shade(c, 2) }} />
           </radialGradient>
         ))}
         <pattern id="pat-striped" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(40)">
@@ -69,7 +63,7 @@ export function Marble({ marble, showNumber, className, style, title }: Props) {
       <ellipse cx={c} cy={c + r - 1} rx={r * 0.8} ry={r * 0.18} fill="black" opacity="0.18" />
       <circle cx={c} cy={c} r={r} fill={`url(#grad-${marble.color})`} />
       {marble.pattern !== 'plain' && <circle cx={c} cy={c} r={r} fill={`url(#pat-${marble.pattern})`} />}
-      <circle cx={c} cy={c} r={r - 0.5} fill="none" stroke={COLOR_HEX[marble.color][2]} strokeOpacity="0.5" />
+      <circle cx={c} cy={c} r={r - 0.5} fill="none" style={{ stroke: shade(marble.color, 2) }} strokeOpacity="0.5" />
       <ellipse cx={c - r * 0.35} cy={c - r * 0.42} rx={r * 0.32} ry={r * 0.2} fill="white" opacity="0.7" transform={`rotate(-30 ${c - r * 0.35} ${c - r * 0.42})`} />
       {showNumber && (
         <text

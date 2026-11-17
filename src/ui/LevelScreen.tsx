@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { checkSolution, getTests, runCase, starsFor, type CheckResult } from '../game/check'
+import { MAX_STARS, COST, checkSolution, expectedFor, getTests, hintCost, runCase, starsFor, type CheckResult } from '../game/check'
+import type { TestCase } from '../game/generate'
+import type { Marble as M } from '../lang/marble'
+import { Experiment } from './Experiment'
 import { chapterOf, conceptsUpTo, type Level } from '../game/levels'
 import type { Progress } from '../game/progress'
 import { levelNumber } from '../game/progression'
@@ -12,6 +15,7 @@ import { localizeCode } from '../i18n/words'
 import { MarbleRow, OutputView } from './Marble'
 import { Machine, buildTicks, type Tick } from './Machine'
 import { Explain, StepStatus } from './Explain'
+import { SectionIcon } from './skin'
 import { RichText } from './RichText'
 
 interface Props {
@@ -43,7 +47,7 @@ export function CodeSample({ code, concepts }: { code: string; concepts: string[
   )
 }
 
-function Stars({ n, of = 3 }: { n: number; of?: number }) {
+function Stars({ n, of = MAX_STARS }: { n: number; of?: number }) {
   return (
     <span className="star-row">
       {Array.from({ length: of }, (_, i) => (
@@ -85,7 +89,10 @@ export function LevelScreen(props: Props) {
   const [selected, setSelected] = useState(0)
   const [revealed, setRevealed] = useState<number[]>([]) // hidden test indices shown to the player
   const [hints, setHints] = useState(0)
-  const [mistakes, setMistakes] = useState(0)
+  /** stars lost on this try: wrong checks and paid help */
+  const [lost, setLost] = useState(0)
+  const [labOpen, setLabOpen] = useState(false)
+  const [custom, setCustom] = useState<TestCase[]>([]) // rows from the marble lab
   const [message, setMessage] = useState<Message | null>(null)
   const [success, setSuccess] = useState<number | null>(null)
   const [spellbook, setSpellbook] = useState(false)
@@ -101,13 +108,15 @@ export function LevelScreen(props: Props) {
   const showNumber = !!level.features.numbers
   const concepts = useMemo(() => conceptsUpTo(level.id), [level.id])
   const chapter = chapterOf(level.id)
-  const potential = starsFor(mistakes)
+  const potential = starsFor(lost)
   const lv = `levels.${level.id}`
 
   // Cards: visible examples + any secret tests that were revealed.
   const cards = [
     ...tests.visible.map((tc, i) => ({ tc, label: t('ui.example', { n: i + 1 }), caseIndex: i, secret: false })),
     ...revealed.map((h) => ({ tc: tests.hidden[h], label: t('ui.secretTest'), caseIndex: tests.visible.length + h, secret: true })),
+    // the player's own rows are for running only - Check all does not use them
+    ...custom.map((tc, i) => ({ tc, label: t('lab.card', { n: i + 1 }), caseIndex: -1, secret: false, own: true })),
   ]
   const card = cards[Math.min(selected, cards.length - 1)]
 
@@ -177,11 +186,11 @@ export function LevelScreen(props: Props) {
     setResult(r)
     setView('all')
     const visibleCount = tests.visible.length
-    const shown = cards.map((c) => c.caseIndex)
+    const shown = cards.map((c) => c.caseIndex).filter((ci) => ci >= 0)
     const shownPass = shown.filter((ci) => r.cases[ci].pass).length
     const mistake = (text: string) => {
-      setMistakes((m) => m + 1)
-      const left = starsFor(mistakes + 1)
+      setLost((m) => m + 1)
+      const left = starsFor(lost + 1)
       setMessage({ tone: 'warn', text: `${text} ${left < potential ? t('ui.msg.stillWin', { stars: '⭐'.repeat(left) }) : ''}` })
     }
     if (shownPass < shown.length) {
@@ -202,7 +211,7 @@ export function LevelScreen(props: Props) {
       setMessage({ tone: 'info', text: tn('ui.msg.tooLong', level.maxSteps ?? 1) })
       return
     }
-    const earned = starsFor(mistakes)
+    const earned = starsFor(lost)
     setMessage({ tone: 'good', text: t('ui.msg.allWork') })
     onSolved(earned)
     setTimeout(() => setSuccess(earned), 700)
@@ -328,7 +337,7 @@ export function LevelScreen(props: Props) {
         </button>
         <button className="crumbs" onClick={onChapter}>
           <span className="chapter-name">
-            {chapter.emoji} {t(`chapters.${chapter.id}.title`)}
+            <SectionIcon chapter={chapter} /> {t(`chapters.${chapter.id}.title`)}
           </span>
           <span className={`level-name ${level.exam ? 'exam' : ''}`}>{title}</span>
         </button>
@@ -389,17 +398,33 @@ export function LevelScreen(props: Props) {
                   className="btn ghost small"
                   onClick={() => {
                     setHints(hints + 1)
-                    setMistakes((m) => m + 1)
+                    setLost((m) => m + hintCost(hints, labOpen))
                   }}
                 >
-                  {nextHintLabel} <span className="cost">{t('ui.costsStar')}</span>
+                  {nextHintLabel} <span className="cost">{t('ui.costs', { stars: '⭐'.repeat(hintCost(hints, labOpen)) })}</span>
                 </button>
               )}
             </div>
 
+            <Experiment
+              level={level}
+              start={card.tc.input}
+              showNumber={showNumber}
+              open={labOpen}
+              onOpen={() => {
+                setLabOpen(true)
+                setLost((m) => m + COST.experiment)
+              }}
+              onAdd={(input: M[]) => {
+                const tc = { input, expected: expectedFor(level, input).output! }
+                setCustom((c) => [...c, tc])
+                loadCard(cards.length)
+              }}
+            />
+
             <div className="rail-title">{t('ui.examples')}</div>
             {cards.map((c, i) => {
-              const cr = result ? result.cases[c.caseIndex] : null
+              const cr = result && c.caseIndex >= 0 ? result.cases[c.caseIndex] : null
               return (
                 <button
                   key={i}
@@ -410,7 +435,7 @@ export function LevelScreen(props: Props) {
                   title={c.label}
                 >
                   <div className="ex-badge">
-                    <span className="ex-num">{c.secret ? '🕵️' : i + 1}</span>
+                    <span className="ex-num">{c.secret ? '🕵️' : 'own' in c ? '🧪' : i + 1}</span>
                     {cr && <span className="ex-status">{cr.pass ? '✅' : '❌'}</span>}
                   </div>
                   <div className="ex-rows">
@@ -591,6 +616,7 @@ export function LevelScreen(props: Props) {
               ) : view === 'all' && result ? (
                 <div className="results">
                   {cards.map((c, i) => {
+                    if (c.caseIndex < 0) return null // the player's own rows are not part of the answer
                     const cr = result.cases[c.caseIndex]
                     return (
                       <button

@@ -324,6 +324,45 @@ export const CHAPTERS: Chapter[] = [
       },
     ],
   },
+  {
+    // Nothing new to learn - long chains of steps where the order matters, tricks like a
+    // spare color for swapping, or getting a remainder out of "/". Hard even for grown-ups.
+    id: 'extreme',
+    emoji: '🌋',
+    levels: [
+      { id: 'z1', solution: 'map number -> number * 2 if color is red\nmap number -> number + 1 if color is blue\nreduce sum number', features: { colors: RB.colors, numbers: [1, 9] }, count: [3, 6] },
+      { id: 'z2', solution: 'map number -> 5 if number > 5\nreduce sum number', features: { colors: ['yellow'], numbers: [1, 9] }, count: [3, 6] },
+      { id: 'z3', solution: 'filter number > 3\nmap number -> number - 3\nfilter number is even\nreduce count', features: { colors: ['green'], numbers: [1, 12] }, count: [5, 9] },
+      { id: 'z4', solution: 'map color -> purple if color is red\nmap color -> red if color is blue\nmap color -> blue if color is purple', features: { colors: RB.colors, sizes: S2 }, count: [4, 7] },
+      { id: 'z5', solution: 'map number -> 5 - number if number <= 5\nmap number -> number - 5 if number > 5', features: { colors: ['blue'], numbers: [1, 9] }, count: [4, 7] },
+      { id: 'z6', solution: 'map number -> number * 3 if size is big\nmap number -> number / 2 if color is green\nreduce sum number', features: { colors: ['red', 'green'], sizes: S2, numbers: [1, 9] }, count: [4, 7] },
+      { id: 'z7', solution: 'filter pattern is not plain\nmap number -> number * 2 if pattern is striped\nmap number -> number + 1 if pattern is dotted\nreduce max number', features: { colors: ['purple'], patterns: P3, numbers: [1, 9] }, count: [5, 8] },
+      { id: 'z8', solution: 'map number -> number + 10 if color is red\nmap color -> red if number > 10\nfilter color is red\nreduce sum number', features: { colors: RB.colors, numbers: [1, 15] }, count: [5, 8] },
+      { id: 'z9', solution: 'map color -> purple if color is red\nmap color -> red if color is green\nmap color -> green if color is blue\nmap color -> blue if color is purple', features: RBG, count: [5, 8] },
+      { id: 'z10', solution: 'reduce from 0 : total * 10 + number', features: { colors: ['purple'], numbers: [1, 9] }, count: [2, 4] },
+      { id: 'z11', solution: 'filter color is not red\nreduce from 0 : total * 10 + number', features: { colors: RBG.colors, numbers: [1, 9] }, count: [4, 7] },
+      { id: 'z12', solution: 'map number -> 1 if pattern is striped\nreduce from 0 : total * 2 + number', features: { colors: ['blue'], patterns: ['plain', 'striped'] }, count: [3, 5] },
+      { id: 'z13', solution: 'reduce from 0 : total * 2 + 1', features: ALL5, count: [2, 6] },
+      { id: 'z14', solution: 'reduce from 0 : number - total', features: { colors: ['green'], numbers: [1, 9] }, count: [2, 4] },
+      { id: 'z15', solution: 'map number -> number - number / 4 * 4', features: { colors: ['red'], numbers: [1, 20] }, count: [4, 7] },
+      { id: 'z16', solution: 'map number -> number - number / 3 * 3\nfilter number is 0\nreduce count', features: { colors: ['green'], numbers: [1, 20] }, count: [5, 9] },
+      { id: 'z17', solution: 'map number -> number - number / 10 * 10\nreduce sum number', features: { colors: ['yellow'], numbers: [10, 99] }, count: [3, 5] },
+      { id: 'z18', solution: 'map number -> number / 10 + number - number / 10 * 10', features: { colors: ['blue'], numbers: [10, 99] }, count: [3, 6] },
+      {
+        id: 'z19',
+        solution: 'map pattern -> dotted if size is small\nmap size -> small if size is big\nmap size -> big if size is medium\nmap size -> medium if pattern is dotted\nmap pattern -> plain',
+        features: { colors: ['yellow'], sizes: S3 },
+        count: [4, 7],
+      },
+      {
+        id: 'zx',
+        exam: true,
+        solution: 'map color -> purple if color is red\nmap color -> red if color is blue\nmap color -> blue if color is purple\nmap number -> number * 2 if color is red\nfilter number > 6',
+        features: { colors: RB.colors, numbers: [1, 9] },
+        count: [5, 8],
+      },
+    ],
+  },
 ]
 
 export const ALL_LEVELS: Level[] = CHAPTERS.flatMap((c) => c.levels)

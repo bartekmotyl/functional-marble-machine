@@ -175,7 +175,7 @@
     "examIntro": "🎓 This is the exam of this section - the hardest puzzle. Pass it to open the next section!",
     "thisTry": "this try",
     "best": "best",
-    "starsTitle": "Solve without mistakes for 3 stars. Each wrong check or hint costs a star.",
+    "starsTitle": "Solve it without help or mistakes for 5 stars. A wrong check or a hint costs a star; telling the rule costs two - or one, if you tried your own marbles first.",
     "examLeave": "Too hard for now? Practise more first - the exam will wait for you.",
     "backToPractice": "← Back to practice levels"
   },
@@ -198,7 +198,6 @@
     "needHint": "💡 Need a hint?",
     "anotherHint": "💡 Another hint",
     "showSolution": "💡 Show a solution",
-    "costsStar": "(costs a ⭐)",
     "mustUse": "📏 You must use \"{what}\"",
     "maxSteps": {
       "one": "📏 Use only {n} step",
@@ -274,7 +273,8 @@
     },
     "spellbookTitle": "📕 Spellbook",
     "spellbookText": "Everything you have learned so far:",
-    "close": "Close"
+    "close": "Close",
+    "costs": "(costs {stars})"
   },
   "steps": {
     "fold": "reduce from",
@@ -313,6 +313,10 @@
     "fold": {
       "title": "Reduce Masters",
       "blurb": "Build your own reduce, step by step."
+    },
+    "extreme": {
+      "title": "The Volcano",
+      "blurb": "Really hard puzzles: long chains of filters, maps and reduces, where the order of steps matters. Even grown-up programmers will sweat!"
     }
   },
   "concepts": {
@@ -1529,11 +1533,162 @@
       "hints": [
         "Map first, then reduce from 1."
       ]
+    },
+    "z1": {
+      "goal": "Red marbles count double, blue ones count one more. What do they add up to?",
+      "hints": [
+        "Change the numbers first, then add them up.",
+        "Use two machines with \"if\" - one for red, one for blue."
+      ]
+    },
+    "z2": {
+      "goal": "Add up the numbers, but no marble may count more than 5.",
+      "hints": [
+        "Big numbers get squeezed down to 5 before adding."
+      ]
+    },
+    "z3": {
+      "goal": "Take the marbles above 3, take 3 away from each, and count the ones that are now even.",
+      "hints": [
+        "Four steps: gate, machine, gate, count.",
+        "Watch out: the second gate sees the numbers after the machine changed them."
+      ]
+    },
+    "z4": {
+      "goal": "Swap the colors: red becomes blue and blue becomes red.",
+      "hints": [
+        "If you paint red ones blue first, you cannot tell them apart from the old blue ones any more!",
+        "Use a spare color nobody uses (purple) as a hiding place for a moment."
+      ]
+    },
+    "z5": {
+      "goal": "Every number becomes its distance from 5.",
+      "hints": [
+        "9 is 4 away from 5, and so is 1.",
+        "Two machines with \"if\". The order matters - the second one must not touch what the first one changed."
+      ]
+    },
+    "z6": {
+      "goal": "Big marbles count triple, then green marbles count half (rounded down). What is the total?",
+      "hints": [
+        "\"/\" throws away the remainder: 7 / 2 is 3.",
+        "A big green marble is first tripled, then halved."
+      ]
+    },
+    "z7": {
+      "goal": "Plain marbles are out. Striped ones double, dotted ones get one more. What is the biggest number?",
+      "hints": [
+        "Gate, two machines with \"if\", then the biggest."
+      ]
+    },
+    "z8": {
+      "goal": "Red marbles get 10 more. Then every marble above 10 turns red. Add up the numbers of the red ones.",
+      "hints": [
+        "Do it in exactly this order - the second machine sees the new numbers.",
+        "Four steps: machine, machine, gate, sum."
+      ]
+    },
+    "z9": {
+      "goal": "Spin the colors around: red becomes blue, blue becomes green, green becomes red.",
+      "hints": [
+        "Like the swap, but with three colors - you still need one hiding place.",
+        "Hide one color in purple, move the other two, then bring the hidden one out."
+      ]
+    },
+    "z10": {
+      "goal": "Write the numbers next to each other: 3, 1, 4 makes 314.",
+      "hints": [
+        "Each new marble pushes the total one place to the left.",
+        "Pushing one place left means multiplying by 10."
+      ]
+    },
+    "z11": {
+      "goal": "Write the numbers of the marbles that are not red next to each other.",
+      "hints": [
+        "First a gate, then the \"write next to each other\" trick."
+      ]
+    },
+    "z12": {
+      "goal": "Read the marbles as a secret code: striped means 1, plain means 0. What number is it?",
+      "hints": [
+        "It is like writing numbers next to each other - but with only 0 and 1, the place is worth 2, not 10.",
+        "Plain-striped-striped is 011, which is 3."
+      ]
+    },
+    "z13": {
+      "goal": "Count the marbles in a strange way: 1 marble gives 1, 2 give 3, 3 give 7, 4 give 15...",
+      "hints": [
+        "Each marble doubles the total and adds one."
+      ]
+    },
+    "z14": {
+      "goal": "Each marble takes the total away from its own number. What is left at the end?",
+      "hints": [
+        "The total does not grow - each marble replaces it.",
+        "With 2, 5, 3: first 2, then 5 - 2 = 3, then 3 - 3 = 0."
+      ]
+    },
+    "z15": {
+      "goal": "Every number becomes what is left after sharing it out in 4s.",
+      "hints": [
+        "14 marbles in bags of 4: 3 full bags, 2 left over.",
+        "\"/\" gives the full bags: 14 / 4 = 3. Bags times 4 is what fits; take that away from the number."
+      ]
+    },
+    "z16": {
+      "goal": "How many numbers can be shared out in 3s with nothing left over?",
+      "hints": [
+        "There is no \"divides by 3\" question - build the remainder yourself, like in the bags puzzle.",
+        "Remainder 0 means it shares out evenly."
+      ]
+    },
+    "z17": {
+      "goal": "Add up the last digits of the numbers.",
+      "hints": [
+        "The last digit is what is left after sharing out in 10s."
+      ]
+    },
+    "z18": {
+      "goal": "Every number becomes the sum of its two digits: 47 becomes 11.",
+      "hints": [
+        "The first digit is the number / 10.",
+        "The second digit is what is left after sharing out in 10s. Add the two."
+      ]
+    },
+    "z19": {
+      "goal": "Sizes go around: small becomes medium, medium becomes big, big becomes small.",
+      "hints": [
+        "A cycle needs a hiding place, but there is no spare size.",
+        "Mark the small marbles with a pattern, move the other sizes, then use the mark - and wipe it off at the end."
+      ]
+    },
+    "zx": {
+      "goal": "Swap red and blue, then the (new) red marbles count double. Keep the marbles above 6.",
+      "hints": [
+        "Swap first, using purple as a hiding place.",
+        "Then double the red ones and use a gate."
+      ]
     }
   },
   "theme": {
     "label": "Theme",
     "light": "☀️ Light",
     "dark": "🌙 Dark"
+  },
+  "skin": {
+    "label": "Skin - how the game looks"
+  },
+  "lab": {
+    "title": "🧪 Marble lab",
+    "pitch": "Build your own row of marbles and see what the machine should give back. Costs {stars} once - and then telling the rule costs only one more star.",
+    "open": "🧪 Open the lab",
+    "how": "Click a marble to change it, + to add one. Below: what the rule makes of your row.",
+    "yourMarbles": "Your marbles",
+    "addMarble": "Add a marble",
+    "removeMarble": "Remove this marble",
+    "comesOut": "COMES OUT",
+    "toMachine": "➕ Put it in the machine",
+    "reset": "↺ Start again",
+    "card": "Your test {n}"
   }
 }

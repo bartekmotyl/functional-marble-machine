@@ -2,7 +2,8 @@ import { CHAPTERS, type Chapter } from '../game/levels'
 import type { Progress } from '../game/progress'
 import { examNeeds, examOf, isExamOpen, isExamPassed, nextPractice, practiceOf, solvedPractice } from '../game/progression'
 import { t, tn } from '../i18n'
-import { LangSwitch, Stars3 } from './MapScreen'
+import { LangSwitch, LevelStars } from './MapScreen'
+import { SectionIcon } from './skin'
 import { isUnlocked } from '../game/progression'
 
 interface Props {
@@ -36,7 +37,7 @@ export function ChapterScreen({ chapter, progress, onOpen, onOpenChapter, onBack
         <LangSwitch onLang={onLang} />
       </div>
       <div className="chapter-card">
-        <div className="chapter-big-emoji">{chapter.emoji}</div>
+        <div className="chapter-big-emoji"><SectionIcon chapter={chapter} /></div>
         <div className="chapter-num">{t('chapter.section', { n: idx + 1 })}</div>
         <h1>{t(`chapters.${chapter.id}.title`)}</h1>
         <p className="chapter-blurb">{t(`chapters.${chapter.id}.blurb`)}</p>
@@ -69,7 +70,7 @@ export function ChapterScreen({ chapter, progress, onOpen, onOpenChapter, onBack
             return (
               <button key={l.id} className={`level-btn small ${progress.stars[l.id] ? 'solved' : ''} ${unlocked ? '' : 'locked'}`} disabled={!unlocked} onClick={() => onOpen(l.id)}>
                 <span className="lvl-num">{unlocked ? i + 1 : '🔒'}</span>
-                <Stars3 n={progress.stars[l.id] ?? 0} />
+                <LevelStars n={progress.stars[l.id] ?? 0} />
               </button>
             )
           })}

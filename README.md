@@ -15,8 +15,8 @@ npm run build
 
 ## Playing
 
-- **Sections**: 7 sections with 24-25 practice levels each (179 levels in total), getting slowly
-  harder. After 5 solved practice levels the section's 🎓 **exam** (its hardest puzzle) opens. Passing the
+- **Sections**: 7 sections with 24-25 practice levels each, getting slowly harder, plus
+  🌋 *The Volcano*: 20 really hard puzzles for grown-ups (199 levels in total). After 5 solved practice levels the section's 🎓 **exam** (its hardest puzzle) opens. Passing the
   exam opens the next section. Each section has its own page, shown when you enter it.
 - The rule is hidden: players work it out from 5 IN/OUT examples, picked so that every part of
   the rule shows up. "Tell me the rule" reveals it as the first hint; the last hint shows a
@@ -31,10 +31,24 @@ npm run build
     lights up). Updates live while you edit. Hover or click a marble to see why.
   - **🐞 Step by step**: follow the loaded example marble by marble; the view follows along.
   - **✔ Check all**: the answer. Tests every example and the secret tests and shows a ✅/❌ list.
-  Run and Step by step are free; only a wrong Check all (or a hint) costs a star.
+- **Stars**: up to 5 per level. Run and Step by step are free; a wrong Check all or a hint costs
+  a star. Telling the rule costs two - or one if you opened the 🧪 **marble lab** first (it
+  costs one star once). In the lab you build any row of marbles, see what the rule makes of it
+  and can put it in the machine. So experimenting first never costs more, and pays off when
+  you find the rule yourself.
 - Cheat mode (on the map screen) opens all levels.
-- Light and dark theme: it follows the system until the player picks one on the map screen.
-  Colors in the CSS are written as `light-dark(<light>, <dark>)`.
+- **Skins** (🎨 on the map screen) change the look: *Candy* (default) and *Pastel* (calm
+  colors, flat buttons). Each works with the light and dark theme, which follows the system
+  until the player picks one.
+
+## Skins
+
+A skin is a YAML file in `skins/`: colors (one value, or `{ light, dark }`), marble shades,
+the font, roundness, button depth and section icons. `skins/candy.yaml` explains every entry.
+At build time `build/skins.ts` checks each skin and turns it into CSS variables
+(`import skins from 'virtual:skins'`); a broken skin stops the build with a clear message.
+All colors in the CSS are skin colors or `color-mix()` of them, so a new skin and the dark
+theme need no CSS changes. Skins change only the look: a red marble stays red.
 
 ## Translations
 
@@ -83,6 +97,7 @@ reduce sum number                        # squash everything into one number (al
 | `src/game/progression.ts` | Which levels, exams and sections are open |
 | `src/game/check.ts` | Picks 5 visible examples (so every question of the rule shows both yes and no) and 5 secret tests, and runs the player's program on them |
 | `src/i18n/` | Translation files and the tiny `t()` helper |
+| `skins/`, `build/skins.ts` | Skins and the build step that turns them into CSS |
 | `src/ui/` | React components: map, section page, level screen, marble SVGs, the machine, explanations |
 
 `npm test` checks every level: the reference solution passes, the starter code doesn't, every

@@ -1,0 +1,46 @@
+# Pastel - calm, soft colors, flat buttons and a plain font. For grown-ups (and anyone else).
+# See candy.yaml for what each entry means.
+
+name:
+  en: Pastel
+  pl: Pastelowy
+
+font: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif"
+round: 0.55
+depth: 0
+
+colors:
+  bg: { light: '#f5f3ef', dark: '#1c1e24' }
+  panel: { light: '#ffffff', dark: '#262930' }
+  ink: { light: '#3b3f4a', dark: '#e4e5ea' }
+  muted: { light: '#868b96', dark: '#9da2ad' }
+  shadow: { light: '#55596a', dark: '#000000' }
+  code-bg: { light: '#2e323c', dark: '#15171c' }
+  code-ink: '#eceef3'
+  on-strong: '#2e323c'
+  accent: '#a9a4ea'
+  accent-text: { light: '#5d58a6', dark: '#c3c0f4' }
+  accent-2: '#f1b6c8'
+  good: '#9dd8b2'
+  bad: '#f2a7a0'
+  warn: '#f5c99c'
+  gold: '#f2db8e'
+  and: '#9fc9f0'
+  or: '#f4c29c'
+
+marbles:
+  red: ['#ffd6d1', '#ef948b', '#b05c54']
+  blue: ['#d6eafc', '#8bbbe9', '#4f7cab']
+  green: ['#d8f2da', '#93d09d', '#4e8c59']
+  yellow: ['#fff5cf', '#f1d572', '#ac8f35']
+  purple: ['#eddff9', '#bc98dd', '#7a5aa0']
+
+icons:
+  filter: 🔎
+  boxes: 🗂️
+  numbers: 🔟
+  map: 🖌️
+  math: ➗
+  reduce: 📊
+  fold: 🧵
+  extreme: 🧠

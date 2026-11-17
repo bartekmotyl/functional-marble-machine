@@ -1,9 +1,11 @@
 import { ALL_LEVELS, CHAPTERS } from '../game/levels'
 import type { Progress } from '../game/progress'
+import { MAX_STARS } from '../game/check'
 import { continueTarget, examNeeds, isChapterOpen, isUnlocked, practiceOf, examOf } from '../game/progression'
 import { DICTS, LANGS, getLang, t } from '../i18n'
 import { Marble } from './Marble'
 import { ThemeSwitch } from './theme'
+import { SectionIcon, SkinSwitch } from './skin'
 
 interface Props {
   progress: Progress
@@ -14,10 +16,10 @@ interface Props {
   onLang: (lang: string) => void
 }
 
-export function Stars3({ n }: { n: number }) {
+export function LevelStars({ n }: { n: number }) {
   return (
     <span className="lvl-stars">
-      {[1, 2, 3].map((k) => (
+      {Array.from({ length: MAX_STARS }, (_, i) => i + 1).map((k) => (
         <span key={k} className={n >= k ? 'on' : 'off'}>
           ⭐
         </span>
@@ -29,6 +31,7 @@ export function Stars3({ n }: { n: number }) {
 export function LangSwitch({ onLang }: { onLang: (lang: string) => void }) {
   return (
     <div className="lang-switch" role="group" aria-label={t('map.language')}>
+      <SkinSwitch />
       <ThemeSwitch />
       {LANGS.map((l) => {
         const meta = DICTS[l].meta as { name: string }
@@ -62,7 +65,7 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
           {progress.unlockAll ? t('map.cheatOn') : t('map.cheatOff')}
         </button>
         <div className="hero-stats">
-          ⭐ {totalStars} / {ALL_LEVELS.length * 3}
+          ⭐ {totalStars} / {ALL_LEVELS.length * MAX_STARS}
           <button className="btn run" onClick={() => (target.level ? onOpen(target.level.id) : onOpenChapter(target.chapter.id))}>
             {totalStars === 0 ? t('map.start') : t('map.continue')}
           </button>
@@ -76,7 +79,7 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
         return (
           <section key={ch.id} className={`chapter ${open ? '' : 'locked'}`}>
             <button className="chapter-head" onClick={() => onOpenChapter(ch.id)} disabled={!open} title={open ? t('map.openSection') : t('map.locked')}>
-              <span className="chapter-emoji">{open ? ch.emoji : '🔒'}</span>
+              <span className="chapter-emoji">{open ? <SectionIcon chapter={ch} /> : '🔒'}</span>
               <span>
                 <span className="chapter-num">{t('chapter.section', { n: ci + 1 })}</span>
                 <h2>{t(`chapters.${ch.id}.title`)}</h2>
@@ -96,7 +99,7 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
                     title={unlocked ? t('level.name', { n: i + 1 }) : t('map.levelLocked')}
                   >
                     <span className="lvl-num">{unlocked ? i + 1 : '🔒'}</span>
-                    <Stars3 n={s} />
+                    <LevelStars n={s} />
                   </button>
                 )
               })}
@@ -108,7 +111,7 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
               >
                 <span className="lvl-num">{isUnlocked(progress, exam.id) ? '🎓' : '🔒'}</span>
                 <span className="lvl-title">{t('map.exam').replace('🎓 ', '')}</span>
-                <Stars3 n={examStars} />
+                <LevelStars n={examStars} />
               </button>
             </div>
           </section>

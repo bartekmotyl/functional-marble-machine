@@ -208,7 +208,7 @@
     "examIntro": "🎓 To jest egzamin z tego działu - najtrudniejsza zagadka. Zdaj go, aby otworzyć następny dział!",
     "thisTry": "ta próba",
     "best": "najlepiej",
-    "starsTitle": "Rozwiąż bez błędów, a dostaniesz 3 gwiazdki. Każde błędne sprawdzenie lub podpowiedź kosztuje gwiazdkę.",
+    "starsTitle": "Rozwiąż bez pomocy i bez błędów, a dostaniesz 5 gwiazdek. Błędne sprawdzenie lub podpowiedź kosztuje gwiazdkę; zdradzenie reguły kosztuje dwie - albo jedną, jeśli najpierw testujesz własne kulki.",
     "examLeave": "Na razie za trudne? Poćwicz jeszcze - egzamin na Ciebie poczeka.",
     "backToPractice": "← Wróć do poziomów ćwiczeniowych"
   },
@@ -231,7 +231,6 @@
     "needHint": "💡 Potrzebujesz podpowiedzi?",
     "anotherHint": "💡 Kolejna podpowiedź",
     "showSolution": "💡 Pokaż rozwiązanie",
-    "costsStar": "(kosztuje ⭐)",
     "mustUse": "📏 Musisz użyć „{what}”",
     "maxSteps": {
       "one": "📏 Użyj tylko {n} kroku",
@@ -311,7 +310,8 @@
     },
     "spellbookTitle": "📕 Księga zaklęć",
     "spellbookText": "Wszystko, czego się do tej pory nauczyłeś/aś:",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "costs": "(kosztuje {stars})"
   },
   "steps": {
     "fold": "redukuj od",
@@ -350,6 +350,10 @@
     "fold": {
       "title": "Mistrzowie Redukcji",
       "blurb": "Zbuduj własną redukcję, krok po kroku."
+    },
+    "extreme": {
+      "title": "Wulkan",
+      "blurb": "Naprawdę trudne zagadki: długie łańcuchy filtrów, map i redukcji, w których liczy się kolejność kroków. Nawet dorośli programiści się spocą!"
     }
   },
   "concepts": {
@@ -1566,11 +1570,162 @@
       "hints": [
         "Najpierw mapuj, potem redukuj od 1."
       ]
+    },
+    "z1": {
+      "goal": "Czerwone kulki liczą się podwójnie, niebieskie o jeden więcej. Ile to razem?",
+      "hints": [
+        "Najpierw zmień liczby, potem je zsumuj.",
+        "Użyj dwóch maszyn z \"jeśli\" - jednej dla czerwonych, drugiej dla niebieskich."
+      ]
+    },
+    "z2": {
+      "goal": "Zsumuj liczby, ale żadna kulka nie może liczyć się więcej niż 5.",
+      "hints": [
+        "Duże liczby trzeba ścisnąć do 5, zanim je dodasz."
+      ]
+    },
+    "z3": {
+      "goal": "Weź kulki powyżej 3, odejmij od każdej 3 i policz te, które są teraz parzyste.",
+      "hints": [
+        "Cztery kroki: bramka, maszyna, bramka, liczenie.",
+        "Uwaga: druga bramka widzi liczby już zmienione przez maszynę."
+      ]
+    },
+    "z4": {
+      "goal": "Zamień kolory: czerwone stają się niebieskie, a niebieskie czerwone.",
+      "hints": [
+        "Jeśli najpierw pomalujesz czerwone na niebiesko, nie odróżnisz ich już od starych niebieskich!",
+        "Użyj zapasowego koloru, którego nikt nie używa (fioletowego), jako kryjówki na chwilę."
+      ]
+    },
+    "z5": {
+      "goal": "Każda liczba zamienia się w swoją odległość od 5.",
+      "hints": [
+        "9 jest 4 od 5, tak samo jak 1.",
+        "Dwie maszyny z \"jeśli\". Kolejność ma znaczenie - druga nie może ruszać tego, co zmieniła pierwsza."
+      ]
+    },
+    "z6": {
+      "goal": "Duże kulki liczą się potrójnie, a potem zielone liczą się w połowie (w dół). Ile to razem?",
+      "hints": [
+        "\"/\" wyrzuca resztę: 7 / 2 to 3.",
+        "Duża zielona kulka jest najpierw potrojona, potem podzielona na pół."
+      ]
+    },
+    "z7": {
+      "goal": "Gładkie odpadają. Paskowane się podwajają, kropkowane dostają jeden więcej. Jaka jest największa liczba?",
+      "hints": [
+        "Bramka, dwie maszyny z \"jeśli\", a na końcu największa."
+      ]
+    },
+    "z8": {
+      "goal": "Czerwone kulki dostają 10 więcej. Potem każda kulka powyżej 10 staje się czerwona. Zsumuj liczby czerwonych.",
+      "hints": [
+        "Zrób to dokładnie w tej kolejności - druga maszyna widzi już nowe liczby.",
+        "Cztery kroki: maszyna, maszyna, bramka, suma."
+      ]
+    },
+    "z9": {
+      "goal": "Zakręć kolorami: czerwone stają się niebieskie, niebieskie zielone, a zielone czerwone.",
+      "hints": [
+        "Jak zamiana, ale z trzema kolorami - nadal potrzebujesz jednej kryjówki.",
+        "Schowaj jeden kolor w fioletowym, przestaw pozostałe dwa, a potem wyciągnij schowany."
+      ]
+    },
+    "z10": {
+      "goal": "Zapisz liczby obok siebie: 3, 1, 4 daje 314.",
+      "hints": [
+        "Każda nowa kulka przesuwa wynik o jedno miejsce w lewo.",
+        "Przesunięcie o miejsce w lewo to mnożenie przez 10."
+      ]
+    },
+    "z11": {
+      "goal": "Zapisz obok siebie liczby kulek, które nie są czerwone.",
+      "hints": [
+        "Najpierw bramka, potem sztuczka z zapisywaniem obok siebie."
+      ]
+    },
+    "z12": {
+      "goal": "Odczytaj kulki jak tajny kod: paskowana to 1, gładka to 0. Jaka to liczba?",
+      "hints": [
+        "To jak zapisywanie liczb obok siebie - ale gdy są tylko 0 i 1, miejsce jest warte 2, a nie 10.",
+        "Gładka-paskowana-paskowana to 011, czyli 3."
+      ]
+    },
+    "z13": {
+      "goal": "Policz kulki w dziwny sposób: 1 kulka daje 1, 2 dają 3, 3 dają 7, 4 dają 15...",
+      "hints": [
+        "Każda kulka podwaja wynik i dodaje jeden."
+      ]
+    },
+    "z14": {
+      "goal": "Każda kulka odejmuje wynik od swojej liczby. Co zostaje na końcu?",
+      "hints": [
+        "Wynik nie rośnie - każda kulka go zastępuje.",
+        "Dla 2, 5, 3: najpierw 2, potem 5 - 2 = 3, potem 3 - 3 = 0."
+      ]
+    },
+    "z15": {
+      "goal": "Każda liczba zamienia się w to, co zostaje po podzieleniu jej na czwórki.",
+      "hints": [
+        "14 kulek w woreczkach po 4: 3 pełne woreczki, zostają 2.",
+        "\"/\" daje pełne woreczki: 14 / 4 = 3. Woreczki razy 4 to tyle, ile się zmieściło; odejmij to od liczby."
+      ]
+    },
+    "z16": {
+      "goal": "Ile liczb da się podzielić na trójki bez reszty?",
+      "hints": [
+        "Nie ma pytania \"dzieli się przez 3\" - zbuduj resztę samodzielnie, jak w zagadce z woreczkami.",
+        "Reszta 0 oznacza, że dzieli się równo."
+      ]
+    },
+    "z17": {
+      "goal": "Zsumuj ostatnie cyfry liczb.",
+      "hints": [
+        "Ostatnia cyfra to to, co zostaje po podzieleniu na dziesiątki."
+      ]
+    },
+    "z18": {
+      "goal": "Każda liczba zamienia się w sumę swoich dwóch cyfr: 47 staje się 11.",
+      "hints": [
+        "Pierwsza cyfra to liczba / 10.",
+        "Druga cyfra to to, co zostaje po podzieleniu na dziesiątki. Dodaj obie."
+      ]
+    },
+    "z19": {
+      "goal": "Rozmiary kręcą się w kółko: mała staje się średnia, średnia duża, a duża mała.",
+      "hints": [
+        "Kółko potrzebuje kryjówki, ale nie ma zapasowego rozmiaru.",
+        "Oznacz małe kulki wzorem, przestaw pozostałe rozmiary, potem skorzystaj ze znaku - a na końcu go zetrzyj."
+      ]
+    },
+    "zx": {
+      "goal": "Zamień czerwone z niebieskimi, potem (nowe) czerwone liczą się podwójnie. Zostaw kulki powyżej 6.",
+      "hints": [
+        "Najpierw zamiana, z fioletowym jako kryjówką.",
+        "Potem podwój czerwone i użyj bramki."
+      ]
     }
   },
   "theme": {
     "label": "Motyw",
     "light": "☀️ Jasny",
     "dark": "🌙 Ciemny"
+  },
+  "skin": {
+    "label": "Skórka - wygląd gry"
+  },
+  "lab": {
+    "title": "🧪 Laboratorium kulek",
+    "pitch": "Ułóż własny rząd kulek i zobacz, co maszyna powinna oddać. Kosztuje {stars} jeden raz - a potem zdradzenie reguły kosztuje już tylko jedną gwiazdkę.",
+    "open": "🧪 Otwórz laboratorium",
+    "how": "Kliknij kulkę, aby ją zmienić, albo +, aby dodać nową. Poniżej: co reguła robi z Twoimi kulkami.",
+    "yourMarbles": "Twoje kulki",
+    "addMarble": "Dodaj kulkę",
+    "removeMarble": "Usuń tę kulkę",
+    "comesOut": "WYCHODZI",
+    "toMachine": "➕ Włóż do maszyny",
+    "reset": "↺ Zacznij od nowa",
+    "card": "Twój test {n}"
   }
 }

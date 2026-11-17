@@ -1,0 +1,52 @@
+# Candy - the default skin: bright and bubbly, for kids.
+#
+# A skin changes only how the game looks: colors, the font, how round things are and the
+# section icons. Marble colors keep their names (a "red" marble must still look red).
+# Each color is one value used in both themes, or { light: ..., dark: ... }.
+# Copy this file to make a new skin; `npm test` checks that every skin is complete.
+
+name:
+  en: Candy
+  pl: Cukierkowy
+
+font: "'Nunito', 'Segoe UI Rounded', 'Segoe UI', system-ui, -apple-system, sans-serif"
+round: 1 # corner roundness: 1 = as designed, 0 = square
+depth: 1 # 3D edge under buttons: 1 = chunky, 0 = flat
+
+colors:
+  # page
+  bg: { light: '#f4f1ff', dark: '#14112a' } # page background
+  panel: { light: '#ffffff', dark: '#1f1a3a' } # cards and panels; light tints are mixed into it
+  ink: { light: '#2b2550', dark: '#ebe7ff' } # text
+  muted: { light: '#7a73a3', dark: '#a59fcc' } # quiet text
+  shadow: { light: '#3c288c', dark: '#000000' } # shadows under cards
+  code-bg: { light: '#1f1d3d', dark: '#0d0b1e' } # code samples
+  code-ink: '#f4f1ff' # text of code samples
+  on-strong: '#ffffff' # text on strong buttons (accent, good, bad...)
+  # meanings
+  accent: '#6c4cf5' # main color: selected things, the Check button
+  accent-text: { light: '#6c4cf5', dark: '#a993ff' } # links and quiet buttons
+  accent-2: '#ff7ab6' # second color: the "map" machine, highlights
+  good: '#22b35e' # right answers, the Run button
+  bad: '#ef4136' # wrong answers, delete buttons
+  warn: '#ff9f1a' # Step by step, warnings
+  gold: '#ffc61a' # stars, hints, the expected output
+  and: '#2f8ff0' # "and" boxes (ALL must say yes)
+  or: '#ff8c1a' # "or" boxes (ONE yes is enough)
+
+marbles: # light, base and dark shade of each marble color
+  red: ['#ff9a8f', '#ef4136', '#9c1c14']
+  blue: ['#9fd3ff', '#2f8ff0', '#164f99']
+  green: ['#a8f0a0', '#3cb54a', '#1d6b27']
+  yellow: ['#fff3a3', '#ffc61a', '#b07d00']
+  purple: ['#e2b3ff', '#9b45d6', '#561f80']
+
+icons: # section icons (by section id)
+  filter: 🔍
+  boxes: 🧩
+  numbers: 🔢
+  map: 🎨
+  math: ⚙️
+  reduce: 🧮
+  fold: 🏆
+  extreme: 🌋
