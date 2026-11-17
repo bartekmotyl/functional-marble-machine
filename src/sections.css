@@ -311,3 +311,55 @@
 .exam-info {
   margin-top: 14px;
 }
+
+/* ============================================================ custom level packs */
+.custom-pack {
+  border: 2px dashed color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.pack-head {
+  cursor: default;
+}
+.pack-head .pack-remove {
+  margin-left: auto;
+}
+.pack-load {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+.modal.import {
+  text-align: left;
+}
+.import-form {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+.import-form input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  padding: 8px 12px;
+  border-radius: calc(12px * var(--round));
+  border: 2px solid color-mix(in srgb, var(--muted) 40%, transparent);
+  background: var(--bg);
+  color: var(--ink);
+}
+.import-status.error {
+  color: var(--bad);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.import-preview {
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  border-radius: calc(16px * var(--round));
+  padding: 12px 16px;
+}
+.import-preview h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.import-url {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}

@@ -50,6 +50,21 @@ At build time `build/skins.ts` checks each skin and turns it into CSS variables
 All colors in the CSS are skin colors or `color-mix()` of them, so a new skin and the dark
 theme need no CSS changes. Skins change only the look: a red marble stays red.
 
+## Custom levels
+
+Players can load their own levels: a YAML **level pack** hosted anywhere (a Gist raw link, for
+example). On the map, use **🔗 Load levels from a link**, or open
+`#/import?url=<URL-encoded link>`. The game downloads the file, checks it
+(`src/game/packs.ts`), shows the name, author and number of levels, and adds the pack only after
+the player confirms. Packs are kept in `localStorage` (`marble-machine-packs-v1`) and appear as
+extra sections on the map, with every level open. Their level ids get a prefix made from the
+link, so stars never clash with built-in levels. Removing a pack also removes its stars.
+
+The format, with every field and check, is in [`levels-format/README.md`](levels-format/README.md),
+and there is an example in `levels-format/example-pack.yaml`. A copy is served at
+`/example-pack.yaml` by the dev server, so `#/import?url=%2Fexample-pack.yaml` loads it locally.
+Pack texts come from the internet, so they are only ever shown as text, never as HTML.
+
 ## Translations
 
 Every visible text lives in `src/i18n/<lang>.json` (`en.json` is the reference): the interface,
@@ -98,6 +113,7 @@ reduce sum number                        # squash everything into one number (al
 | `src/game/check.ts` | Picks 5 visible examples (so every question of the rule shows both yes and no) and 5 secret tests, and runs the player's program on them |
 | `src/i18n/` | Translation files and the tiny `t()` helper |
 | `skins/`, `build/skins.ts` | Skins and the build step that turns them into CSS |
+| `src/game/packs.ts`, `src/game/packStore.ts`, `levels-format/` | Custom level packs: the format, its checks, and storage in the browser |
 | `src/ui/` | React components: map, section page, level screen, marble SVGs, the machine, explanations |
 
 `npm test` checks every level: the reference solution passes, the starter code doesn't, every

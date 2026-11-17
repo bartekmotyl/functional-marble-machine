@@ -1,25 +1,32 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { MAX_STARS, COST, checkSolution, expectedFor, getTests, hintCost, runCase, starsFor, type CheckResult } from '../game/check'
 import type { TestCase } from '../game/generate'
 import type { Marble as M } from '../lang/marble'
 import { Experiment } from './Experiment'
-import { chapterOf, conceptsUpTo, type Level } from '../game/levels'
+import type { Concept, Level } from '../game/levels'
+import type { LevelTexts } from '../game/packs'
 import type { Progress } from '../game/progress'
-import { levelNumber } from '../game/progression'
 import { CONCEPT_CODE } from '../game/concepts'
 import { BlockEditor } from '../blocks/BlockEditor'
 import { addQuestion, cmp, fromSource, propValues, replaceNode, toProgram, toSource, type BlockProgram, type Cond } from '../blocks/model'
 import { LangError, type Program } from '../lang/parser'
-import { has, t, tl, tn } from '../i18n'
+import { t, tn } from '../i18n'
 import { localizeCode } from '../i18n/words'
 import { MarbleRow, OutputView } from './Marble'
 import { Machine, buildTicks, type Tick } from './Machine'
 import { Explain, StepStatus } from './Explain'
-import { SectionIcon } from './skin'
 import { RichText } from './RichText'
 
 interface Props {
   level: Level
+  /** the level's goal, intro and hints, already in the player's language */
+  texts: LevelTexts
+  /** blocks the player may use */
+  concepts: Concept[]
+  /** "Level 3" or "Exam" */
+  title: string
+  /** the section in the top bar */
+  section: { title: string; icon: ReactNode }
   savedCode?: string
   stars: number
   progress: Progress
@@ -79,7 +86,7 @@ function findCond(p: BlockProgram, id: string): Cond | null {
 }
 
 export function LevelScreen(props: Props) {
-  const { level, savedCode, stars, progress, onSaveCode, onSolved, onBack, onChapter, onNext, examReady, onExam, onNextSection } = props
+  const { level, texts, concepts, title, section, savedCode, stars, progress, onSaveCode, onSolved, onBack, onChapter, onNext, examReady, onExam, onNextSection } = props
   const [blocks, setBlocks] = useState<BlockProgram>(
     () => (savedCode !== undefined ? fromSource(savedCode) : null) ?? fromSource(level.starter ?? '') ?? [],
   )
@@ -106,10 +113,7 @@ export function LevelScreen(props: Props) {
 
   const tests = getTests(level)
   const showNumber = !!level.features.numbers
-  const concepts = useMemo(() => conceptsUpTo(level.id), [level.id])
-  const chapter = chapterOf(level.id)
   const potential = starsFor(lost)
-  const lv = `levels.${level.id}`
 
   // Cards: visible examples + any secret tests that were revealed.
   const cards = [
@@ -307,8 +311,8 @@ export function LevelScreen(props: Props) {
   // ------------------------------------------------------------ hints: the rule, then tips, then a solution
 
   const allHints: { kind: 'rule' | 'tip' | 'solution'; text: string }[] = [
-    { kind: 'rule', text: t(`${lv}.goal`) },
-    ...tl(`${lv}.hints`).map((h) => ({ kind: 'tip' as const, text: h })),
+    { kind: 'rule', text: texts.goal },
+    ...texts.hints.map((h) => ({ kind: 'tip' as const, text: h })),
     { kind: 'solution', text: level.solution },
   ]
   const constraints = [
@@ -326,7 +330,6 @@ export function LevelScreen(props: Props) {
   }
 
   const progressAfter: Progress = { ...progress, stars: { ...progress.stars, [level.id]: Math.max(stars, success ?? 0) } }
-  const title = level.exam ? t('level.exam') : t('level.name', { n: levelNumber(level.id) })
   const runLabel = cards.length > 1 ? t('ui.runExample', { label: card.label }) : t('ui.runThis')
 
   return (
@@ -337,7 +340,7 @@ export function LevelScreen(props: Props) {
         </button>
         <button className="crumbs" onClick={onChapter}>
           <span className="chapter-name">
-            <SectionIcon chapter={chapter} /> {t(`chapters.${chapter.id}.title`)}
+            {section.icon} {section.title}
           </span>
           <span className={`level-name ${level.exam ? 'exam' : ''}`}>{title}</span>
         </button>
@@ -479,10 +482,10 @@ export function LevelScreen(props: Props) {
             </div>
           </div>
           <div className="panel-scroll">
-            {has(`${lv}.intro`) && (
+            {texts.intro && (
               <details className="intro" open={introOpen} onToggle={(e) => setIntroOpen((e.target as HTMLDetailsElement).open)}>
                 <summary>{t('ui.howItWorks')}</summary>
-                <RichText text={t(`${lv}.intro`)} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
+                <RichText text={texts.intro} renderCode={(c) => <CodeSample code={c} concepts={concepts} />} />
               </details>
             )}
             {debug && <div className="editing-locked">{t('ui.steppingLocked')}</div>}

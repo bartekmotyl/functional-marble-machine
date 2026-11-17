@@ -1690,5 +1690,32 @@
     "toMachine": "➕ Put it in the machine",
     "reset": "↺ Start again",
     "card": "Your test {n}"
+  },
+  "packs": {
+    "load": "🔗 Load levels from a link",
+    "loadText": "Anyone can write their own levels in a YAML file and put it on the internet. Paste the link to the file here.",
+    "link": "Link to a level file",
+    "fetch": "Load",
+    "loading": "Loading and checking the levels...",
+    "by": "by {author}",
+    "levelCount": {
+      "one": "{n} level",
+      "other": "{n} levels"
+    },
+    "replaces": "You already have levels from this link - adding them again updates them and keeps your stars.",
+    "trust": "These levels were made by someone else, not by the makers of this game.",
+    "add": "✅ Add these levels",
+    "cancel": "Cancel",
+    "custom": "Custom levels",
+    "remove": "🗑️ Remove",
+    "removeConfirm": "Remove \"{name}\" and its stars from this browser?",
+    "errors": {
+      "link": "This does not look like a link. It should start with https://",
+      "network": "The file could not be downloaded. Check the link - the website must also allow other pages to read it (CORS).",
+      "status": "The website answered with an error. Check the link.",
+      "tooBig": "The file is too big.",
+      "html": "This link leads to a web page, not a YAML file. Use the link to the raw file.",
+      "invalid": "Something is wrong in this level file: {problem}"
+    }
   }
 }

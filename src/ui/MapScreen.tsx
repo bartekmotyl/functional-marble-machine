@@ -1,5 +1,6 @@
 import { ALL_LEVELS, CHAPTERS } from '../game/levels'
-import type { Progress } from '../game/progress'
+import type { Pack } from '../game/packs'
+import { CHEATS_ALLOWED, type Progress } from '../game/progress'
 import { MAX_STARS } from '../game/check'
 import { continueTarget, examNeeds, isChapterOpen, isUnlocked, practiceOf, examOf } from '../game/progression'
 import { DICTS, LANGS, getLang, t } from '../i18n'
@@ -14,6 +15,10 @@ interface Props {
   onUnlockAll: (v: boolean) => void
   onReset: () => void
   onLang: (lang: string) => void
+  /** custom level packs, shown as extra sections below the built-in ones */
+  packs: Pack[]
+  onImport: () => void
+  onRemovePack: (pack: Pack) => void
 }
 
 export function LevelStars({ n }: { n: number }) {
@@ -45,8 +50,9 @@ export function LangSwitch({ onLang }: { onLang: (lang: string) => void }) {
   )
 }
 
-export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onReset, onLang }: Props) {
-  const totalStars = Object.values(progress.stars).reduce((a, b) => a + b, 0)
+export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onReset, onLang, packs, onImport, onRemovePack }: Props) {
+  // stars of custom levels are not part of the game's total
+  const totalStars = ALL_LEVELS.reduce((a, l) => a + (progress.stars[l.id] ?? 0), 0)
   const target = continueTarget(progress)
   return (
     <div className="map-screen">
@@ -61,9 +67,11 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
         </div>
         <h1>{t('map.title')}</h1>
         <p>{t('map.tagline')}</p>
-        <button className={`cheat ${progress.unlockAll ? 'on' : ''}`} onClick={() => onUnlockAll(!progress.unlockAll)} title={t('map.cheatTitle')}>
-          {progress.unlockAll ? t('map.cheatOn') : t('map.cheatOff')}
-        </button>
+        {CHEATS_ALLOWED && (
+          <button className={`cheat ${progress.unlockAll ? 'on' : ''}`} onClick={() => onUnlockAll(!progress.unlockAll)} title={t('map.cheatTitle')}>
+            {progress.unlockAll ? t('map.cheatOn') : t('map.cheatOff')}
+          </button>
+        )}
         <div className="hero-stats">
           ⭐ {totalStars} / {ALL_LEVELS.length * MAX_STARS}
           <button className="btn run" onClick={() => (target.level ? onOpen(target.level.id) : onOpenChapter(target.chapter.id))}>
@@ -117,6 +125,47 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
           </section>
         )
       })}
+
+      {packs.map((pack) => (
+        <section key={pack.id} className="chapter custom-pack">
+          <div className="chapter-head pack-head">
+            <span className="chapter-emoji">🧪</span>
+            <span>
+              <span className="chapter-num">{t('packs.custom')}</span>
+              <h2>{pack.name}</h2>
+            </span>
+            <button
+              className="btn ghost small pack-remove"
+              onClick={() => {
+                if (confirm(t('packs.removeConfirm', { name: pack.name }))) onRemovePack(pack)
+              }}
+            >
+              {t('packs.remove')}
+            </button>
+          </div>
+          <p className="muted">
+            {t('packs.by', { author: pack.author })}
+            {pack.description ? ` - ${pack.description}` : ''}
+          </p>
+          <div className="level-buttons">
+            {pack.levels.map((l, i) => {
+              const s = progress.stars[l.id] ?? 0
+              return (
+                <button key={l.id} className={`level-btn ${s ? 'solved' : ''}`} onClick={() => onOpen(l.id)} title={t('level.name', { n: i + 1 })}>
+                  <span className="lvl-num">{i + 1}</span>
+                  <LevelStars n={s} />
+                </button>
+              )
+            })}
+          </div>
+        </section>
+      ))}
+
+      <div className="pack-load">
+        <button className="btn ghost" onClick={onImport}>
+          {t('packs.load')}
+        </button>
+      </div>
 
       <footer className="map-footer">
         <button

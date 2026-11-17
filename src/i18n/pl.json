@@ -1727,5 +1727,34 @@
     "toMachine": "➕ Włóż do maszyny",
     "reset": "↺ Zacznij od nowa",
     "card": "Twój test {n}"
+  },
+  "packs": {
+    "load": "🔗 Wczytaj poziomy z linku",
+    "loadText": "Każdy może napisać własne poziomy w pliku YAML i umieścić go w internecie. Wklej tutaj link do tego pliku.",
+    "link": "Link do pliku z poziomami",
+    "fetch": "Wczytaj",
+    "loading": "Wczytywanie i sprawdzanie poziomów...",
+    "by": "autorstwo: {author}",
+    "levelCount": {
+      "one": "{n} poziom",
+      "few": "{n} poziomy",
+      "many": "{n} poziomów",
+      "other": "{n} poziomu"
+    },
+    "replaces": "Masz już poziomy z tego linku - dodanie ich ponownie je zaktualizuje i zachowa twoje gwiazdki.",
+    "trust": "Te poziomy przygotował ktoś inny, nie twórcy tej gry.",
+    "add": "✅ Dodaj te poziomy",
+    "cancel": "Anuluj",
+    "custom": "Własne poziomy",
+    "remove": "🗑️ Usuń",
+    "removeConfirm": "Usunąć „{name}” i zdobyte w nim gwiazdki z tej przeglądarki?",
+    "errors": {
+      "link": "To nie wygląda na link. Powinien zaczynać się od https://",
+      "network": "Nie udało się pobrać pliku. Sprawdź link - strona musi też pozwalać innym stronom go czytać (CORS).",
+      "status": "Strona odpowiedziała błędem. Sprawdź link.",
+      "tooBig": "Plik jest za duży.",
+      "html": "Ten link prowadzi do strony internetowej, a nie do pliku YAML. Użyj linku do surowego pliku.",
+      "invalid": "Coś jest nie tak w pliku z poziomami: {problem}"
+    }
   }
 }

@@ -1,0 +1,95 @@
+# An example level pack for Functional Marble Machine. See README.md in this folder for every field.
+# Load it in the game with "Load levels from a link".
+format: 1
+name: Rainbow Workshop
+author: The Functional Marble Machine team
+description: Five small puzzles about colors, sizes and numbers.
+
+levels:
+  - id: reds
+    solution: filter color is red
+    features:
+      colors: [red, blue, yellow]
+    count: [4, 7]
+    starter: filter color is blue
+    texts:
+      en:
+        goal: Keep only the red marbles.
+        intro: |
+          Welcome to the workshop! Look at the examples: which marbles come out?
+
+          A **filter** keeps the marbles that answer *yes*.
+        hints:
+          - Only one color comes out.
+      pl:
+        goal: Zostaw tylko czerwone kulki.
+        intro: |
+          Witaj w warsztacie! Spójrz na przykłady: które kulki wychodzą?
+
+          **filtr** zostawia kulki, które odpowiadają *tak*.
+        hints:
+          - Wychodzi tylko jeden kolor.
+
+  - id: nosmall
+    solution: filter size is not small
+    features:
+      colors: [green, purple]
+      sizes: [small, medium, big]
+    texts:
+      en:
+        goal: Throw away the small marbles.
+        hints:
+          - Medium and big marbles stay.
+      pl:
+        goal: Wyrzuć małe kulki.
+        hints:
+          - Średnie i duże kulki zostają.
+
+  - id: paint
+    solution: map color -> yellow if color is blue
+    features:
+      colors: [red, blue, green]
+    count: [4, 7]
+    texts:
+      en:
+        goal: Paint the blue marbles yellow.
+        hints:
+          - Only some marbles change.
+          - Use a map with "if".
+      pl:
+        goal: Pomaluj niebieskie kulki na żółto.
+        hints:
+          - Zmieniają się tylko niektóre kulki.
+          - Użyj mapowania z "jeśli".
+
+  - id: double
+    solution: map number -> number * 2
+    features:
+      colors: [blue]
+      numbers: [1, 9]
+    count: [3, 6]
+    texts:
+      en:
+        goal: Double every number.
+      pl:
+        goal: Podwój każdą liczbę.
+
+  - id: total
+    solution: |
+      filter color is yellow
+      reduce sum number
+    features:
+      colors: [yellow, purple]
+      numbers: [1, 9]
+    count: [4, 7]
+    maxSteps: 2
+    mustUse: [sum]
+    texts:
+      en:
+        goal: Add up the numbers on the yellow marbles.
+        hints:
+          - First keep the yellow ones, then add them up.
+      pl:
+        goal: Dodaj liczby na żółtych kulkach.
+        hints:
+          - Najpierw zostaw żółte, potem je dodaj.

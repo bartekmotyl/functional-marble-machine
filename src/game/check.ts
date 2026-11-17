@@ -10,11 +10,13 @@ export const HIDDEN_TESTS = 5
 const cache = new Map<string, { visible: TestCase[]; hidden: TestCase[] }>()
 
 export function getTests(level: Level) {
-  let t = cache.get(level.id)
+  // custom levels can change when their pack is loaded again, so the key has the whole level
+  const key = JSON.stringify([level.id, level.solution, level.features, level.count])
+  let t = cache.get(key)
   if (!t) {
     const count = level.count ?? [4, 7]
     t = generateTests(level.solution, level.features, count, VISIBLE_EXAMPLES, HIDDEN_TESTS, hash(level.id))
-    cache.set(level.id, t)
+    cache.set(key, t)
   }
   return t
 }

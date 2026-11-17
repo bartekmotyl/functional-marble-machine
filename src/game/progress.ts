@@ -12,6 +12,9 @@ export interface Progress {
 
 const KEY = 'marble-machine-progress-v1'
 
+/** Cheat mode (open every level) exists only in local dev runs (`npm run dev`), not in the released game. */
+export const CHEATS_ALLOWED = import.meta.env.DEV
+
 /** Levels used to give 3 stars, now 5: 3 → 5, 2 → 4, 1 → 3 (the stars lost stay lost). */
 export function upgrade(p: Progress): Progress {
   if ((p.maxStars ?? 3) >= MAX_STARS) return p
@@ -23,7 +26,10 @@ export function upgrade(p: Progress): Progress {
 function load(): Progress {
   try {
     const raw = localStorage.getItem(KEY)
-    if (raw) return upgrade({ stars: {}, code: {}, ...JSON.parse(raw) })
+    if (raw) {
+      const p = upgrade({ stars: {}, code: {}, ...JSON.parse(raw) })
+      return CHEATS_ALLOWED ? p : { ...p, unlockAll: false }
+    }
   } catch {
     /* ignore broken storage */
   }
@@ -42,8 +48,13 @@ export function useProgress() {
   const award = useCallback((id: string, stars: number) => {
     setProgress((p) => ({ ...p, stars: { ...p.stars, [id]: Math.max(p.stars[id] ?? 0, stars) } }))
   }, [])
-  const setUnlockAll = useCallback((v: boolean) => setProgress((p) => ({ ...p, unlockAll: v })), [])
+  const setUnlockAll = useCallback((v: boolean) => setProgress((p) => ({ ...p, unlockAll: CHEATS_ALLOWED && v })), [])
+  /** Forget the stars and machines of every level whose id starts with the prefix (a removed pack). */
+  const forget = useCallback((prefix: string) => {
+    const keep = <T,>(r: Record<string, T>) => Object.fromEntries(Object.entries(r).filter(([id]) => !id.startsWith(prefix)))
+    setProgress((p) => ({ ...p, stars: keep(p.stars), code: keep(p.code) }))
+  }, [])
   const reset = useCallback(() => setProgress({ stars: {}, code: {}, maxStars: MAX_STARS }), [])
 
-  return { progress, saveCode, award, setUnlockAll, reset }
+  return { progress, saveCode, award, setUnlockAll, reset, forget }
 }
