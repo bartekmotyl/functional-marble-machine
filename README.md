@@ -37,7 +37,7 @@ npm run build
   and can put it in the machine. So experimenting first never costs more, and pays off when
   you find the rule yourself.
 - Cheat mode (on the map screen) opens all levels.
-- **Skins** (🎨 on the map screen) change the look: *Candy* (default) and *Pastel* (calm
+- **Skins** (🎨 on the map screen) change the look: *Pastel* (default; calm
   colors, flat buttons). Each works with the light and dark theme, which follows the system
   until the player picks one.
 

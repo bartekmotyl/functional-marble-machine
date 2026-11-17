@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { t } from '../i18n'
 
 export type Theme = 'light' | 'dark'
@@ -24,6 +24,13 @@ export function applyTheme(theme: Theme | null = stored()) {
 
 export function ThemeSwitch() {
   const [theme, setTheme] = useState<Theme>(currentTheme)
+  // until the player picks a theme, follow the system - also when it changes (e.g. at night)
+  useEffect(() => {
+    const mq = matchMedia('(prefers-color-scheme: dark)')
+    const follow = () => setTheme(currentTheme())
+    mq.addEventListener('change', follow)
+    return () => mq.removeEventListener('change', follow)
+  }, [])
   const next: Theme = theme === 'dark' ? 'light' : 'dark'
   const pick = () => {
     localStorage.setItem(KEY, next)

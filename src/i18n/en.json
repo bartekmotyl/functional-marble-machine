@@ -149,7 +149,8 @@
     "exam": "🎓 Exam",
     "examLocked": "Solve {n} levels of this section to open the exam",
     "openSection": "Open section",
-    "language": "Language"
+    "language": "Language",
+    "settings": "Settings: look and language"
   },
   "chapter": {
     "section": "Section {n}",
@@ -1717,5 +1718,10 @@
       "html": "This link leads to a web page, not a YAML file. Use the link to the raw file.",
       "invalid": "Something is wrong in this level file: {problem}"
     }
+  },
+  "footer": {
+    "madeBy": "Made by",
+    "source": "source code on GitHub",
+    "inspired": "Inspired by the programming puzzles of the Android game Hacked."
   }
 }

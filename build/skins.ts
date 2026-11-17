@@ -18,7 +18,7 @@ export interface Skin {
   css: string
 }
 
-export const DEFAULT_SKIN = 'candy'
+export const DEFAULT_SKIN = 'pastel'
 
 /** Every skin must define these colors (see skins/candy.yaml for what each one is for). */
 export const COLOR_KEYS = [

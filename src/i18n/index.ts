@@ -30,8 +30,13 @@ function initialLang(): string {
   } catch {
     /* no storage (tests) */
   }
-  const browser = typeof navigator !== 'undefined' ? navigator.language.slice(0, 2) : 'en'
-  return DICTS[browser] ? browser : 'en'
+  // not picked yet: the first of the browser's languages that the game has (e.g. "pl-PL" -> pl)
+  const wanted = typeof navigator !== 'undefined' ? [...(navigator.languages ?? []), navigator.language] : []
+  for (const l of wanted) {
+    const code = l?.slice(0, 2).toLowerCase()
+    if (code && DICTS[code]) return code
+  }
+  return 'en'
 }
 
 let current = initialLang()

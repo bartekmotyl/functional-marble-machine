@@ -3,9 +3,13 @@ import type { Pack } from '../game/packs'
 import { CHEATS_ALLOWED, type Progress } from '../game/progress'
 import { MAX_STARS } from '../game/check'
 import { continueTarget, examNeeds, isChapterOpen, isUnlocked, practiceOf, examOf } from '../game/progression'
-import { DICTS, LANGS, getLang, t } from '../i18n'
+import { t } from '../i18n'
 import { Marble } from './Marble'
 import { ThemeSwitch } from './theme'
+import { LangPicker } from './LangPicker'
+
+const AUTHOR = 'Bartek Motyl'
+const REPO_URL = 'https://github.com/bartekmotyl/functional-marble-machine'
 import { SectionIcon, SkinSwitch } from './skin'
 
 interface Props {
@@ -35,17 +39,10 @@ export function LevelStars({ n }: { n: number }) {
 
 export function LangSwitch({ onLang }: { onLang: (lang: string) => void }) {
   return (
-    <div className="lang-switch" role="group" aria-label={t('map.language')}>
+    <div className="lang-switch" role="group" aria-label={t('map.settings')}>
       <SkinSwitch />
       <ThemeSwitch />
-      {LANGS.map((l) => {
-        const meta = DICTS[l].meta as { name: string }
-        return (
-          <button key={l} className={`lang-btn ${getLang() === l ? 'on' : ''}`} onClick={() => onLang(l)} title={meta.name}>
-            {meta.name}
-          </button>
-        )
-      })}
+      <LangPicker onLang={onLang} />
     </div>
   )
 }
@@ -168,6 +165,15 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
       </div>
 
       <footer className="map-footer">
+        <div className="credits">
+          <div>
+            {t('footer.madeBy')} <b>{AUTHOR}</b> ·{' '}
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+              {t('footer.source')}
+            </a>
+          </div>
+          <div>{t('footer.inspired')}</div>
+        </div>
         <button
           className="btn ghost small"
           onClick={() => {
