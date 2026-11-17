@@ -597,3 +597,53 @@
   flex-wrap: wrap;
   gap: 6px;
 }
+
+/* ============================================================ narrow screens (phones, small tablets)
+   Kept last so it wins over the desktop rules above. Desktop (> 1000px) is not affected.
+   The three columns go one below the other and nothing may be wider than the screen. */
+@media (max-width: 1000px) {
+  .level-screen .level-grid {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 8px;
+    gap: 10px;
+  }
+  .level-screen .panel,
+  .panel-scroll,
+  .engine-scroll,
+  .rail {
+    min-width: 0;
+    max-width: 100%;
+  }
+  /* top bar: map button, level name and stars wrap instead of pushing the page wider */
+  .level-screen .topbar {
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    padding: 6px 10px;
+  }
+  .level-screen .topbar .crumbs {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+  .level-screen .topbar .star-box {
+    font-size: 0.95rem;
+  }
+  /* skin / theme / language buttons wrap onto a second line */
+  .lang-switch {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 6px;
+  }
+  .theme-btn {
+    margin-right: 0;
+  }
+  .chapter-top {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chapter-screen {
+    padding: 12px 10px 32px;
+  }
+  .map-screen {
+    padding: 16px 10px 40px;
+  }
+}
