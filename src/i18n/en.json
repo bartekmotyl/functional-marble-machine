@@ -135,7 +135,7 @@
     "labelNumber": "marble: color {color}, size {size}, pattern {pattern}, number {number}"
   },
   "map": {
-    "title": "Marble Machine",
+    "title": "Functional Marble Machine",
     "tagline": "Build machines that sort, paint and count marbles - with code!",
     "start": "▶ Start playing",
     "continue": "▶ Continue",
@@ -400,7 +400,7 @@
   "levels": {
     "f1": {
       "goal": "Keep only the red marbles.",
-      "intro": "Welcome to the Marble Machine! You build a machine, and marbles roll through it.\n\nLook at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you find the rule? Click an example to put it in the machine.\n\n**filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This machine keeps blue marbles:\n\n```\nfilter color is blue\n```\n\nClick the word **blue** in your machine, pick another color, and press **▶ Run this** to try it.",
+      "intro": "Welcome to the Functional Marble Machine! You build a machine, and marbles roll through it.\n\nLook at the examples on the left: **IN** is what goes into the machine, **OUT** is what should come out. Can you find the rule? Click an example to put it in the machine.\n\n**filter** is a gate. It asks every marble a question. Marbles that answer *yes* roll on, the others drop out. This machine keeps blue marbles:\n\n```\nfilter color is blue\n```\n\nClick the word **blue** in your machine, pick another color, and press **▶ Run this** to try it.",
       "hints": [
         "You only need to change one word.",
         "Which color is in every OUT?"

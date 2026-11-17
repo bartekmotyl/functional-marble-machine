@@ -166,7 +166,7 @@
     "labelNumber": "kulka: kolor {color}, rozmiar {size}, wzór {pattern}, liczba {number}"
   },
   "map": {
-    "title": "Maszyna do Kulek",
+    "title": "Funkcyjna Maszyna do Kulek",
     "tagline": "Buduj maszyny, które sortują, malują i liczą kulki - za pomocą kodu!",
     "start": "▶ Zacznij grać",
     "continue": "▶ Graj dalej",
@@ -437,7 +437,7 @@
   "levels": {
     "f1": {
       "goal": "Zostaw tylko czerwone kulki.",
-      "intro": "Witaj w Maszynie do Kulek! Budujesz maszynę, a kulki się przez nią toczą.\n\nSpójrz na przykłady po lewej: **WEJŚCIE** to to, co wpada do maszyny, **WYJŚCIE** to to, co powinno z niej wyjść. Potrafisz znaleźć regułę? Kliknij przykład, aby włożyć go do maszyny.\n\n**filtruj** to bramka. Zadaje każdej kulce pytanie. Kulki, które odpowiedzą *tak*, toczą się dalej, a pozostałe wypadają. Ta maszyna zostawia niebieskie kulki:\n\n```\nfilter color is blue\n```\n\nKliknij słowo **niebieski** w swojej maszynie, wybierz inny kolor i naciśnij **▶ Uruchom**, żeby to sprawdzić.",
+      "intro": "Witaj w Funkcyjnej Maszynie do Kulek! Budujesz maszynę, a kulki się przez nią toczą.\n\nSpójrz na przykłady po lewej: **WEJŚCIE** to to, co wpada do maszyny, **WYJŚCIE** to to, co powinno z niej wyjść. Potrafisz znaleźć regułę? Kliknij przykład, aby włożyć go do maszyny.\n\n**filtruj** to bramka. Zadaje każdej kulce pytanie. Kulki, które odpowiedzą *tak*, toczą się dalej, a pozostałe wypadają. Ta maszyna zostawia niebieskie kulki:\n\n```\nfilter color is blue\n```\n\nKliknij słowo **niebieski** w swojej maszynie, wybierz inny kolor i naciśnij **▶ Uruchom**, żeby to sprawdzić.",
       "hints": [
         "Wystarczy zmienić jedno słowo.",
         "Jaki kolor jest w każdym WYJŚCIU?"

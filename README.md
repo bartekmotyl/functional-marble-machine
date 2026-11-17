@@ -1,4 +1,4 @@
-# Marble Machine
+# Functional Marble Machine
 
 A puzzle game that teaches **filter / map / reduce** to kids (10+). Each level shows a few
 examples: marbles going in → what should come out. The player finds the rule and builds a tiny
