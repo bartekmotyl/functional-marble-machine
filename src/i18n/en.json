@@ -1722,6 +1722,8 @@
   "footer": {
     "madeBy": "Made by",
     "source": "source code on GitHub",
-    "inspired": "Inspired by the programming puzzles of the Android game Hacked."
+    "inspired": "Inspired by the programming puzzles of the Android game Hacked.",
+    "android": "📱 Download the Android app",
+    "androidNote": "(.apk - open it on your phone to install)"
   }
 }

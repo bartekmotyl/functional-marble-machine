@@ -79,6 +79,38 @@ npm run android:build      # APK in android/app/build/outputs/apk/debug/
 
 The `android/` folder is a normal Android Studio project (`npx cap open android`).
 
+### Releases
+
+Players download the newest app from
+<https://github.com/bartekmotyl/functional-marble-machine/releases/latest/download/functional-marble-machine.apk>
+(also linked in the game's footer). To publish a new version, push a version tag. The
+*Release* workflow (`.github/workflows/release.yml`) then builds a signed APK and creates a
+GitHub Release with it:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Release APKs are signed with the app's own key, so a new version installs over the old one and
+keeps the player's progress. Make the key **once** and keep it safe (if it is lost, players
+must uninstall the app to install a new version):
+
+```bash
+keytool -genkeypair -v -keystore marble-release.keystore -alias marble -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Then add four repository secrets (GitHub -> Settings -> Secrets and variables -> Actions):
+
+| Secret | Value |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | the keystore file as base64: `base64 -w0 marble-release.keystore` (PowerShell: `[Convert]::ToBase64String([IO.File]::ReadAllBytes("marble-release.keystore"))`) |
+| `ANDROID_KEYSTORE_PASSWORD` | the keystore password you chose |
+| `ANDROID_KEY_ALIAS` | `marble` |
+| `ANDROID_KEY_PASSWORD` | the key password (the same as the keystore password, unless you chose another) |
+
+Keystore files are ignored by git - never commit them.
+
 The app icon is drawn in `assets/icon-foreground.svg` and `assets/icon-background.svg`.
 After changing them, run `npm run icons`: it renders the Android launcher icons and the web
 favicon (`public/icon.svg`).

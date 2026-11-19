@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { ALL_LEVELS, CHAPTERS } from '../game/levels'
 import type { Pack } from '../game/packs'
 import { CHEATS_ALLOWED, type Progress } from '../game/progress'
@@ -10,6 +11,10 @@ import { LangPicker } from './LangPicker'
 
 const AUTHOR = 'Bartek Motyl'
 const REPO_URL = 'https://github.com/bartekmotyl/functional-marble-machine'
+/** Always the newest Android app (published by .github/workflows/release.yml). */
+const APK_URL = `${REPO_URL}/releases/latest/download/functional-marble-machine.apk`
+/** Inside the Android app there is no point offering the Android app. */
+const IN_APP = Capacitor.isNativePlatform()
 import { SectionIcon, SkinSwitch } from './skin'
 
 interface Props {
@@ -173,6 +178,11 @@ export function MapScreen({ progress, onOpen, onOpenChapter, onUnlockAll, onRese
             </a>
           </div>
           <div>{t('footer.inspired')}</div>
+          {!IN_APP && (
+            <div>
+              <a href={APK_URL}>{t('footer.android')}</a> <span className="footer-note">{t('footer.androidNote')}</span>
+            </div>
+          )}
         </div>
         <button
           className="btn ghost small"

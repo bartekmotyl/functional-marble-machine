@@ -1761,6 +1761,8 @@
   "footer": {
     "madeBy": "Autor:",
     "source": "kod źródłowy na GitHubie",
-    "inspired": "Zainspirowane zagadkami programistycznymi z gry Hacked na Androida."
+    "inspired": "Zainspirowane zagadkami programistycznymi z gry Hacked na Androida.",
+    "android": "📱 Pobierz aplikację na Androida",
+    "androidNote": "(.apk - otwórz plik na telefonie, aby zainstalować)"
   }
 }
