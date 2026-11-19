@@ -1,6 +1,7 @@
 node_modules
 dist
 
-# signing keys never go into git
+# signing keys and other secrets never go into git
+secrets/
 *.jks
 *.keystore
