@@ -79,6 +79,10 @@ npm run android:build      # APK in android/app/build/outputs/apk/debug/
 
 The `android/` folder is a normal Android Studio project (`npx cap open android`).
 
+The app icon is drawn in `assets/icon-foreground.svg` and `assets/icon-background.svg`.
+After changing them, run `npm run icons`: it renders the Android launcher icons and the web
+favicon (`public/icon.svg`).
+
 ## Translations
 
 Every visible text lives in `src/i18n/<lang>.json` (`en.json` is the reference): the interface,

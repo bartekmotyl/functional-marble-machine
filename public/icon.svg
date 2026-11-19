@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="152 152 720 720">
+  <clipPath id="shape"><rect x="152" y="152" width="720" height="720" rx="158.4"/></clipPath>
+  <g clip-path="url(#shape)">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b4f7c"/><stop offset="1" stop-color="#6f6ca6"/></linearGradient>
+    <radialGradient id="glow" cx="30%" cy="20%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+
+  <defs>
+    <radialGradient id="red" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffd6d1"/><stop offset=".45" stop-color="#ef948b"/><stop offset="1" stop-color="#b05c54"/></radialGradient>
+    <radialGradient id="blue" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#d6eafc"/><stop offset=".45" stop-color="#8bbbe9"/><stop offset="1" stop-color="#4f7cab"/></radialGradient>
+    <radialGradient id="yellow" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff5cf"/><stop offset=".45" stop-color="#f1d572"/><stop offset="1" stop-color="#ac8f35"/></radialGradient>
+    <linearGradient id="funnel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f5f0"/><stop offset="1" stop-color="#dcdae6"/></linearGradient>
+    <g id="shine"><ellipse cx="-24" cy="-28" rx="22" ry="13" fill="#fff" opacity=".55" transform="rotate(-30 -24 -28)"/></g>
+  </defs>
+  
+  <g>
+    <circle cx="398" cy="356" r="68" fill="url(#red)"/><use href="#shine" x="398" y="356"/>
+    <circle cx="626" cy="356" r="68" fill="url(#yellow)"/><use href="#shine" x="626" y="356"/>
+    <circle cx="512" cy="300" r="68" fill="url(#blue)"/><use href="#shine" x="512" y="300"/>
+  </g>
+  
+  <path d="M292 438 H732 Q744 438 736 450 L566 606 V658 Q566 668 556 668 H468 Q458 668 458 658 V606 L288 450 Q280 438 292 438 Z"
+        fill="url(#funnel)" stroke="#2e3150" stroke-opacity=".2" stroke-width="6"/>
+  
+  <circle cx="512" cy="748" r="62" fill="url(#blue)"/><use href="#shine" x="512" y="748"/>
+</g>
+</svg>
