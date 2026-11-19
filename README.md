@@ -65,6 +65,20 @@ and there is an example in `levels-format/example-pack.yaml`. A copy is served a
 `/example-pack.yaml` by the dev server, so `#/import?url=%2Fexample-pack.yaml` loads it locally.
 Pack texts come from the internet, so they are only ever shown as text, never as HTML.
 
+## Android app
+
+The game is also packaged as an Android app with [Capacitor](https://capacitorjs.com): the
+built game runs inside a full-screen web view, so it works offline. GitHub Actions
+(`.github/workflows/android.yml`) builds a debug APK on every push to `main`. Download it from
+the run's *Artifacts* on the Actions tab, then install it on a phone (allow "install unknown
+apps"). To build locally you need the Android SDK and JDK 21:
+
+```bash
+npm run android:build      # APK in android/app/build/outputs/apk/debug/
+```
+
+The `android/` folder is a normal Android Studio project (`npx cap open android`).
+
 ## Translations
 
 Every visible text lives in `src/i18n/<lang>.json` (`en.json` is the reference): the interface,
